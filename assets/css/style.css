@@ -201,7 +201,7 @@ body::before {
     padding: 0.5rem 1.25rem;
     border-radius: 8px;
     background: var(--gradient-primary);
-    color: white !important;
+    color: white;
     font-weight: 600 !important;
     font-size: 0.85rem !important;
     border: none;
@@ -217,6 +217,22 @@ body::before {
 
 .nav-cta::after {
     display: none !important;
+}
+
+/* Kakao Dedicated Button */
+.btn-kakao {
+    background: #FEE500 !important;
+    color: #191919 !important;
+    font-weight: 800 !important;
+    border: none !important;
+    box-shadow: 0 4px 18px rgba(254, 229, 0, 0.35) !important;
+}
+
+.btn-kakao:hover {
+    background: #FADA0A !important;
+    color: #000000 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(254, 229, 0, 0.5) !important;
 }
 
 /* Mobile nav toggle */
