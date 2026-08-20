@@ -143,4 +143,37 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // --- Budget Filter Tabs Handler ---
+    const budgetTabBtns = document.querySelectorAll('.budget-tab-btn');
+    const filterableCards = document.querySelectorAll('[data-budget]');
+
+    if (budgetTabBtns.length > 0) {
+        budgetTabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active tab button
+                budgetTabBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const selectedBudget = btn.getAttribute('data-filter');
+
+                // Filter cards with smooth animation
+                filterableCards.forEach(card => {
+                    const cardBudget = card.getAttribute('data-budget');
+                    if (selectedBudget === 'all' || cardBudget === selectedBudget) {
+                        card.style.display = 'block';
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(10px)';
+                        setTimeout(() => {
+                            card.style.transition = 'all 0.3s ease';
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 50);
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    }
 });

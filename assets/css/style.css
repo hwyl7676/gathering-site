@@ -1042,10 +1042,81 @@ a.btn.btn-kakao:hover {
         flex-direction: column;
         align-items: stretch;
     }
-    .btn {
-        justify-content: center;
-    }
     .stats-bar {
         grid-template-columns: 1fr;
     }
+}
+
+/* ===================================================================
+   Budget Filter Tabs & Badges
+   =================================================================== */
+.budget-tabs-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin: 1.5rem 0 2rem;
+}
+
+.budget-tab-btn {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    padding: 0.6rem 1.15rem;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s var(--ease-out-expo);
+    backdrop-filter: blur(10px);
+}
+
+.budget-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.budget-tab-btn.active {
+    background: var(--gradient-primary);
+    color: white !important;
+    border-color: transparent;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+}
+
+.budget-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.budget-badge.under-50m {
+    background: rgba(34, 211, 238, 0.12);
+    color: var(--cyan-400);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+}
+
+.budget-badge.m50-100m {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--green-400);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.budget-badge.m100-300m {
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--indigo-400);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.budget-badge.over-300m {
+    background: rgba(245, 158, 11, 0.12);
+    color: var(--amber-400);
+    border: 1px solid rgba(245, 158, 11, 0.3);
 }
