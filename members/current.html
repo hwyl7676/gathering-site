@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[VIP 풀버전] 서울/수도권 경매 AI 분석 브리핑 (2026년 08월 20일) | Private 경매 구독</title>
+    <meta name="description" content="2026년 08월 20일 발행. AI가 분석한 경매 물건 3건 중 2건 알짜 픽 선별.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/report.css">
+</head>
+<body>
+
+    
+    <!-- VIP Lock Modal Overlay -->
+    <div id="members-lock" class="members-lock-overlay" style="display: none;">
+        <div class="members-lock-card">
+            <div class="members-lock-badge">카톡 오픈채팅 전용 VIP 리포트</div>
+            <h2 class="members-lock-title">비공개 알짜 픽 열람 안내</h2>
+            <p class="members-lock-desc">
+                본 페이지는 카카오톡 오픈채팅방 구독자 전용 풀 버전 리포트입니다.<br>
+                카톡방 상단 공지사항에 안내된 <strong>입장 코드</strong>를 입력해 주세요.
+            </p>
+            <form id="lock-form" class="members-lock-form" onsubmit="handleAuth(event)">
+                <input type="text" id="passcode-input" class="members-lock-input" placeholder="입장 코드 입력 (예: house7)" autocomplete="off" required>
+                <button type="submit" class="members-lock-btn">리포트 잠금 해제 &rarr;</button>
+                <div id="lock-error" class="members-lock-error">입장 코드가 일치하지 않습니다. 카톡방 공지를 확인하세요.</div>
+            </form>
+            <div class="members-lock-kakao-link">
+                아직 코드를 받지 못하셨나요? 
+                <a href="https://open.kakao.com/o/gJaTtHJi" target="_blank">카톡방 무료 입장하기 &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const VALID_PASSCODES = ['house7', 'HOUSE7', 'gathering7'];
+        function checkAccess() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const keyParam = urlParams.get('key');
+            const storedAuth = localStorage.getItem('gh_member_auth');
+            
+            if (keyParam && VALID_PASSCODES.includes(keyParam)) {
+                localStorage.setItem('gh_member_auth', keyParam);
+                document.getElementById('members-lock').style.display = 'none';
+                return;
+            }
+            if (storedAuth && VALID_PASSCODES.includes(storedAuth)) {
+                document.getElementById('members-lock').style.display = 'none';
+                return;
+            }
+            document.getElementById('members-lock').style.display = 'flex';
+        }
+        function handleAuth(e) {
+            e.preventDefault();
+            const input = document.getElementById('passcode-input').value.trim();
+            if (VALID_PASSCODES.includes(input)) {
+                localStorage.setItem('gh_member_auth', input);
+                document.getElementById('members-lock').style.display = 'none';
+            } else {
+                document.getElementById('lock-error').style.display = 'block';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', checkAccess);
+    </script>
+
+
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="../" class="nav-logo">
+                <div class="nav-logo-icon">G</div>
+                <span class="nav-logo-text">Private 경매 구독</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../#features">서비스 소개</a></li>
+                <li><a href="../#pipeline">분석 파이프라인</a></li>
+                <li><a href="../#verification">적중 검증</a></li>
+                <li><a href="../#reports">리포트</a></li>
+                <li><a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="nav-cta btn-kakao" style="background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important;">카톡 무료입장</a></li>
+            </ul>
+            <button class="nav-toggle" aria-label="메뉴 열기">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <header class="report-detail-header">
+        <div class="container">
+            <a href="../#reports" class="btn btn-sm btn-secondary" style="margin-bottom: 2rem;">&larr; 리포트 목록</a>
+            <div class="report-case-number">Report #2026-0820</div>
+            <h1>[VIP 풀버전] 서울/수도권 경매 AI 분석 브리핑 (2026년 08월 20일)</h1>
+            <div class="report-detail-meta">
+                <span>2026년 08월 20일 발행</span>
+                <span>3건 분석</span>
+                <span>2건 알짜 픽 선별</span>
+                <span class="report-badge pass" style="font-size: 0.8rem;">평균 마진율 56.2%</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        
+
+        <div class="summary-grid animate-on-scroll">
+            <div class="summary-card">
+                <div class="summary-card-label">총 분석 건수</div>
+                <div class="summary-card-value accent">3건</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-card-label">알짜 픽 선별</div>
+                <div class="summary-card-value positive">2건</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-card-label">평균 기대 마진율</div>
+                <div class="summary-card-value positive">56.2%</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-card-label">분석 기준</div>
+                <div class="summary-card-value" style="font-size: 1.1rem;">마진 30%+</div>
+            </div>
+        </div>
+
+
+        <div class="detail-section animate-on-scroll">
+            <div class="detail-section-title">
+                <span style="color: var(--green-400);">PASS</span>&nbsp;&middot;&nbsp;1위. 2024타경33102
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 풀버전</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td>서울특별시 은평구 불광동 334-12 102호</td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">180,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>115,200,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span style="color: var(--indigo-400); font-weight: 700;">123,300,000 원</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +51,768,000 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 1,200만~2,500만 차감 시: +26,768,000 원 ~ +39,768,000 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 4,775만 ~ 6,075만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 1,200만~2,500만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">42,708,600 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        56.25% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 21.71% ~ 32.25%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>39.67 ㎡ (12.0 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>49.58 ㎡ (15.0 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>14,999,780 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td>115,775,999 원 ~ 134,100,000 원</td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td>2회 유찰 (최저가 64%), 대지권 비율 우수</td>
+                </tr>
+            </table>
+
+            <!-- 🛡️ 인간 베이스 현실 예비비 산출 근거 박스 -->
+            <div style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 12px; padding: 1.25rem 1.5rem; margin-top: 1.25rem;">
+                <div style="font-family: var(--font-heading); font-size: 0.92rem; font-weight: 700; color: var(--cyan-400); margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+                    <span>현실 반영 예비비 산출 근거 (예상: 1,200만 ~ 2,500만원)</span>
+                    <span style="font-size: 0.75rem; background: rgba(34, 211, 238, 0.15); padding: 0.2rem 0.5rem; border-radius: 4px; color: var(--text-primary);">현장 리얼 코스트 반영</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem 1.5rem; font-size: 0.85rem; color: var(--text-secondary);">
+                    <div>&bull; <strong>명도 협상비 (이사비)</strong>: 200만 ~ 500만원 (강제집행 방지 원만한 합의)</div>
+                    <div>&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 150만 ~ 250만원 (방치 짐 및 찌든때 정리)</div>
+                    <div>&bull; <strong>필수 인테리어 수리</strong>: 600만 ~ 1,200만원 (도배·장판·조명·실리콘)</div>
+                    <div>&bull; <strong>공실 2~3개월 금융비용</strong>: 250만 ~ 550만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section animate-on-scroll">
+            <div class="detail-section-title">
+                <span style="color: var(--green-400);">PASS</span>&nbsp;&middot;&nbsp;2위. 2024타경44519
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 풀버전</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td>서울특별시 중랑구 면목동 88-99 301호</td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">210,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>134,400,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span style="color: var(--indigo-400); font-weight: 700;">143,850,000 원</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +60,396,000 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 1,200만~2,500만 차감 시: +35,396,000 원 ~ +48,396,000 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 5,371만 ~ 6,671만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 1,200만~2,500만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">49,826,700 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        56.25% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 24.61% ~ 33.64%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>42.97 ㎡ (13.0 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>59.5 ㎡ (18.0 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>16,155,802 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td>135,072,000 원 ~ 156,450,000 원</td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td>2회 유찰 (최저가 64%), 신통기획 재개발 예정지 포함</td>
+                </tr>
+            </table>
+
+            <!-- 🛡️ 인간 베이스 현실 예비비 산출 근거 박스 -->
+            <div style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 12px; padding: 1.25rem 1.5rem; margin-top: 1.25rem;">
+                <div style="font-family: var(--font-heading); font-size: 0.92rem; font-weight: 700; color: var(--cyan-400); margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+                    <span>현실 반영 예비비 산출 근거 (예상: 1,200만 ~ 2,500만원)</span>
+                    <span style="font-size: 0.75rem; background: rgba(34, 211, 238, 0.15); padding: 0.2rem 0.5rem; border-radius: 4px; color: var(--text-primary);">현장 리얼 코스트 반영</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem 1.5rem; font-size: 0.85rem; color: var(--text-secondary);">
+                    <div>&bull; <strong>명도 협상비 (이사비)</strong>: 200만 ~ 500만원 (강제집행 방지 원만한 합의)</div>
+                    <div>&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 150만 ~ 250만원 (방치 짐 및 찌든때 정리)</div>
+                    <div>&bull; <strong>필수 인테리어 수리</strong>: 600만 ~ 1,200만원 (도배·장판·조명·실리콘)</div>
+                    <div>&bull; <strong>공실 2~3개월 금융비용</strong>: 250만 ~ 550만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section animate-on-scroll">
+            <div class="detail-section-title">
+                <span style="color: var(--red-400);">PRUNED</span>&nbsp;&middot;&nbsp;3위. 2024타경55803
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 풀버전</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td>서울특별시 관악구 신림동 543-21 201호</td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>아파트</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">240,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>192,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span style="color: var(--indigo-400); font-weight: 700;">200,400,000 원</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">85.0%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--text-secondary); font-weight: 700;">
+                        +31,584,000 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 2,000만~3,500만 차감 시: 0 원 ~ +11,584,000 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 7,811만 ~ 9,311만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 2,000만~3,500만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">26,846,400 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--text-secondary); font-weight: 700;">
+                        25.0% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 0.0% ~ 5.78%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>36.36 ㎡ (11.0 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>52.89 ㎡ (16.0 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>21,820,363 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td>192,959,999 원 ~ 210,420,000 원</td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td>1회 유찰 (최저가 80%), 대항력 없는 임차인 거주</td>
+                </tr>
+            </table>
+
+            <!-- 🛡️ 인간 베이스 현실 예비비 산출 근거 박스 -->
+            <div style="background: rgba(34, 211, 238, 0.04); border: 1px solid rgba(34, 211, 238, 0.2); border-radius: 12px; padding: 1.25rem 1.5rem; margin-top: 1.25rem;">
+                <div style="font-family: var(--font-heading); font-size: 0.92rem; font-weight: 700; color: var(--cyan-400); margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+                    <span>현실 반영 예비비 산출 근거 (예상: 2,000만 ~ 3,500만원)</span>
+                    <span style="font-size: 0.75rem; background: rgba(34, 211, 238, 0.15); padding: 0.2rem 0.5rem; border-radius: 4px; color: var(--text-primary);">현장 리얼 코스트 반영</span>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem 1.5rem; font-size: 0.85rem; color: var(--text-secondary);">
+                    <div>&bull; <strong>명도 협상비 (이사비)</strong>: 200만 ~ 500만원 (강제집행 방지 원만한 합의)</div>
+                    <div>&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 150만 ~ 250만원 (방치 짐 및 찌든때 정리)</div>
+                    <div>&bull; <strong>필수 인테리어 수리</strong>: 1,200만 ~ 2,000만원 (도배·장판·주방·욕실)</div>
+                    <div>&bull; <strong>공실 2~3개월 금융비용</strong>: 450만 ~ 750만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-default); border-radius: 16px; padding: 2rem; margin: 3rem 0 2rem; text-align: center;">
+            <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-primary);">주 2회 AI 추천 알짜 경매 픽을 실시간으로 받아보세요</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">카카오톡 오픈채팅방에서 무료로 실시간 브리핑을 제공합니다.</p>
+            <a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="btn btn-kakao" style="background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important; font-size: 1.05rem; padding: 0.85rem 2rem;">
+                카카오톡 오픈채팅 무료 입장 (코드: house7) &rarr;
+            </a>
+        </div>
+
+        <div class="disclaimer">
+            <p>본 리포트는 AI 자동 분석 결과이며, 투자 자문이 아닙니다.<br>
+            최종 투자 판단은 반드시 전문가 상담 및 현장 답사 후 투자자 본인의 책임 하에 결정하시기 바랍니다.</p>
+            <p style="margin-top: 0.5rem;">
+                &copy; 2026 Private 경매 구독 &middot; <a href="https://gathering-house.kr">gathering-house.kr</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>
