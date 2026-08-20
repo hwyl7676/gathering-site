@@ -110,13 +110,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Smooth scroll for anchor links ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', (e) => {
-            e.preventDefault();
-            const target = document.querySelector(anchor.getAttribute('href'));
+            const href = anchor.getAttribute('href');
+            if (href === '#') return;
+            const target = document.querySelector(href);
             if (target) {
+                e.preventDefault();
                 const offset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 72;
                 const y = target.getBoundingClientRect().top + window.pageYOffset - offset;
                 window.scrollTo({ top: y, behavior: 'smooth' });
             }
         });
     });
+
+    // --- Track record 'Load More' toggle ---
+    const loadMoreBtn = document.getElementById('load-more-track-btn');
+    const hiddenTrackItems = document.getElementById('hidden-track-records');
+
+    if (loadMoreBtn && hiddenTrackItems) {
+        loadMoreBtn.addEventListener('click', () => {
+            const isExpanded = hiddenTrackItems.classList.contains('active');
+            if (isExpanded) {
+                hiddenTrackItems.classList.remove('active');
+                hiddenTrackItems.style.display = 'none';
+                loadMoreBtn.innerHTML = '<span>지난 검증 내역 더보기 (2건 추가) &darr;</span>';
+            } else {
+                hiddenTrackItems.classList.add('active');
+                hiddenTrackItems.style.display = 'block';
+                hiddenTrackItems.querySelectorAll('.track-record-card').forEach(card => {
+                    card.classList.add('visible');
+                });
+                loadMoreBtn.innerHTML = '<span>검증 내역 접기 &uarr;</span>';
+            }
+        });
+    }
 });
