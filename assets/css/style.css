@@ -759,6 +759,162 @@ body::before {
     to { transform: rotate(360deg); }
 }
 
+/* --- Track Record Verification Section --- */
+.track-record-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: 16px;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    transition: all 0.3s var(--ease-out-expo);
+    position: relative;
+    overflow: hidden;
+}
+
+.track-record-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gradient-primary);
+}
+
+.track-record-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-accent);
+    transform: translateY(-2px);
+    box-shadow: var(--glow-card);
+}
+
+.track-record-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.track-record-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.track-record-case {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--indigo-400);
+    background: rgba(99, 102, 241, 0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+}
+
+.track-record-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--green-400);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.track-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    padding: 1.25rem;
+    border: 1px solid var(--border-subtle);
+}
+
+@media (max-width: 768px) {
+    .track-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+.track-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.track-col-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.track-col.forecast .track-col-title {
+    color: var(--blue-400);
+}
+
+.track-col.actual .track-col-title {
+    color: var(--green-400);
+}
+
+.track-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.92rem;
+}
+
+.track-label {
+    color: var(--text-secondary);
+}
+
+.track-val {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.track-val.highlight {
+    font-size: 1.05rem;
+    color: var(--cyan-400);
+    font-weight: 700;
+}
+
+.track-val.profit {
+    font-size: 1.05rem;
+    color: var(--green-400);
+    font-weight: 700;
+}
+
+.track-report-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--indigo-400);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.track-report-link:hover {
+    color: var(--cyan-400);
+    text-decoration: underline;
+}
+
 /* Scroll-triggered animations */
 .animate-on-scroll {
     opacity: 0;
