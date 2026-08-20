@@ -219,20 +219,25 @@ body::before {
     display: none !important;
 }
 
-/* Kakao Dedicated Button */
-.btn-kakao {
+/* Kakao Dedicated Button - 카카오 오리지널 옐로우 불변 유지 */
+.btn-kakao,
+a.nav-cta.btn-kakao,
+a.btn.btn-kakao {
     background: #FEE500 !important;
     color: #191919 !important;
     font-weight: 800 !important;
     border: none !important;
-    box-shadow: 0 4px 18px rgba(254, 229, 0, 0.35) !important;
+    box-shadow: 0 4px 18px rgba(254, 229, 0, 0.4) !important;
+    text-shadow: none !important;
 }
 
-.btn-kakao:hover {
+.btn-kakao:hover,
+a.nav-cta.btn-kakao:hover,
+a.btn.btn-kakao:hover {
     background: #FADA0A !important;
-    color: #000000 !important;
+    color: #191919 !important;
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(254, 229, 0, 0.5) !important;
+    box-shadow: 0 8px 26px rgba(254, 229, 0, 0.55) !important;
 }
 
 /* Mobile nav toggle */
