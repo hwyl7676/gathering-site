@@ -3,126 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[VIP 풀버전] 서울/수도권 경매 AI 분석 브리핑 (2026년 08월 20일) | Private 경매 구독</title>
+    <title>[티저] 서울/수도권 경매 AI 분석 브리핑 (2026년 08월 20일) | Private 경매 구독</title>
     <meta name="description" content="2026년 08월 20일 발행. AI가 분석한 경매 물건 3건 중 2건 알짜 픽 선별.">
-    <meta name="robots" content="noindex, nofollow">
+    
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/report.css">
 </head>
 <body>
 
     
-    <!-- VIP Lock Modal Overlay -->
-    <div id="members-lock" class="members-lock-overlay" style="display: none;">
-        <div class="members-lock-card">
-            <div class="members-lock-badge">카톡 오픈채팅 전용 VIP 리포트</div>
-            <h2 class="members-lock-title">비공개 알짜 픽 열람 안내</h2>
-            <p class="members-lock-desc">
-                본 페이지는 카카오톡 오픈채팅방 구독자 전용 풀 버전 리포트입니다.<br>
-                카톡방 상단 공지사항에서 <strong>이번 주 입장 코드</strong>를 무료로 확인하세요.
-            </p>
-
-            
-            <div class="members-lock-highlights">
-                <div class="members-lock-highlights-head">
-                    <span>비공개 알짜 픽 요약 (2건 선별)</span>
-                    <span>사건번호/추천가 비공개</span>
-                </div>
-                
-                <div class="members-lock-highlight-item">
-                    <div>
-                        <span class="highlight-badge">알짜 1위</span>
-                        <span class="highlight-title">서울특별시 은평구 불광동 (다세대 (빌라))</span>
-                    </div>
-                    <div class="highlight-details">
-                        <span>예상 순수익: <strong>+5,176만원</strong></span>
-                        <span>실투자금: <strong>약 4,775만원</strong></span>
-                    </div>
-                </div>
-                <div class="members-lock-highlight-item">
-                    <div>
-                        <span class="highlight-badge">알짜 2위</span>
-                        <span class="highlight-title">서울특별시 중랑구 면목동 (다세대 (빌라))</span>
-                    </div>
-                    <div class="highlight-details">
-                        <span>예상 순수익: <strong>+6,039만원</strong></span>
-                        <span>실투자금: <strong>약 5,371만원</strong></span>
-                    </div>
-                </div>
-            </div>
-
-            <a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="members-lock-main-kakao-btn">
-                카톡방에서 무료 입장 코드 받기 &rarr;
-            </a>
-            <div class="members-lock-subtext">* 카톡방 상단 공지사항에 이번 주 코드가 실시간 공유됩니다.</div>
-
-            <div class="members-lock-divider">
-                <span>이미 코드를 알고 계신가요?</span>
-            </div>
-
-            <form id="lock-form" class="members-lock-form" onsubmit="handleAuth(event)">
-                <div class="members-lock-input-group">
-                    <input type="text" id="passcode-input" class="members-lock-input" placeholder="입장 코드 입력" autocomplete="off" required>
-                    <button type="submit" class="members-lock-submit-btn">잠금 해제 &rarr;</button>
-                </div>
-                <div id="lock-error" class="members-lock-error">입장 코드가 일치하지 않습니다. 카톡방 공지를 확인하세요.</div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        (function() {
-            const TARGET_PASSCODE = 'ESHRj3rLnEt2';
-            function normalizeCode(str) {
-                if (!str) return '';
-                return str.toLowerCase().trim()
-                          .replace(/[1l|!]/g, 'i')
-                          .replace(/[0o]/g, 'o');
-            }
-            function isValid(input) {
-                if (!input) return false;
-                const normInput = normalizeCode(input);
-                const normTarget = normalizeCode(TARGET_PASSCODE);
-                return normInput === normTarget || input.toLowerCase().trim() === TARGET_PASSCODE.toLowerCase().trim();
-            }
-            function checkAccess() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const keyParam = urlParams.get('key');
-                const storedAuth = localStorage.getItem('gh_member_auth');
-                const lockEl = document.getElementById('members-lock');
-                
-                if (keyParam && isValid(keyParam)) {
-                    localStorage.setItem('gh_member_auth', TARGET_PASSCODE);
-                    if (window.history.replaceState) {
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    }
-                    if (lockEl) lockEl.style.display = 'none';
-                    return;
-                }
-                if (storedAuth && isValid(storedAuth)) {
-                    if (lockEl) lockEl.style.display = 'none';
-                    return;
-                }
-                if (lockEl) lockEl.style.display = 'flex';
-            }
-            window.handleAuth = function(e) {
-                e.preventDefault();
-                const input = (document.getElementById('passcode-input').value || '').trim();
-                const lockEl = document.getElementById('members-lock');
-                const errEl = document.getElementById('lock-error');
-                if (isValid(input)) {
-                    localStorage.setItem('gh_member_auth', TARGET_PASSCODE);
-                    if (lockEl) lockEl.style.display = 'none';
-                    if (errEl) errEl.style.display = 'none';
-                } else {
-                    if (errEl) errEl.style.display = 'block';
-                }
-            };
-            checkAccess();
-            document.addEventListener('DOMContentLoaded', checkAccess);
-        })();
-    </script>
-
 
     <nav class="nav">
         <div class="nav-inner">
@@ -149,7 +38,7 @@
         <div class="container">
             <a href="../#reports" class="btn btn-sm btn-secondary" style="margin-bottom: 2rem;">&larr; 리포트 목록</a>
             <div class="report-case-number">Report #2026-0820</div>
-            <h1>[VIP 풀버전] 서울/수도권 경매 AI 분석 브리핑 (2026년 08월 20일)</h1>
+            <h1>[티저] 서울/수도권 경매 AI 분석 브리핑 (2026년 08월 20일)</h1>
             <div class="report-detail-meta">
                 <span>2026년 08월 20일 발행</span>
                 <span>3건 분석</span>
@@ -161,6 +50,16 @@
 
     <main class="container">
         
+        <div class="teaser-banner animate-on-scroll">
+            <div class="teaser-banner-content">
+                <h3>[안내] 본 페이지는 공개용 티저 리포트입니다</h3>
+                <p>사건번호, 아파트 단지명, AI 최적 추천 입찰가가 완전 공개된 풀 버전 리포트는 <strong>카카오톡 오픈채팅방 공지사항</strong>에서 즉시 열람하실 수 있습니다.</p>
+            </div>
+            <a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="btn btn-kakao" style="background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important; white-space: nowrap;">
+                카톡방에서 풀버전 확인 &rarr;
+            </a>
+        </div>
+
 
         <div class="summary-grid animate-on-scroll">
             <div class="summary-card">
@@ -184,13 +83,13 @@
 
         <div class="detail-section animate-on-scroll">
             <div class="detail-section-title">
-                <span style="color: var(--green-400);">PASS</span>&nbsp;&middot;&nbsp;1위. 2024타경33102
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 풀버전</span>
+                <span style="color: var(--green-400);">PASS</span>&nbsp;&middot;&nbsp;1위. 2024타경*****
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">티저 모드</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td>서울특별시 은평구 불광동 334-12 102호</td>
+                    <td>서울특별시 은평구 불광동 *** (빌라/다세대) <a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -206,7 +105,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span style="color: var(--indigo-400); font-weight: 700;">123,300,000 원</span></td>
+                    <td><a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 확인 (카톡 무료입장) &rarr;</a></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -257,7 +156,7 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td>115,775,999 원 ~ 134,100,000 원</td>
+                    <td><span class="teaser-blur-text">115,775,999 원 ~ 134,100,000 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
@@ -282,13 +181,13 @@
 
         <div class="detail-section animate-on-scroll">
             <div class="detail-section-title">
-                <span style="color: var(--green-400);">PASS</span>&nbsp;&middot;&nbsp;2위. 2024타경44519
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 풀버전</span>
+                <span style="color: var(--green-400);">PASS</span>&nbsp;&middot;&nbsp;2위. 2024타경*****
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">티저 모드</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td>서울특별시 중랑구 면목동 88-99 301호</td>
+                    <td>서울특별시 중랑구 면목동 *** (빌라/다세대) <a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -304,7 +203,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span style="color: var(--indigo-400); font-weight: 700;">143,850,000 원</span></td>
+                    <td><a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 확인 (카톡 무료입장) &rarr;</a></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -355,7 +254,7 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td>135,072,000 원 ~ 156,450,000 원</td>
+                    <td><span class="teaser-blur-text">135,072,000 원 ~ 156,450,000 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
@@ -380,13 +279,13 @@
 
         <div class="detail-section animate-on-scroll">
             <div class="detail-section-title">
-                <span style="color: var(--red-400);">PRUNED</span>&nbsp;&middot;&nbsp;3위. 2024타경55803
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 풀버전</span>
+                <span style="color: var(--red-400);">PRUNED</span>&nbsp;&middot;&nbsp;3위. 2024타경*****
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">티저 모드</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td>서울특별시 관악구 신림동 543-21 201호</td>
+                    <td>서울특별시 관악구 신림동 *** (아파트) <a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -402,7 +301,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span style="color: var(--indigo-400); font-weight: 700;">200,400,000 원</span></td>
+                    <td><a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 확인 (카톡 무료입장) &rarr;</a></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -453,7 +352,7 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td>192,959,999 원 ~ 210,420,000 원</td>
+                    <td><span class="teaser-blur-text">192,959,999 원 ~ 210,420,000 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
