@@ -496,3 +496,17 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* VIP Encrypted Placeholder Styles */
+.vip-locked-placeholder {
+    color: var(--text-muted);
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+    filter: blur(3.5px);
+    user-select: none;
+    transition: filter 0.3s ease, color 0.3s ease;
+}
+
