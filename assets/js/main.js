@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { passive: true });
     }
 
-    // --- Animated counters ---
-    const counters = document.querySelectorAll('[data-count]');
+    // --- Animated counters (통계 숫자 전용 한정) ---
+    const counters = document.querySelectorAll('.summary-card-value[data-count], .stat-number[data-count], [data-counter]');
     const counterObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function animateCounter(el) {
         const target = parseInt(el.dataset.count);
+        if (isNaN(target)) return;
         const suffix = el.dataset.suffix || '';
         const prefix = el.dataset.prefix || '';
         const duration = 1500;
@@ -133,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             content.style.display = 'none';
             if (btn) {
                 btn.classList.remove('active');
-                const countMatch = btn.getAttribute('data-count') || '2';
+                const countMatch = btn.getAttribute('data-prune-count') || btn.getAttribute('data-count') || '2';
                 btn.innerHTML = `<span>AI 필터링 탈락 물건 (${countMatch}건) 확인하기 (투자 주의 &darr;)</span>`;
             }
         }
