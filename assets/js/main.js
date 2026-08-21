@@ -144,35 +144,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Budget Filter Tabs Handler ---
+    // --- Track Status & Budget Compound Filter Handler ---
+    const statusBtns = document.querySelectorAll('.track-status-btn');
     const budgetTabBtns = document.querySelectorAll('.budget-tab-btn');
-    const filterableCards = document.querySelectorAll('[data-budget]');
+    const filterableCards = document.querySelectorAll('.track-record-card[data-status]');
+
+    let currentStatus = 'all';
+    let currentBudget = 'all';
+
+    function applyCompoundFilter() {
+        filterableCards.forEach(card => {
+            const cardStatus = card.getAttribute('data-status');
+            const cardBudget = card.getAttribute('data-budget');
+
+            const matchStatus = (currentStatus === 'all' || cardStatus === currentStatus);
+            const matchBudget = (currentBudget === 'all' || cardBudget === currentBudget);
+
+            if (matchStatus && matchBudget) {
+                card.style.display = 'block';
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.3s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 30);
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    if (statusBtns.length > 0) {
+        statusBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                statusBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentStatus = btn.getAttribute('data-status-filter') || 'all';
+                applyCompoundFilter();
+            });
+        });
+    }
 
     if (budgetTabBtns.length > 0) {
         budgetTabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // Update active tab button
                 budgetTabBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-
-                const selectedBudget = btn.getAttribute('data-filter');
-
-                // Filter cards with smooth animation
-                filterableCards.forEach(card => {
-                    const cardBudget = card.getAttribute('data-budget');
-                    if (selectedBudget === 'all' || cardBudget === selectedBudget) {
-                        card.style.display = 'block';
-                        card.style.opacity = '0';
-                        card.style.transform = 'translateY(10px)';
-                        setTimeout(() => {
-                            card.style.transition = 'all 0.3s ease';
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        }, 50);
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
+                currentBudget = btn.getAttribute('data-filter') || 'all';
+                applyCompoundFilter();
             });
         });
     }
