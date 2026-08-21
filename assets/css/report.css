@@ -757,19 +757,241 @@
     text-align: center;
 }
 
-/* Responsive */
+/* Reality Buffer Box Styles */
+.reality-buffer-box {
+    background: rgba(34, 211, 238, 0.04);
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-top: 1.25rem;
+}
+
+.reality-buffer-head {
+    font-family: var(--font-heading);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--cyan-400);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.reality-buffer-tag {
+    font-size: 0.75rem;
+    background: rgba(34, 211, 238, 0.15);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.reality-buffer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.reality-buffer-item {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+/* Responsive & Mobile-First High-Definition Overrides */
 @media (max-width: 768px) {
-    .summary-grid {
-        grid-template-columns: repeat(2, 1fr);
+    body {
+        padding-bottom: env(safe-area-inset-bottom, 1rem);
     }
+
+    .report-detail-header {
+        padding-top: calc(var(--nav-height) + 2rem);
+        padding-bottom: 1.75rem;
+    }
+
+    .report-detail-header h1 {
+        font-size: 1.5rem !important;
+        line-height: 1.35 !important;
+    }
+
+    .report-detail-meta {
+        gap: 0.6rem !important;
+        font-size: 0.82rem !important;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.5rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .summary-card {
+        padding: 0.85rem 0.6rem !important;
+        border-radius: 12px !important;
+    }
+
+    .summary-card-label {
+        font-size: 0.72rem !important;
+        margin-bottom: 0.25rem !important;
+        word-break: keep-all !important;
+    }
+
+    .summary-card-value {
+        font-size: 1.25rem !important;
+        letter-spacing: -0.02em !important;
+    }
+
+    .detail-section {
+        padding: 1.15rem 0.9rem !important;
+        border-radius: 14px !important;
+        margin-bottom: 1.25rem !important;
+    }
+
+    .detail-section-title {
+        font-size: 0.98rem !important;
+        flex-wrap: wrap !important;
+        gap: 0.35rem !important;
+        margin-bottom: 0.85rem !important;
+        padding-bottom: 0.6rem !important;
+        line-height: 1.4 !important;
+    }
+
+    /* 표(table) 모바일 카드형 1단 블록화 */
+    .detail-table,
+    .detail-table tbody {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .detail-table tr {
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 0.65rem 0.75rem !important;
+        margin-bottom: 0.4rem !important;
+        border-radius: 8px !important;
+        background: rgba(255, 255, 255, 0.02) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+        gap: 0.25rem !important;
+    }
+
+    .detail-table tr:last-child {
+        margin-bottom: 0 !important;
+    }
+
     .detail-table th {
-        width: 40%;
+        display: block !important;
+        width: 100% !important;
+        padding: 0 !important;
+        font-size: 0.76rem !important;
+        color: var(--text-muted) !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.02em !important;
+    }
+
+    .detail-table td {
+        display: block !important;
+        width: 100% !important;
+        padding: 0 !important;
+        font-size: 0.92rem !important;
+        color: var(--text-primary) !important;
+        word-break: keep-all !important;
+        overflow-wrap: break-word !important;
+        line-height: 1.45 !important;
+    }
+
+    .reality-buffer-box {
+        padding: 1rem 0.85rem !important;
+        border-radius: 10px !important;
+        margin-top: 1rem !important;
+    }
+
+    .reality-buffer-head {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.6rem !important;
+    }
+
+    .reality-buffer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.5rem !important;
+        font-size: 0.82rem !important;
+    }
+
+    .report-group-header {
+        margin-top: 1.75rem !important;
+    }
+
+    .report-group-title {
+        flex-wrap: wrap !important;
+        gap: 0.35rem !important;
+    }
+
+    .report-group-title h2 {
+        font-size: 1.1rem !important;
+    }
+
+    .badge-status {
+        font-size: 0.72rem !important;
+        padding: 0.18rem 0.45rem !important;
+    }
+
+    .pass-criteria-tag,
+    .prune-reason-tag {
+        font-size: 0.72rem !important;
+        padding: 0.18rem 0.45rem !important;
+        word-break: keep-all !important;
+        line-height: 1.35 !important;
+    }
+
+    .criteria-info-box {
+        font-size: 0.78rem !important;
+        padding: 0.6rem 0.75rem !important;
+        line-height: 1.4 !important;
+        word-break: keep-all !important;
+    }
+
+    .pruned-accordion-btn {
+        width: 100% !important;
+        font-size: 0.86rem !important;
+        padding: 0.8rem 0.9rem !important;
+    }
+
+    .teaser-masked {
+        display: inline-block !important;
+        margin-top: 0.25rem !important;
+        font-size: 0.8rem !important;
+        padding: 0.2rem 0.55rem !important;
+    }
+
+    .toast-notification {
+        bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
+        width: 90% !important;
+        max-width: 360px !important;
+        font-size: 0.85rem !important;
+        padding: 0.75rem 1rem !important;
+        white-space: normal !important;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 380px) {
     .summary-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.35rem !important;
+    }
+
+    .summary-card {
+        padding: 0.65rem 0.4rem !important;
+    }
+
+    .summary-card-value {
+        font-size: 1.1rem !important;
+    }
+
+    .summary-card-label {
+        font-size: 0.68rem !important;
     }
 }
 
