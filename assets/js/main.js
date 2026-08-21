@@ -407,6 +407,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.removeChild(ta);
             }
             window.showToast(`참여코드(${code})가 복사되었습니다! 카톡방에 붙여넣으세요.`);
+            if (window.trackEvent) {
+                window.trackEvent('code_copy', { code: code });
+            }
         } catch (err) {}
 
         setTimeout(() => {
