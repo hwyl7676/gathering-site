@@ -108,8 +108,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Precision Scroll & Highlight Engine for Anchor Targets ---
+    function openPrunedAccordion() {
+        const content = document.getElementById('pruned-accordion-content');
+        const btn = document.getElementById('pruned-accordion-btn');
+        if (content) {
+            content.style.display = 'block';
+            content.querySelectorAll('.detail-section').forEach(sec => sec.classList.add('visible'));
+        }
+        if (btn) {
+            btn.classList.add('active');
+            btn.innerHTML = '<span>AI 필터링 탈락 물건 접기 &uarr;</span>';
+        }
+    }
+
+    window.togglePrunedSection = function() {
+        const content = document.getElementById('pruned-accordion-content');
+        const btn = document.getElementById('pruned-accordion-btn');
+        if (!content) return;
+
+        const isHidden = (content.style.display === 'none' || !content.style.display);
+        if (isHidden) {
+            openPrunedAccordion();
+        } else {
+            content.style.display = 'none';
+            if (btn) {
+                btn.classList.remove('active');
+                const countMatch = btn.getAttribute('data-count') || '2';
+                btn.innerHTML = `<span>AI 필터링 탈락 물건 (${countMatch}건) 확인하기 (투자 주의 &darr;)</span>`;
+            }
+        }
+    };
+
     function scrollToTargetElement(target, isSmooth = true) {
         if (!target) return;
+
+        // 만약 타겟이 접혀있는 탈락 물건 아코디언 내부에 있다면 먼저 펼치기
+        const accordionParent = target.closest('#pruned-accordion-content');
+        if (accordionParent && accordionParent.style.display === 'none') {
+            openPrunedAccordion();
+        }
+
         target.classList.add('visible', 'highlighted-target');
         
         const navHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 72;
