@@ -186,6 +186,49 @@
     color: #f87171;
 }
 
+/* Pruned Accordion Toggle Styles */
+.pruned-accordion-toggle-wrapper {
+    margin: 3.5rem 0 1.5rem 0;
+    text-align: center;
+}
+
+.pruned-accordion-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(248, 113, 113, 0.35);
+    color: #fca5a5;
+    padding: 0.95rem 1.8rem;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 520px;
+}
+
+.pruned-accordion-btn:hover {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(248, 113, 113, 0.6);
+    color: #fee2e2;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.15);
+}
+
+.pruned-accordion-btn.active {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: var(--border-subtle);
+    color: var(--text-secondary);
+}
+
+.pruned-accordion-content {
+    transition: all 0.35s ease;
+}
+
 /* Detail Section */
 .detail-section {
     background: var(--bg-card);
