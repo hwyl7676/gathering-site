@@ -27,7 +27,7 @@
                 <li><a href="#pipeline">분석 파이프라인</a></li>
                 <li><a href="#verification">적중 검증</a></li>
                 <li><a href="#reports">리포트</a></li>
-                <li><a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="nav-cta btn-kakao" style="background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important;">카톡 무료입장</a></li>
+                <li><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="nav-cta btn-kakao" style="background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important;">카톡 무료입장</a></li>
             </ul>
             <button class="nav-toggle" aria-label="메뉴 열기">
                 <span></span>
@@ -63,7 +63,7 @@
                     실시간으로 계산하여 고수익 알짜 물건만 선별합니다.
                 </p>
                 <div class="hero-actions">
-                    <a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="btn btn-kakao" style="background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important;">카톡 무료 알림방 입장 &rarr;</a>
+                    <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="btn btn-kakao" style="background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important;">카톡 무료 알림방 입장 &rarr;</a>
                     <a href="#verification" class="btn btn-secondary">적중 검증 결과 보기</a>
                 </div>
             </div>
@@ -170,7 +170,7 @@
         </div>
     </section>
 
-                                    <!-- Track Record / Verification Section -->
+                                        <!-- Track Record / Verification Section -->
     <section class="section" id="verification">
         <div class="container">
 
@@ -573,12 +573,30 @@
                 <div class="section-label">Reports</div>
                 <h2 class="section-title">최신 분석 리포트</h2>
                 <p class="section-desc">
-                    AI 파이프라인이 선별한 최신 고수익 경매 물건 브리핑입니다.<br>
-                    <span style="color: var(--cyan-400); font-size: 0.9rem; font-weight: 600;">
-                        (웹 공개 리포트는 비식별화된 [티저 버전]이며, 사건번호와 AI 최종 추천가는 카톡방 공지사항에서 풀 버전으로 열람 가능합니다)
-                    </span>
+                    AI 파이프라인이 엄격한 마진(30%+)과 권리 분석을 통과시킨 최신 알짜 경매 물건 브리핑입니다.
                 </p>
             </div>
+
+            <!-- Main FOMO Banner with Realtime Timer -->
+            <div class="teaser-banner animate-on-scroll" style="margin-bottom: 2.25rem;">
+                <div class="teaser-banner-content">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                        <h3 style="margin: 0;">이번 회차 알짜 픽 열람 안내</h3>
+                        <div class="countdown-timer-wrapper">
+                            <span>회차 핀코드 만료:</span>
+                            <span class="countdown-timer-text timer-text">--:--:--</span>
+                        </div>
+                    </div>
+                    <p>사건번호, 아파트 단지명, AI 최적 추천 입찰가와 <strong>선순위 임차인 대항력 인수 검증 체크리스트</strong>가 완전 공개된 풀 버전 리포트는 <strong>카카오톡 오픈채팅방 상단 핀 공지사항</strong>에서 즉시 열람하실 수 있습니다.</p>
+                    <div class="exclusive-checklist-tag">
+                        카톡방 공지 독점: AI 2차 특수 권리분석 &amp; 선순위 보증금 인수 안전 체크리스트 제공
+                    </div>
+                </div>
+                <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="btn btn-kakao" style="background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important; white-space: nowrap; font-size: 1rem; padding: 0.85rem 1.4rem;">
+                    카톡방에서 핀코드 확인 &rarr;
+                </a>
+            </div>
+
             <div class="report-list">
                 <a href="reports/report-2026-08-21-16.html" class="report-item animate-on-scroll">
                     <div class="report-date">
@@ -589,10 +607,10 @@
                         <div class="report-title">서울/수도권 경매 AI 분석 브리핑 (2026년 08월 21일)</div>
                         <div class="report-meta">5건 분석 &middot; 3건 알짜 픽 선별 &middot; 평균 마진율 56.2%</div>
                     </div>
-                    <span class="report-badge pass">3건 PASS</span>
+                    <span class="report-badge pass">3건 합격 (추천)</span>
                     <span class="report-arrow">&rarr;</span>
                 </a>
-<a href="reports/report-2026-08-21-15.html" class="report-item animate-on-scroll">
+                <a href="reports/report-2026-08-21-15.html" class="report-item animate-on-scroll">
                     <div class="report-date">
                         <div class="report-date-day">21</div>
                         <div class="report-date-month">Aug 2026</div>
@@ -601,10 +619,10 @@
                         <div class="report-title">서울/수도권 경매 AI 분석 브리핑 (2026년 08월 21일)</div>
                         <div class="report-meta">5건 분석 &middot; 3건 알짜 픽 선별 &middot; 평균 마진율 56.2%</div>
                     </div>
-                    <span class="report-badge pass">3건 PASS</span>
+                    <span class="report-badge pass">3건 합격 (추천)</span>
                     <span class="report-arrow">&rarr;</span>
                 </a>
-<a href="reports/report-2026-08-21-14.html" class="report-item animate-on-scroll">
+                <a href="reports/report-2026-08-21-14.html" class="report-item animate-on-scroll">
                     <div class="report-date">
                         <div class="report-date-day">21</div>
                         <div class="report-date-month">Aug 2026</div>
@@ -613,10 +631,10 @@
                         <div class="report-title">서울/수도권 경매 AI 분석 브리핑 (2026년 08월 21일)</div>
                         <div class="report-meta">5건 분석 &middot; 3건 알짜 픽 선별 &middot; 평균 마진율 56.2%</div>
                     </div>
-                    <span class="report-badge pass">3건 합격</span>
+                    <span class="report-badge pass">3건 합격 (추천)</span>
                     <span class="report-arrow">&rarr;</span>
                 </a>
-<a href="reports/report-2026-08-21-13.html" class="report-item animate-on-scroll">
+                <a href="reports/report-2026-08-21-13.html" class="report-item animate-on-scroll">
                     <div class="report-date">
                         <div class="report-date-day">21</div>
                         <div class="report-date-month">Aug 2026</div>
@@ -625,10 +643,10 @@
                         <div class="report-title">서울/수도권 경매 AI 분석 브리핑 (2026년 08월 21일)</div>
                         <div class="report-meta">5건 분석 &middot; 3건 알짜 픽 선별 &middot; 평균 마진율 56.2%</div>
                     </div>
-                    <span class="report-badge pass">3건 합격</span>
+                    <span class="report-badge pass">3건 합격 (추천)</span>
                     <span class="report-arrow">&rarr;</span>
                 </a>
-<a href="reports/report-2026-08-21-12.html" class="report-item animate-on-scroll">
+                <a href="reports/report-2026-08-21-12.html" class="report-item animate-on-scroll">
                     <div class="report-date">
                         <div class="report-date-day">21</div>
                         <div class="report-date-month">Aug 2026</div>
@@ -637,7 +655,7 @@
                         <div class="report-title">서울/수도권 경매 AI 분석 브리핑 (2026년 08월 21일)</div>
                         <div class="report-meta">5건 분석 &middot; 3건 알짜 픽 선별 &middot; 평균 마진율 56.2%</div>
                     </div>
-                    <span class="report-badge pass">3건 합격</span>
+                    <span class="report-badge pass">3건 합격 (추천)</span>
                     <span class="report-arrow">&rarr;</span>
                 </a>
             </div>
@@ -654,12 +672,9 @@
                     카카오톡 오픈채팅방에서 실시간 무료로 받아보실 수 있습니다.
                 </p>
                 <div class="hero-actions" style="flex-direction: column; align-items: center; gap: 0.75rem;">
-                    <a href="https://open.kakao.com/o/gJaTtHJi" target="_blank" class="btn btn-kakao" style="background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important; font-size: 1.05rem; padding: 0.9rem 2.2rem;">
-                        카카오톡 오픈채팅 무료 입장 &rarr;
+                    <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="btn btn-kakao" style="background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important; font-size: 1.05rem; padding: 0.9rem 2.2rem;">
+                        카카오톡 오픈채팅 무료 입장 (참여코드: house7) &rarr;
                     </a>
-                    <div style="font-size: 0.95rem; color: var(--text-secondary); margin-top: 0.25rem;">
-                        입장 코드: <span style="font-family: var(--font-mono); color: var(--cyan-400); font-weight: 700; background: rgba(34, 211, 238, 0.12); padding: 0.25rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">house7</span>
-                    </div>
                 </div>
             </div>
         </div>
