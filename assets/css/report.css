@@ -267,6 +267,8 @@
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .members-lock-card {
@@ -279,6 +281,41 @@
     text-align: center;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 50px rgba(34, 211, 238, 0.1);
     animation: lockCardIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    margin: auto;
+}
+
+@media (max-width: 480px) {
+    .members-lock-overlay {
+        padding: 1rem 0.75rem 5rem 0.75rem;
+        align-items: flex-start;
+    }
+    .members-lock-card {
+        padding: 1.25rem 1rem;
+        border-radius: 16px;
+        margin: 1rem auto;
+    }
+    .members-lock-title {
+        font-size: 1.15rem !important;
+    }
+    .members-lock-desc {
+        font-size: 0.8rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    .members-lock-highlights {
+        padding: 0.6rem 0.75rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    .members-lock-main-kakao-btn {
+        padding: 0.75rem 1rem !important;
+        font-size: 0.92rem !important;
+    }
+    .members-lock-subtext {
+        margin-bottom: 0.6rem !important;
+        font-size: 0.74rem !important;
+    }
+    .members-lock-divider {
+        margin: 0.6rem 0 !important;
+    }
 }
 
 @keyframes lockCardIn {

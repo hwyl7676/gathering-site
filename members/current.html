@@ -65,7 +65,7 @@
 
             <form id="lock-form" class="members-lock-form" onsubmit="handleAuth(event)">
                 <div class="members-lock-input-group">
-                    <input type="text" id="passcode-input" class="members-lock-input" placeholder="6자리 핀코드 입력 (예: 7H29KM)" maxlength="12" autocomplete="off" required>
+                    <input type="text" id="passcode-input" class="members-lock-input" placeholder="6자리 핀코드 입력" maxlength="12" autocomplete="off" onfocus="setTimeout(() => { this.scrollIntoView({behavior: 'smooth', block: 'center'}); }, 250);" required>
                     <button type="submit" class="members-lock-submit-btn">잠금 해제 &rarr;</button>
                 </div>
                 <div id="lock-error" class="members-lock-error">입장 핀코드가 일치하지 않습니다. 카톡방 상단 핀 공지를 확인하세요.</div>
@@ -177,13 +177,6 @@
                     }
                     return;
                 }
-                if (cleanPin === '7H29KM') {
-                    if (errEl) {
-                        errEl.style.display = 'block';
-                        errEl.textContent = '7H29KM은 입력 예시입니다. 카톡방 상단 핀 공지사항의 이번 주 핀코드를 입력해 주세요.';
-                    }
-                    return;
-                }
 
                 const success = await tryUnlock(cleanPin);
                 if (success) {
@@ -282,7 +275,7 @@
         </div>
 
 
-        <div class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="p/I1UN+V7BSPD9dRc7GcQH8QMehKysWo8Ob3LbfXzfMH6Ncz5zLuAUH+aX0oNvKI7Jgao1BBIrKLDkodASTnnl3o+zboL0zLpX5H7pP8H0F9kIZwHx7mqK4ke+MyCVDjgIEj/tP5J/2eD0+/i734XAD/8hOZsG7ibv+0FbBFss+jtMDotpN1fjNH5Tq0QTy2vLedHjgTFLyJk7vxHGQZxdJY4REXyY1hPd/JXGFplkpRf4TpTUJdifveUHEpwNbGcIQ+MLWhbw23HKhf2Vhtz2CNXX7dhqrsZ8gXdxPCl8nF+35g8VGXY9e8VUD6XSWQoB5+DXSuEr12dvVvnZ+5w1TDjB2s/S/iFLCao8FqVZPYeaxJ0AtvR0XRex7acaDvxYEONOLP/tJxwyDLL5VPCAl9TiPD">
+        <div class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="DSLp3ee+A46TDpkv0elhur6gqktN6d2sfTVb7iMu4nokAo1t4Fi4EEDjqEC7W6W4Cm+0Dj0/XYPO1jGgCU4BVv+s/BLo8FQHqXs4IjN5q4x4LonKqJYAS7Ll3R9vd9OFEwSsDnVZlRe9FNHWLT5GDxxQ4oFj3/UqY2LGRgsFqUdmJI6e0eQ82ktWh+AgrYhG7ehglWXxI7m+Ew7itolAiPoUFV9GOSR8TZCPTnnIIlFLJ47+n7dmAJXXskDT6MQ199pPTRFv0jkEHwssH7lh3g7X2L1QANN82aWBma4EyaFYJpI3feSxln5pDtL0MeVmoo1S3ueKuja8b0hq8KvYd/anH7kiJtVGhVlIzUU5bJ7rhHg8nusZZs2hhsGuB5OMPuQlzwlxHunBcr7Gq2VvIpLcFaTj">
             <div class="detail-section-title">
                 <span style="color: var(--green-400);">PASS</span>&nbsp;&middot;&nbsp;1위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2026타경*****</span>
                 <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
@@ -380,7 +373,7 @@
             </div>
         </div>
 
-        <div class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="aEGAl+ycYqz5rLmsXLOXxlxrezQOCuHPt8wAWJd3tlK1D0zanmvgfWr5HVOkn53CMIWNWCJRosFRtg44MCH85Lk44lwm6JMLEHxEPjF8DQ8qzAjPfE1MyRghvn1z/cLxGJ2SvOtuOue7O+1eI5PvSDguWgtQ9JuQ3DQzVuihJosiP0V4hbcyFgjnFwhLkmRbFef0fZE8QlQUHtZ8hNqnRyIufkfwWt9NRJX0bD0uH+9VM3SnlR/h8ykBUEa/XdMjZNB/5zDQsNVyACW2LK0vMkovjuyzVAE+t8Mp5mce9VljwknHeoUIAcJz93HGgaNHvcuMhYoin/X4qongIbhbKOcyobIpQMGNaDK5z2LESPHvCzr61g3t+gMtICrF1exNvM/d8tlC7hIz942QFj9AbnDDqOt5ikEX5Eo=">
+        <div class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="r/lwqGnnl90SGGdt13vaoZ7RvCCJ9kDXYU/BdLIdH+LFA+DFBFuZ5PcKqTUAMyuQ4qHvQln6KYdqsanioyZpaF6tNAA7ASwSq04LMv831CEfWW4Inh/HdIhEMU6jAh24hJ5/t4IUgA3FAYDs8ZMACzeYjyHN2E3LtcI1d8lCyUSHRwabAyCSY0B7LnnXXMHS03bLEqYJ2Ep313VWyF0sIRHAESSUjpLwJhPCxLqFj4o1ybtpPPpRtzgj1FEmh8F4+8lqHzbq2QuSv8LVG5TRN99AhC3A2pOmVhfh3LamRKUnk8VkMz2BSjaagsOQ61UL6klPiSYQo+i0Xtn2D2209neMKegF6nT5Jz3fQ3hMqHM516KFw63uFjlEpxYvgvW+w1iHXYeo8Pij9mptrA/O68cGZe1Xeko9ytY=">
             <div class="detail-section-title">
                 <span style="color: var(--green-400);">PASS</span>&nbsp;&middot;&nbsp;2위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2026타경*****</span>
                 <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
@@ -478,7 +471,7 @@
             </div>
         </div>
 
-        <div class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="5BGDrUyiinKBcgOIup1LHd6VOcXeQFDOnULF2Zf45AgwtjQecXKPFsTBA122SQ4/3VJLA0JHGQwqLXGvQfOEpRyYYRGTOqRYew6Tqne1LJnEAG3ohHg6Dx6WlAbih9/JoBX25wutwWoIjIJ2HzjMWNvy7UlS2IBYBSu79mOQN9y5KIaCVoS1nH6/kOGxH52QucpneO3AEKr/0z29rG6Njn8wD1M5C2tqIpGLi/Rl67qMUGvpj4ojmcpMQWjb9AjNIU9Ylb4vsCDje5dZocVkOTIzf2jupHbjAX2YoJXZ9klej0YmjvqpTiYb4FE6XrjjBSSHZnNF5kifHwWgxju2x2hO9XYb4YYMFJcZgn9yuLRKopBWcm8V2r+IQR6Ps1KfY2vB7OvowVGEG5hZP8JY4L+wgKGRbgEhR6KJ8SYJ33pWlk8LNjRXdr8nhCygMjoxaOeORNlfiLPvBqTrHpEG">
+        <div class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="Met1rPMu094Y/SJwjPLZz5iVGY/85dbcAwVhXBaF6B8eEq/qeQ7EsBspbVXefAvNZgMAqzEittIzeIt08CEMjtW6L8fU+mqTEOZd0H/8qSExwA07/Hq6svZBFa5CyfAfcZcR1FeUjIPVxR0VmsRcdOiRMf5j5Zv2g3SY7gZeFJEV5W5yDkd6yD/rv8SVSbVt1qmPd5VGsygywRIvn2fk+D6aND198H459vptGV77IGeO7fRXS6gUsN+e//nwgcD3TARfBBVqnKW1gW9gtRYEyY9oS0pUWLqrABunIFZQmimFoVHwI4KIF5I1e9lzcrrxM+6ro+vd/DTop7UEyPEK80y2LRHtd9U9mrZCwDM1I2LFEA7cTbywBRGAx3w4on6N1SD4pNWMQKUSXGJ/H5Z+ZdhCwGCZGR0h3lwYOAILVx7LIJ8qQMY6eeN2K0lGYoUwrRJ6JgyRTpHXCKgeOrLY">
             <div class="detail-section-title">
                 <span style="color: var(--red-400);">PRUNED</span>&nbsp;&middot;&nbsp;3위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2026타경*****</span>
                 <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
@@ -576,7 +569,7 @@
             </div>
         </div>
 
-        <div class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="LefOUpGVWAmpfD3STDpacSFVVH52h3jnty9QqlSTxa0jkCawc7k23UaTKKo7eitFX70halcKv3w8VCVVqAjWy7pPcNcoWZ35hoZMmM3j60eiEscxaCnpOsjUVPdxTs5tpBtLXcVxRtlz4DWqXNaLsZ+vmymsS0WOGey2p+1ASJpHSbW7EgGX9fJJ8ZOrw2CM9iRh2NCODKqxAu5qI3yeePX74eUrGLr0pxLdtrE6y6nyiw7f3hyvwrvuOx//85XMYucpmekK8rX7QgiezGivJuDETmOxkVU9gDQONF44AxnGZwV8Nd6w/nzRlnQKVa9uP3Wc5S+TT0SEDHFwZrKZyzzejqAYHEy5HhGPCc7F+rCJPh+5SUpTdUDjxQLQGf9aYsJid8kTzndNWMLxqshiQIoxMTI2sZnp2WUYDJSv9xg/DIXgV7dYswyuCJCy">
+        <div class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="FFbuC/hSTiTzpnYY4evIWi8rlX30dTpoQXh+553/Ho7C3+Cd01uW6onJ9f0zCqZAUhOPhvTpzc2cWFGnseprPTVf8B+bOb8fAVc+oyQHeUhw+r7JkbSWxUWg9ZC6P1neQZMsp/QX3eyZ1D9HS8xhXrrgooUpYBY6yUWcUPTJsjUAwC58RHZQf5BsioGTkGLAdejHbmvDCt0OrHQlZwyhreFO5w8OXPt9vge8VC3um2kOongpaAIlrsuzGAJ9HXeQ9VMLh3bMVhYhTkHyBHeGg58QGAok0JJjkl00MN+9YyPQG87YXmu6FQSf0uuogZ9XksIbYoR3ap5OJnmsKRm01nhClokcee8FZvuyygEoQXkyD0WznMEdS+BslEf606aZ/SRThIfqMEiEIbz0EujwGIGoyAwgjzo2aenziRD+tUc+66cz+Ev1KulN4RMb">
             <div class="detail-section-title">
                 <span style="color: var(--red-400);">PRUNED</span>&nbsp;&middot;&nbsp;4위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2026타경*****</span>
                 <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
@@ -674,7 +667,7 @@
             </div>
         </div>
 
-        <div class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="TdLwlO3D2LC/BEP4EDh38DXgsPuLjxkLeXe4kkCCrgVWScN876SnavxGUiouB+q2Pk/rE0ReEbQ/bY9AY/EGDMK75nL0n3XHy64SxNIST2Vtu87Gk1DkPxI3szBp87a4dJN0NsIk3rOTPUKlNcoT2fiDDiygZHHHzg4rHMes/Fx4GE5gwuC/7QjXOfypu4yXIfCFdIT5WPyxWKnyLFscAvb2iVScTXG6BBcexh2S5ncZqjCEp7wupfR90+gS92Z1dCfpyD7mCnnFj8IqHRlHlwbO5EmLhDjoI3SRG6VV0UfQLq7CY1V6fQqm+RS/3OzqXPEBeSr4OaynwbCGU8GUH0KYcsbY+8+Hi6xv1FhUTGmRbCtKlfZhN3N1sPssR+Jf0vv5cCqV1q9SQ9cURP8kkBL8MiVS1uAz">
+        <div class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="udXkZBWiI/BcjMqwW/7sjYBiJq/F/lMBAdcqvCPL694kYmCPKpNyxNmuyc93YsQBhw1NWFS19YExbQvwemSDNB3oJboXnqYFjVGSnSLzHgS3WD8lI+4T3HukODiczyG0w5Axz+5gzLo7Zbl7mvOSiyioh4+3XpXwD0sdZvIFcbp+t2BarOaxsM2gXWWii+igQ0Vcbl1MONJVen3kYJBq9CvJ72Fd5Md5Skk8ujatg4+45E6gLYefVe8yIMEIdgnpa/7dlD7eKLTKLpw2QJ/OuuziJJkzFr1u84rlXOY9lkIfa0dDaMTEQdNF6joxmC8EwCyzwwB3/axgy4xL8ykPaAkB60BfgWdNzIOhyMALHEVzx8MAFkHPVnPYtaBrqQmuX4DWgE1/SYlK0OvJjvEbbpEyihwmwubb">
             <div class="detail-section-title">
                 <span style="color: var(--green-400);">PASS</span>&nbsp;&middot;&nbsp;5위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2026타경*****</span>
                 <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
