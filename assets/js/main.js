@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Animated counters (통계 숫자 전용 한정) ---
-    const counters = document.querySelectorAll('.summary-card-value[data-count], .stat-number[data-count], [data-counter]');
+    const counters = document.querySelectorAll('.stat-value[data-count], .summary-card-value[data-count], [data-counter]');
     const counterObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 counterObserver.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.2 });
 
     counters.forEach(counter => counterObserver.observe(counter));
 
@@ -343,23 +343,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 vipLi.innerHTML = `<a href="${membersUrl}" class="nav-vip-badge">VIP 풀리포트 &rarr;</a>`;
                 navLinks.insertBefore(vipLi, navLinks.firstChild);
             }
-
-            // 티저 리포트 페이지나 메인 페이지의 티저 배너를 VIP 복귀 배너로 업그레이드
-            const teaserBanners = document.querySelectorAll('.teaser-banner');
-            teaserBanners.forEach(banner => {
-                const isSubdir = window.location.pathname.includes('/reports/') || window.location.pathname.includes('/members/');
-                const membersUrl = isSubdir ? '../members/current.html' : 'members/current.html';
-                
-                banner.innerHTML = `
-                    <div class="teaser-banner-content">
-                        <h3 style="color: #fbbf24;">VIP 회원 인증 상태입니다</h3>
-                        <p>사건번호와 AI 최종 추천 입찰가가 완전 공개된 VIP 풀 버전 리포트를 즉시 열람하실 수 있습니다.</p>
-                    </div>
-                    <a href="${membersUrl}" class="nav-vip-badge" style="padding: 0.75rem 1.5rem; font-size: 0.95rem;">
-                        VIP 풀버전 열기 &rarr;
-                    </a>
-                `;
-            });
         }
     } catch (e) {
         // 스토리지 접근 불가 환경 방어
@@ -390,6 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setInterval(updateTimer, 1000);
     }
     initCountdownTimer();
+    setTimeout(initCountdownTimer, 300);
 
     // --- Toast Notification & One-Click Kakao Join ---
     let toastEl = document.getElementById('global-toast');
