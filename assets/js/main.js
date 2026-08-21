@@ -364,4 +364,69 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {
         // 스토리지 접근 불가 환경 방어
     }
+
+    // --- FOMO Realtime Countdown Timer Engine ---
+    function initCountdownTimer() {
+        const timerEls = document.querySelectorAll('.countdown-timer-text');
+        if (timerEls.length === 0) return;
+
+        function updateTimer() {
+            const now = new Date();
+            // 오늘 자정(23:59:59)까지 남은 시간
+            const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+            let diffMs = endOfDay - now;
+            if (diffMs <= 0) diffMs = 0;
+
+            const hours = String(Math.floor(diffMs / (1000 * 60 * 60))).padStart(2, '0');
+            const minutes = String(Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+            const seconds = String(Math.floor((diffMs % (1000 * 60)) / 1000)).padStart(2, '0');
+
+            timerEls.forEach(el => {
+                el.textContent = `${hours}:${minutes}:${seconds}`;
+            });
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    }
+    initCountdownTimer();
+
+    // --- Toast Notification & One-Click Kakao Join ---
+    let toastEl = document.getElementById('global-toast');
+    if (!toastEl) {
+        toastEl = document.createElement('div');
+        toastEl.id = 'global-toast';
+        toastEl.className = 'toast-notification';
+        document.body.appendChild(toastEl);
+    }
+
+    window.showToast = function(msg) {
+        if (!toastEl) return;
+        toastEl.textContent = msg;
+        toastEl.classList.add('show');
+        setTimeout(() => {
+            toastEl.classList.remove('show');
+        }, 2800);
+    };
+
+    window.joinKakaoWithCode = function(e, targetUrl = 'https://open.kakao.com/o/gJaTtHJi', code = 'house7') {
+        if (e) e.preventDefault();
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code);
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = code;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
+            window.showToast(`참여코드(${code})가 복사되었습니다! 카톡방에 붙여넣으세요.`);
+        } catch (err) {}
+
+        setTimeout(() => {
+            window.open(targetUrl, '_blank');
+        }, 400);
+    };
 });
