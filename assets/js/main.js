@@ -107,17 +107,105 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- Precision Scroll & Highlight Engine for Anchor Targets ---
+    function scrollToTargetElement(target, isSmooth = true) {
+        if (!target) return;
+        target.classList.add('visible', 'highlighted-target');
+        
+        const navHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 72;
+        const targetRect = target.getBoundingClientRect();
+        const absoluteTop = window.pageYOffset + targetRect.top;
+        const scrollToY = Math.max(0, absoluteTop - navHeight - 16);
+
+        window.scrollTo({
+            top: scrollToY,
+            behavior: isSmooth ? 'smooth' : 'auto'
+        });
+
+        // 3초 후 하이라이트 클래스 정리 (재진입 시 다시 펄스 가능)
+        setTimeout(() => {
+            target.classList.remove('highlighted-target');
+        }, 3200);
+    }
+
+    function findTargetByHash(hashStr) {
+        if (!hashStr || hashStr === '#' || hashStr.length < 2) return null;
+        
+        // 1. 직접 ID 선택자 시도
+        try {
+            const direct = document.querySelector(hashStr);
+            if (direct) return direct;
+        } catch (e) {}
+
+        const cleanKey = hashStr.replace(/^#/, '').trim();
+
+        // 2. data-rank 매칭 (예: item-1, item-2)
+        const rankEl = document.querySelector(`[data-rank="${cleanKey}"]`);
+        if (rankEl) return rankEl;
+
+        // 3. ID 부분 일치 탐색
+        const partialIdEl = document.querySelector(`[id*="${cleanKey}"]`);
+        if (partialIdEl) return partialIdEl;
+
+        // 4. 사건번호 숫자만 추출하여 텍스트 매칭
+        const digitsOnly = cleanKey.replace(/\D/g, '');
+        if (digitsOnly.length >= 4) {
+            const sections = document.querySelectorAll('.detail-section');
+            for (const sec of sections) {
+                if (sec.textContent.includes(digitsOnly)) {
+                    return sec;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    function handleHashNavigation(isSmooth = true) {
+        const hash = window.location.hash;
+        if (!hash) return;
+
+        const targetEl = findTargetByHash(hash);
+        if (targetEl) {
+            scrollToTargetElement(targetEl, isSmooth);
+        }
+    }
+
+    // 초기 로딩 시 렌더링 완료 타이밍을 고려한 다단계 정밀 스크롤
+    if (window.location.hash) {
+        // 1차 즉각 시도
+        setTimeout(() => handleHashNavigation(false), 50);
+        // 2차 웹폰트 및 DOM 레이아웃 안정화 후 부드러운 안착
+        setTimeout(() => handleHashNavigation(true), 350);
+    }
+
+    window.addEventListener('load', () => {
+        if (window.location.hash) {
+            setTimeout(() => handleHashNavigation(true), 150);
+        }
+    });
+
+    window.addEventListener('hashchange', () => {
+        handleHashNavigation(true);
+    });
+
     // --- Smooth scroll for anchor links ---
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    document.querySelectorAll('a[href*="#"]').forEach(anchor => {
         anchor.addEventListener('click', (e) => {
             const href = anchor.getAttribute('href');
-            if (href === '#') return;
-            const target = document.querySelector(href);
-            if (target) {
-                e.preventDefault();
-                const offset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 72;
-                const y = target.getBoundingClientRect().top + window.pageYOffset - offset;
-                window.scrollTo({ top: y, behavior: 'smooth' });
+            if (!href || href === '#') return;
+
+            const urlParts = href.split('#');
+            const targetHash = '#' + urlParts[1];
+            const isSamePage = !urlParts[0] || urlParts[0] === window.location.pathname || urlParts[0] === window.location.href.split('#')[0];
+
+            if (isSamePage) {
+                const target = findTargetByHash(targetHash);
+                if (target) {
+                    e.preventDefault();
+                    history.pushState(null, null, targetHash);
+                    scrollToTargetElement(target, true);
+                }
             }
         });
     });
