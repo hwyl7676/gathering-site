@@ -240,6 +240,63 @@ a.btn.btn-kakao:hover {
     box-shadow: 0 8px 26px rgba(254, 229, 0, 0.55) !important;
 }
 
+/* VIP Member State Styles */
+.nav-vip-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 1rem;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    font-size: 0.85rem !important;
+    text-decoration: none;
+    box-shadow: 0 2px 14px rgba(251, 191, 36, 0.45);
+    transition: all 0.2s ease;
+}
+
+.nav-vip-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(251, 191, 36, 0.6);
+}
+
+.vip-member-tag {
+    display: inline-block;
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    margin-left: 0.5rem;
+}
+
+.vip-return-banner {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.12) 0%, rgba(99, 102, 241, 0.08) 100%);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.vip-return-title {
+    font-weight: 700;
+    color: #fbbf24;
+    font-size: 0.95rem;
+}
+
+.vip-return-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
 /* Mobile nav toggle */
 .nav-toggle {
     display: none;

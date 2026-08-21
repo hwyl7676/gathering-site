@@ -196,4 +196,45 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // --- Global VIP Member State Sync ---
+    try {
+        const vipPin = localStorage.getItem('gh_member_pin') || sessionStorage.getItem('gh_member_pin');
+        if (vipPin) {
+            // 로컬스토리지와 세션스토리지 상호 동기화
+            localStorage.setItem('gh_member_pin', vipPin);
+            sessionStorage.setItem('gh_member_pin', vipPin);
+
+            // 네비게이션 바에 VIP 풀버전 바로가기 골드 버튼 추가
+            const navLinks = document.querySelector('.nav-links');
+            if (navLinks && !document.querySelector('.nav-vip-badge')) {
+                const vipLi = document.createElement('li');
+                // 현재 경로 판별 (루트인지 하위 폴더인지)
+                const isSubdir = window.location.pathname.includes('/reports/') || window.location.pathname.includes('/members/');
+                const membersUrl = isSubdir ? '../members/current.html' : 'members/current.html';
+                
+                vipLi.innerHTML = `<a href="${membersUrl}" class="nav-vip-badge">VIP 풀리포트 &rarr;</a>`;
+                navLinks.insertBefore(vipLi, navLinks.firstChild);
+            }
+
+            // 티저 리포트 페이지나 메인 페이지의 티저 배너를 VIP 복귀 배너로 업그레이드
+            const teaserBanners = document.querySelectorAll('.teaser-banner');
+            teaserBanners.forEach(banner => {
+                const isSubdir = window.location.pathname.includes('/reports/') || window.location.pathname.includes('/members/');
+                const membersUrl = isSubdir ? '../members/current.html' : 'members/current.html';
+                
+                banner.innerHTML = `
+                    <div class="teaser-banner-content">
+                        <h3 style="color: #fbbf24;">VIP 회원 인증 상태입니다</h3>
+                        <p>사건번호와 AI 최종 추천 입찰가가 완전 공개된 VIP 풀 버전 리포트를 즉시 열람하실 수 있습니다.</p>
+                    </div>
+                    <a href="${membersUrl}" class="nav-vip-badge" style="padding: 0.75rem 1.5rem; font-size: 0.95rem;">
+                        VIP 풀버전 열기 &rarr;
+                    </a>
+                `;
+            });
+        }
+    } catch (e) {
+        // 스토리지 접근 불가 환경 방어
+    }
 });
