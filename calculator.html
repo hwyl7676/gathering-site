@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AI 법원 경매 실투자금 & 취득세·대출 간이 계산기 | Private 경매 구독</title>
+    <meta name="description" content="감정가와 낙찰가만 입력하면 취득세 감면, 경락잔금대출 한도, 등기비용, 수리비까지 내 통장에 필요한 순수 현금을 1초 만에 자동 계산합니다.">
+    <meta name="keywords" content="경매계산기, 취득세계산기, 경락잔금대출, 부동산경매, 실투자금계산기, 생애최초취득세감면">
+    <meta property="og:title" content="AI 법원 경매 실투자금 & 취득세·대출 간이 계산기">
+    <meta property="og:description" content="낙찰을 위해 내 통장에 필요한 진짜 현금은 얼마일까? 1초 만에 세금, 대출, 수리비까지 한 장으로 계산해 드립니다.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gathering-house.kr/calculator.html">
+    <link rel="canonical" href="https://gathering-house.kr/calculator.html">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/calculator.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo">
+                <div class="nav-logo-icon">G</div>
+                <span class="nav-logo-text">Private 경매 구독</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/">홈으로</a></li>
+                <li><a href="/#features">서비스 소개</a></li>
+                <li><a href="/#reports">리포트</a></li>
+                <li><a href="calculator.html" style="color: var(--cyan-400); font-weight: 700;">실투자금 계산기</a></li>
+                <li><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="nav-cta btn-kakao" style="background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important;">카톡 무료입장</a></li>
+            </ul>
+            <button class="nav-toggle" aria-label="메뉴 열기">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="calc-container">
+        
+        <!-- Header -->
+        <header class="calc-header">
+            <div class="calc-badge">
+                <span>무료 개방</span> &middot; 2026 개정 세법 및 대출 규제 완벽 반영
+            </div>
+            <h1 class="calc-title">
+                경매 실투자금 &amp; 취득세·대출<br>
+                <span class="gradient-text">1초 원스톱 간이 계산기</span>
+            </h1>
+            <p class="calc-subtitle">
+                낙찰가만 보고 덜컥 들어갔다가 잔금 부족으로 보증금을 날리지 마세요.<br>
+                취득세 감면부터 경락잔금대출, 등기 부대비용, 현실 수리비까지 내 통장에 필요한 순수 현금을 정확히 계산해 드립니다.
+            </p>
+        </header>
+
+        <!-- Calculator Grid -->
+        <div class="calc-grid">
+            
+            <!-- Left: Input Controls -->
+            <div class="calc-card">
+                
+                <!-- Step 1: 물건 금액 설정 -->
+                <div class="calc-section-title">
+                    <span class="step-num">1</span>
+                    <span>경매 물건 가격 설정</span>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">
+                        <span>감정평가액 (감정가)</span>
+                        <span class="val-korean" id="appraisalKorean">6억 0,000만 원</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="text" id="appraisalPrice" class="calc-input" value="600,000,000" inputmode="numeric">
+                        <span class="input-unit">원</span>
+                    </div>
+                    <div class="quick-btns">
+                        <button type="button" class="btn-quick" onclick="addPrice('appraisalPrice', 100000000)">+1억</button>
+                        <button type="button" class="btn-quick" onclick="addPrice('appraisalPrice', 50000000)">+5천만</button>
+                        <button type="button" class="btn-quick" onclick="addPrice('appraisalPrice', 10000000)">+1천만</button>
+                        <button type="button" class="btn-quick" onclick="setPrice('appraisalPrice', 600000000)">6억 리셋</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">
+                        <span>입찰 희망가 / 낙찰 예상가</span>
+                        <span class="val-korean" id="bidKorean">4억 2,000만 원 (70.0%)</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="text" id="bidPrice" class="calc-input" value="420,000,000" inputmode="numeric">
+                        <span class="input-unit">원</span>
+                    </div>
+                    <div class="quick-btns">
+                        <button type="button" class="btn-quick" onclick="setBidRate(0.8)">80% (1회 유찰)</button>
+                        <button type="button" class="btn-quick" onclick="setBidRate(0.7)">70% (2회 유찰)</button>
+                        <button type="button" class="btn-quick" onclick="setBidRate(0.64)">64% (2회 유찰)</button>
+                        <button type="button" class="btn-quick" onclick="addPrice('bidPrice', 10000000)">+1천만</button>
+                        <button type="button" class="btn-quick" onclick="addPrice('bidPrice', 5000000)">+500만</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">
+                        <span>전용 면적 구분</span>
+                    </div>
+                    <div class="segmented-control">
+                        <button type="button" class="seg-btn active" id="areaUnder85" onclick="setArea(85)">85㎡ 이하 (국민주택/농특세 비과세)</button>
+                        <button type="button" class="seg-btn" id="areaOver85" onclick="setArea(100)">85㎡ 초과 (농특세 0.2~1.0% 부과)</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: 주택 보유 수 및 세법 조건 -->
+                <div class="calc-section-title" style="margin-top: 2rem;">
+                    <span class="step-num">2</span>
+                    <span>주택 수 및 취득세 감면 조건</span>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">
+                        <span>취득자 보유 상태 (취득세율 결정)</span>
+                    </div>
+                    <div class="radio-grid" id="taxGroup">
+                        <label class="radio-card active" onclick="selectTaxRule(this, 'normal_1')">
+                            <input type="radio" name="taxRule" value="normal_1" checked>
+                            <div class="radio-title">무주택자 (1주택 취득)</div>
+                            <div class="radio-desc">일반 기본세율 (1.0% ~ 3.0%)</div>
+                            <span class="radio-rate">기본 1~3%</span>
+                        </label>
+                        <label class="radio-card" onclick="selectTaxRule(this, 'normal_2_non')">
+                            <input type="radio" name="taxRule" value="normal_2_non">
+                            <div class="radio-title">1주택자 (일시적/비규제 2주택)</div>
+                            <div class="radio-desc">기존주택 처분조건 또는 비규제지역</div>
+                            <span class="radio-rate">기본 1~3%</span>
+                        </label>
+                        <label class="radio-card" onclick="selectTaxRule(this, 'heavy_2_reg')">
+                            <input type="radio" name="taxRule" value="heavy_2_reg">
+                            <div class="radio-title">1주택자 (조정대상지역 2주택)</div>
+                            <div class="radio-desc">강남3구, 용산구 등 규제지역 추가 취득</div>
+                            <span class="radio-rate" style="color: var(--amber-400);">중과 8.0%</span>
+                        </label>
+                        <label class="radio-card" onclick="selectTaxRule(this, 'heavy_3_non')">
+                            <input type="radio" name="taxRule" value="heavy_3_non">
+                            <div class="radio-title">2주택자 (비규제지역 3주택)</div>
+                            <div class="radio-desc">비규제지역 3번째 주택 취득</div>
+                            <span class="radio-rate" style="color: var(--amber-400);">중과 8.0%</span>
+                        </label>
+                        <label class="radio-card" onclick="selectTaxRule(this, 'heavy_3_reg')">
+                            <input type="radio" name="taxRule" value="heavy_3_reg">
+                            <div class="radio-title">2주택 이상 (조정 3주택/다주택)</div>
+                            <div class="radio-desc">규제지역 3주택 또는 4주택 이상</div>
+                            <span class="radio-rate" style="color: var(--red-400);">중과 12.0%</span>
+                        </label>
+                        <label class="radio-card" onclick="selectTaxRule(this, 'corporation')">
+                            <input type="radio" name="taxRule" value="corporation">
+                            <div class="radio-title">법인 (주택 취득)</div>
+                            <div class="radio-desc">법인 명의 주택 낙찰 시 최고세율</div>
+                            <span class="radio-rate" style="color: var(--red-400);">중과 12.0%</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="toggle-group">
+                        <div class="toggle-info">
+                            <div class="toggle-title">생애최초 주택 구입 취득세 감면</div>
+                            <div class="toggle-desc">취득가액 12억 원 이하 시 최대 200만 원 전액 공제</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="firstHomeDiscount" onchange="calculate()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Step 3: 경락잔금대출 및 부대비용 -->
+                <div class="calc-section-title" style="margin-top: 2rem;">
+                    <span class="step-num">3</span>
+                    <span>경락잔금대출 및 현실 예비비</span>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">
+                        <span>경락잔금대출 희망 LTV 비율</span>
+                        <span class="val-korean" id="ltvKorean">낙찰가의 70%</span>
+                    </div>
+                    <div class="segmented-control" style="flex-wrap: wrap;">
+                        <button type="button" class="seg-btn active" onclick="setLtv(70, this)">70% (일반)</button>
+                        <button type="button" class="seg-btn" onclick="setLtv(80, this)">80% (실수요자)</button>
+                        <button type="button" class="seg-btn" onclick="setLtv(60, this)">60% (다주택자)</button>
+                        <button type="button" class="seg-btn" onclick="setLtv(0, this)">0% (전액현금)</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">
+                        <span>대출 예상 연이율 (%)</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="number" id="interestRate" class="calc-input" value="4.5" step="0.1" min="0" max="20">
+                        <span class="input-unit">%</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">
+                        <span>현실 수리/인테리어 및 명도 예비비</span>
+                        <span class="val-korean" id="repairReserveKorean">1,500만 원</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="text" id="repairReserve" class="calc-input" value="15,000,000" inputmode="numeric">
+                        <span class="input-unit">원</span>
+                    </div>
+                    <div class="quick-btns">
+                        <button type="button" class="btn-quick" onclick="setPrice('repairReserve', 15000000)">기본 1,500만</button>
+                        <button type="button" class="btn-quick" onclick="setPrice('repairReserve', 10000000)">1,000만</button>
+                        <button type="button" class="btn-quick" onclick="setPrice('repairReserve', 5000000)">500만 (양호)</button>
+                        <button type="button" class="btn-quick" onclick="setPrice('repairReserve', 0)">0원 (신축)</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right: Sticky Receipt Output Card -->
+            <div class="calc-result-card">
+                
+                <div class="result-hero">
+                    <div class="result-hero-label">내 통장에 필요한 최종 순수 현금</div>
+                    <div class="result-hero-amount" id="totalCashRequired">1억 4,874만 원</div>
+                    <div class="result-hero-korean" id="totalCashExact">148,740,000원</div>
+                    <div class="result-hero-sub">낙찰 자부담금 + 취득세 + 등기 부대비용 + 수리 예비비 합산</div>
+                </div>
+
+                <div class="insight-pills">
+                    <div class="insight-pill">
+                        <div class="pill-label">감정가 대비 할인율</div>
+                        <div class="pill-val" id="discountRate">-30.0%</div>
+                    </div>
+                    <div class="insight-pill">
+                        <div class="pill-label">월 예상 대출 이자</div>
+                        <div class="pill-val" id="monthlyInterest">110만 원</div>
+                    </div>
+                </div>
+
+                <!-- Receipt Detail Breakdown -->
+                <div class="receipt-section">
+                    <div class="receipt-title">1. 낙찰 대금 및 대출 내역</div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">낙찰 예상가</span>
+                        <span class="receipt-val highlight" id="recBidPrice">420,000,000원</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">경락잔금대출 가능액 (<span id="recLtvText">70%</span>)</span>
+                        <span class="receipt-val discount" id="recLoanAmount">- 294,000,000원</span>
+                    </div>
+                    <div class="receipt-row total-row">
+                        <span class="receipt-label">낙찰 자부담금</span>
+                        <span class="receipt-val" id="recSelfBidPay">126,000,000원</span>
+                    </div>
+                </div>
+
+                <div class="receipt-section">
+                    <div class="receipt-title">2. 취득세 및 지방세 명세</div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">취득세 본세 (<span id="recTaxRate">1.0%</span>)</span>
+                        <span class="receipt-val" id="recTaxBase">4,200,000원</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">지방교육세</span>
+                        <span class="receipt-val" id="recTaxEdu">420,000원</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">농어촌특별세</span>
+                        <span class="receipt-val" id="recTaxRural">0원</span>
+                    </div>
+                    <div class="receipt-row" id="recDiscountRow" style="display: none;">
+                        <span class="receipt-label" style="color: var(--cyan-400);">생애최초 취득세 감면</span>
+                        <span class="receipt-val discount" id="recTaxDiscount">- 2,000,000원</span>
+                    </div>
+                    <div class="receipt-row total-row">
+                        <span class="receipt-label">세금 합계</span>
+                        <span class="receipt-val" id="recTaxTotal">4,620,000원</span>
+                    </div>
+                </div>
+
+                <div class="receipt-section">
+                    <div class="receipt-title">3. 등기 부대비용 및 현실 예비비</div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">국민주택채권 할인액 (예상)</span>
+                        <span class="receipt-val" id="recBondPrice">2,100,000원</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">법무사 보수 + 인지·증지대</span>
+                        <span class="receipt-val" id="recLegalFee">1,020,000원</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">수리/인테리어 &amp; 명도 예비비</span>
+                        <span class="receipt-val highlight" id="recRepairReserve">15,000,000원</span>
+                    </div>
+                    <div class="receipt-row total-row">
+                        <span class="receipt-label">부대비용 및 예비비 합계</span>
+                        <span class="receipt-val" id="recExtraTotal">18,120,000원</span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="calc-actions">
+                    <button type="button" class="btn-share" onclick="copyCalculationSummary()">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                        </svg>
+                        계산 결과 요약 복사하기
+                    </button>
+                </div>
+
+                <!-- CTA Box -->
+                <div class="calc-cta-box">
+                    <div class="calc-cta-title">지금 계산하신 물건, 숨은 함정은 없을까요?</div>
+                    <div class="calc-cta-desc">
+                        대항력 임차인, 인수 보증금, 경락잔금대출 불가 물건을 AI가 걸러냅니다.<br>
+                        매주 화/목 아침 8시, 순수익 5천만 원+ 알짜 픽을 카톡으로 받아보세요.
+                    </div>
+                    <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="btn btn-kakao" style="width: 100%; display: flex; align-items: center; justify-content: center; background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important; font-size: 0.95rem; padding: 0.75rem;">
+                        카카오톡 무료입장 (코드: house7) &rarr;
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" style="margin-top: 4rem;">
+        <div class="container">
+            <p>&copy; 2026 Private 경매 구독 &middot; <a href="https://gathering-house.kr">gathering-house.kr</a></p>
+            <p style="margin-top: 0.5rem; font-size: 0.78rem;">
+                본 계산기는 참고용 간이 시뮬레이션이며, 실제 취득세 및 대출 한도는 개인별 소득(DSR), 주택 공시가격, 금융기관 심사에 따라 달라질 수 있습니다.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Toast Component -->
+    <div id="global-toast" class="toast-notification"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/analytics.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        // State
+        let currentTaxRule = 'normal_1';
+        let currentArea = 85;
+        let currentLtv = 70;
+
+        function formatNumber(num) {
+            return Math.round(num).toLocaleString('ko-KR');
+        }
+
+        function formatKoreanMoney(num) {
+            if (num <= 0) return '0원';
+            const eok = Math.floor(num / 100000000);
+            const man = Math.floor((num % 100000000) / 10000);
+            let str = '';
+            if (eok > 0) str += `${eok}억 `;
+            if (man > 0) str += `${man.toLocaleString('ko-KR')}만 `;
+            str += '원';
+            return str;
+        }
+
+        function parseCleanNumber(val) {
+            if (typeof val === 'number') return val;
+            return parseInt(String(val).replace(/[^0-9]/g, ''), 10) || 0;
+        }
+
+        function addPrice(id, amount) {
+            const el = document.getElementById(id);
+            const cur = parseCleanNumber(el.value);
+            el.value = formatNumber(cur + amount);
+            calculate();
+        }
+
+        function setPrice(id, val) {
+            document.getElementById(id).value = formatNumber(val);
+            calculate();
+        }
+
+        function setBidRate(rate) {
+            const appraisal = parseCleanNumber(document.getElementById('appraisalPrice').value);
+            document.getElementById('bidPrice').value = formatNumber(appraisal * rate);
+            calculate();
+        }
+
+        function setArea(area) {
+            currentArea = area;
+            document.getElementById('areaUnder85').classList.toggle('active', area <= 85);
+            document.getElementById('areaOver85').classList.toggle('active', area > 85);
+            calculate();
+        }
+
+        function setLtv(ltv, btn) {
+            currentLtv = ltv;
+            document.querySelectorAll('.segmented-control button').forEach(b => {
+                if (b.innerText.includes('%')) b.classList.remove('active');
+            });
+            btn.classList.add('active');
+            calculate();
+        }
+
+        function selectTaxRule(card, rule) {
+            currentTaxRule = rule;
+            document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            calculate();
+        }
+
+        // Core Calculation Engine
+        function calculate() {
+            const appraisal = parseCleanNumber(document.getElementById('appraisalPrice').value);
+            const bid = parseCleanNumber(document.getElementById('bidPrice').value);
+            const isFirstHome = document.getElementById('firstHomeDiscount').checked;
+            const interestRate = parseFloat(document.getElementById('interestRate').value) || 4.5;
+            const repairReserve = parseCleanNumber(document.getElementById('repairReserve').value);
+
+            // Update Input Korean Labels
+            document.getElementById('appraisalKorean').textContent = formatKoreanMoney(appraisal);
+            const bidRatePct = appraisal > 0 ? ((bid / appraisal) * 100).toFixed(1) : 0;
+            document.getElementById('bidKorean').textContent = `${formatKoreanMoney(bid)} (${bidRatePct}%)`;
+            document.getElementById('repairReserveKorean').textContent = formatKoreanMoney(repairReserve);
+            document.getElementById('ltvKorean').textContent = `낙찰가의 ${currentLtv}%`;
+
+            // 1. Loan Calculation
+            const loanAmount = Math.round(bid * (currentLtv / 100));
+            const selfBidPay = bid - loanAmount;
+            const annualInterest = loanAmount * (interestRate / 100);
+            const monthlyInterest = Math.round(annualInterest / 12);
+
+            // 2. Acquisition Tax Calculation (2026 Korean Real Estate Tax Law)
+            let baseRate = 0.01; // 1%
+            let eduRate = 0.001; // 0.1%
+            let ruralRate = 0.0; // 농특세
+
+            if (currentTaxRule === 'normal_1' || currentTaxRule === 'normal_2_non') {
+                if (bid <= 600000000) {
+                    baseRate = 0.01;
+                    eduRate = 0.001;
+                } else if (bid <= 900000000) {
+                    // 6억 초과 9억 이하: (취득가액 * 2/3억 - 3) * 1%
+                    baseRate = ((bid * (2 / 300000000) - 3) / 100);
+                    eduRate = baseRate * 0.1;
+                } else {
+                    baseRate = 0.03;
+                    eduRate = 0.003;
+                }
+                if (currentArea > 85) {
+                    ruralRate = 0.002; // 85초과시 0.2%
+                }
+            } else if (currentTaxRule === 'heavy_2_reg' || currentTaxRule === 'heavy_3_non') {
+                baseRate = 0.08;
+                eduRate = 0.004;
+                ruralRate = currentArea > 85 ? 0.006 : 0.004;
+            } else if (currentTaxRule === 'heavy_3_reg' || currentTaxRule === 'corporation') {
+                baseRate = 0.12;
+                eduRate = 0.004;
+                ruralRate = 0.01;
+            }
+
+            let taxBase = Math.round(bid * baseRate);
+            let taxEdu = Math.round(bid * eduRate);
+            let taxRural = Math.round(bid * ruralRate);
+
+            // First-home discount (max 2,000,000 won if house <= 12 eok)
+            let discountAmount = 0;
+            const discountRow = document.getElementById('recDiscountRow');
+            if (isFirstHome && bid <= 1200000000 && currentTaxRule.startsWith('normal')) {
+                discountAmount = Math.min(taxBase + taxEdu, 2000000);
+                discountRow.style.display = 'flex';
+                document.getElementById('recTaxDiscount').textContent = `- ${formatNumber(discountAmount)}원`;
+            } else {
+                discountRow.style.display = 'none';
+            }
+
+            const taxTotal = Math.max(0, taxBase + taxEdu + taxRural - discountAmount);
+
+            // 3. Extra Fees (Housing Bond + Legal Registry Fees)
+            // 국민주택채권 할인액 근사치: 낙찰가의 약 0.5%
+            const bondPrice = Math.round(bid * 0.005);
+            // 법무사 보수 + 인지대(15만) + 증지대(1.5만)
+            const legalFee = Math.round(750000 + (bid * 0.0006));
+            const extraTotal = bondPrice + legalFee + repairReserve;
+
+            // 4. Final Cash Required
+            const finalCash = selfBidPay + taxTotal + bondPrice + legalFee + repairReserve;
+
+            // Update UI Outputs
+            document.getElementById('totalCashRequired').textContent = formatKoreanMoney(finalCash);
+            document.getElementById('totalCashExact').textContent = `${formatNumber(finalCash)}원`;
+
+            const discountRateVal = appraisal > 0 ? (((appraisal - bid) / appraisal) * 100).toFixed(1) : 0;
+            document.getElementById('discountRate').textContent = `-${discountRateVal}%`;
+            document.getElementById('monthlyInterest').textContent = `${formatKoreanMoney(monthlyInterest)} /월`;
+
+            // Breakdown Receipt Table
+            document.getElementById('recBidPrice').textContent = `${formatNumber(bid)}원`;
+            document.getElementById('recLtvText').textContent = `${currentLtv}%`;
+            document.getElementById('recLoanAmount').textContent = `- ${formatNumber(loanAmount)}원`;
+            document.getElementById('recSelfBidPay').textContent = `${formatNumber(selfBidPay)}원`;
+
+            const taxRatePct = (baseRate * 100).toFixed(2);
+            document.getElementById('recTaxRate').textContent = `${taxRatePct}%`;
+            document.getElementById('recTaxBase').textContent = `${formatNumber(taxBase)}원`;
+            document.getElementById('recTaxEdu').textContent = `${formatNumber(taxEdu)}원`;
+            document.getElementById('recTaxRural').textContent = `${formatNumber(taxRural)}원`;
+            document.getElementById('recTaxTotal').textContent = `${formatNumber(taxTotal)}원`;
+
+            document.getElementById('recBondPrice').textContent = `${formatNumber(bondPrice)}원`;
+            document.getElementById('recLegalFee').textContent = `${formatNumber(legalFee)}원`;
+            document.getElementById('recRepairReserve').textContent = `${formatNumber(repairReserve)}원`;
+            document.getElementById('recExtraTotal').textContent = `${formatNumber(extraTotal)}원`;
+        }
+
+        // Formatting inputs on user type
+        ['appraisalPrice', 'bidPrice', 'repairReserve'].forEach(id => {
+            const input = document.getElementById(id);
+            input.addEventListener('input', (e) => {
+                const raw = parseCleanNumber(e.target.value);
+                e.target.value = formatNumber(raw);
+                calculate();
+            });
+        });
+
+        document.getElementById('interestRate').addEventListener('input', calculate);
+
+        // Copy Calculation Report
+        function copyCalculationSummary() {
+            const appraisal = document.getElementById('appraisalPrice').value;
+            const bid = document.getElementById('bidPrice').value;
+            const totalCash = document.getElementById('totalCashRequired').textContent;
+            const loan = document.getElementById('recLoanAmount').textContent;
+            const tax = document.getElementById('recTaxTotal').textContent;
+            const reserve = document.getElementById('recRepairReserve').textContent;
+
+            const text = `[Private 경매 실투자금 계산 리포트]
+• 감정평가액: ${appraisal}원
+• 낙찰예상가: ${bid}원
+------------------------------------
+1. 경락잔금대출: ${loan.replace('-', '')}
+2. 낙찰 자부담: ${document.getElementById('recSelfBidPay').textContent}
+3. 취득세 합계: ${tax}
+4. 부대비용 및 수리비: ${reserve}
+------------------------------------
+★ 최종 필요 순수 현금: ${totalCash} (${document.getElementById('totalCashExact').textContent})
+
+* 출처: Private 경매 구독 (https://gathering-house.kr/calculator.html)`;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    window.showToast('계산 결과 요약이 클립보드에 복사되었습니다.');
+                });
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                window.showToast('계산 결과 요약이 클립보드에 복사되었습니다.');
+            }
+        }
+
+        // Initialize calculation on load
+        document.addEventListener('DOMContentLoaded', calculate);
+    </script>
+</body>
+</html>
