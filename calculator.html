@@ -448,8 +448,9 @@
                     baseRate = 0.01;
                     eduRate = 0.001;
                 } else if (bid <= 900000000) {
-                    // 6억 초과 9억 이하: (취득가액 * 2/3억 - 3) * 1%
-                    baseRate = ((bid * (2 / 300000000) - 3) / 100);
+                    // 6억 초과 9억 이하: 세율(%) = (취득가액(억 원) × 2/3 - 3)
+                    const bidInEok = bid / 100000000;
+                    baseRate = ((bidInEok * 2 / 3) - 3) / 100;
                     eduRate = baseRate * 0.1;
                 } else {
                     baseRate = 0.03;
@@ -461,11 +462,13 @@
             } else if (currentTaxRule === 'heavy_2_reg' || currentTaxRule === 'heavy_3_non') {
                 baseRate = 0.08;
                 eduRate = 0.004;
-                ruralRate = currentArea > 85 ? 0.006 : 0.004;
+                // 85㎡ 이하(국민주택규모)는 농특세 비과세, 초과 시 0.6%
+                ruralRate = currentArea > 85 ? 0.006 : 0.0;
             } else if (currentTaxRule === 'heavy_3_reg' || currentTaxRule === 'corporation') {
                 baseRate = 0.12;
                 eduRate = 0.004;
-                ruralRate = 0.01;
+                // 85㎡ 이하(국민주택규모)는 농특세 비과세, 초과 시 1.0%
+                ruralRate = currentArea > 85 ? 0.01 : 0.0;
             }
 
             let taxBase = Math.round(bid * baseRate);
