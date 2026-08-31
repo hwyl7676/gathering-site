@@ -6,8 +6,8 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>[VIP 풀버전] 서울/수도권 경매 AI 분석 브리핑 (2026년 08월 30일) | Private 경매 구독</title>
-    <meta name="description" content="2026년 08월 30일 발행. AI가 분석한 경매 물건 1건 중 1건 알짜 픽 선별.">
+    <title>[VIP 풀버전] 서울/수도권 경매 AI 분석 브리핑 (2026년 08월 31일) | Private 경매 구독</title>
+    <meta name="description" content="2026년 08월 31일 발행. AI가 분석한 경매 물건 1건 중 1건 알짜 픽 선별.">
     <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/report.css">
@@ -27,8 +27,8 @@
             </div>
             <h2 class="members-lock-title">비공개 알짜 픽 열람 안내</h2>
             <p class="members-lock-desc">
-                본 페이지는 카카오톡 오픈채팅방 구독자 전용 풀 버전 리포트입니다.<br>
-                카톡방 상단 <strong>핀 공지사항</strong>에서 이번 회차 6자리 핀코드를 무료로 확인하세요.
+                본 페이지는 비공개 인증 전용 풀 버전 리포트입니다.<br>
+                발급받으신 6자리 보안 핀코드를 입력하여 열람하세요.
             </p>
 
             
@@ -50,19 +50,12 @@
                 </div>
             </div>
 
-            
-            <div class="members-lock-subtext">* 버튼 클릭 시 입장코드가 자동 복사되며 카톡방으로 이동합니다.</div>
-
-            <div class="members-lock-divider">
-                <span>이미 코드를 알고 계신가요?</span>
-            </div>
-
             <form id="lock-form" class="members-lock-form" onsubmit="handleAuth(event)">
                 <div class="members-lock-input-group">
                     <input type="text" id="passcode-input" class="members-lock-input" placeholder="6자리 핀코드 입력" maxlength="12" autocomplete="off" onfocus="setTimeout(() => { this.scrollIntoView({behavior: 'smooth', block: 'center'}); }, 250);" required>
                     <button type="submit" class="members-lock-submit-btn">잠금 해제 &rarr;</button>
                 </div>
-                <div id="lock-error" class="members-lock-error">입장 핀코드가 일치하지 않습니다. 카톡방 상단 핀 공지를 확인하세요.</div>
+                <div id="lock-error" class="members-lock-error">입장 핀코드가 일치하지 않습니다. 올바른 핀코드를 입력해 주세요.</div>
             </form>
         </div>
     </div>
@@ -176,21 +169,13 @@
                 const rawPin = (inputEl ? inputEl.value : '').trim().toUpperCase();
                 const cleanPin = rawPin.replace(/[\s\-_]/g, '');
 
-                if (false) {
-                    if (errEl) {
-                        errEl.style.display = 'block';
-                        errEl.textContent = '은 오픈채팅방 입장 참여코드입니다. 리포트 열람 핀코드는 카톡방 상단 핀 공지사항에서 확인해 주세요.';
-                    }
-                    return;
-                }
-
                 const success = await tryUnlock(cleanPin);
                 if (success) {
                     if (errEl) errEl.style.display = 'none';
                 } else {
                     if (errEl) {
                         errEl.style.display = 'block';
-                        errEl.textContent = '입장 핀코드가 일치하지 않습니다. 카톡방 상단 핀 공지를 확인하세요.';
+                        errEl.textContent = '입장 핀코드가 일치하지 않습니다. 올바른 핀코드를 입력해 주세요.';
                     }
                 }
             };
@@ -230,10 +215,10 @@
                 <span class="vip-member-tag">VIP 풀버전</span>
             </a>
             <ul class="nav-links">
-                                                <li><a href="../#verification">적중 검증</a></li>
+                <li><a href="../#verification">적중 검증</a></li>
                 <li><a href="../#reports">리포트</a></li>
                 <li><a href="../calculator.html" style="color: var(--cyan-400); font-weight: 700;">실투자금 계산기</a></li>
-                </ul>
+            </ul>
             <button class="nav-toggle" aria-label="메뉴 열기">
                 <span></span>
                 <span></span>
@@ -245,10 +230,10 @@
     <header class="report-detail-header">
         <div class="container">
             <a href="../" class="btn btn-sm btn-secondary" style="margin-bottom: 2rem;">&larr; 메인 홈으로 가기</a>
-            <div class="report-case-number">Report #2026-0830</div>
-            <h1>[VIP 풀버전] 서울/수도권 경매 AI 분석 브리핑 (2026년 08월 30일)</h1>
+            <div class="report-case-number">Report #2026-0831</div>
+            <h1>[VIP 풀버전] 서울/수도권 경매 AI 분석 브리핑 (2026년 08월 31일)</h1>
             <div class="report-detail-meta">
-                <span>2026년 08월 30일 발행</span>
+                <span>2026년 08월 31일 발행</span>
                 <span>1건 분석</span>
                 <span>1건 알짜 픽 선별</span>
                 <span class="report-badge pass" style="font-size: 0.8rem;">평균 마진율 25.0%</span>
@@ -289,7 +274,7 @@
             </div>
         </div>
         
-        <div id="case-202699999" data-rank="item-1" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="rCcJLdCJLpmoVoYU9B1khyYjKGJNEYZwRthLeSoimnbSwgsffBodVr3kd24M7Vrs40dhXFiMSu7jw659FyfraOPrQG315zqT0f0EQMCNtO5+99uzu4TD5GGqr23Ja+lZHyZEo6sZSGo24brJpxlkzemLaFec9hwkYBTpODb1Lvp6Ifpyy2/CrKv7zjUgoHP+8dN1XYsBDiyggEbC3HjGOeaxqCBhXAI7NtMSgQTSl7fe7nUixj14u21rt6SoHseiB7+/W/VExqNND+Ho+IAlDZbe/Paiqo9k+FyXSuGeEd+2aJ0f3AAQ4NI=" >
+        <div id="case-202699999" data-rank="item-1" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="XvcpzRq/dn530liN6MWtYwZe1rMIEgNRpRYMvHhUH9XX2rUxyF87AkYg4Q2oHEmCEOrTmYnPzhi7XnHPVWu2sYCpf7+8AWLeluIe6ne79YjNBo99d8yHSJ1cfexkatk/mZZ5LMTdDyBLzC19DhrLVGBWV1z70ZJhRCzDNEmGtYy1oi6rA1uqyUdkzoqybh6JCVZQgxmZCaleTXxxDkvWtst53CLMznKRL/RwFlEJTYp70S2aVazzWNDw1lrTHfitgosjpP/KReSh2UxWKFPIqJqwukXekZ8HAqXaNdHlpckWz4lzm7c2v74=" >
             <div class="detail-section-title">
                 <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 마진 25.0% (기준 30% 대비 +-5.0%p 초과)</span>&nbsp;&middot;&nbsp;추천 1위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2026타경*****</span>
                 <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
@@ -389,9 +374,11 @@
 
 
         <div style="background: var(--bg-card); border: 1px solid var(--border-default); border-radius: 16px; padding: 2rem; margin: 3rem 0 2rem; text-align: center;">
-            <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-primary);">주 2회 AI 추천 알짜 경매 픽을 실시간으로 받아보세요</h3>
-            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">카카오톡 오픈채팅방에서 무료로 실시간 브리핑을 제공합니다.</p>
-            
+            <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-primary);">내 상황에 맞는 실투자금과 안전마진 계산</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">취득세 감면, 경락잔금대출(LTV), 수리비 등 필요한 순수 현금을 직접 시뮬레이션해 보세요.</p>
+            <a href="../calculator.html" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.85rem 2rem;">
+                실투자금 1초 무료 계산기 바로가기 &rarr;
+            </a>
         </div>
 
         <div class="disclaimer">
