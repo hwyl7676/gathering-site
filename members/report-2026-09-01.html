@@ -278,7 +278,7 @@
             <div class="report-view-tabs">
                 <button type="button" class="report-view-tab-btn active" id="tab-btn-ai-picks" onclick="switchReportMainTab('ai-picks', this)">
                     <span class="tab-title">AI 정밀 분석 추천 물건</span>
-                    <span class="tab-count-badge">0건</span>
+                    <span class="tab-count-badge">5건</span>
                 </button>
                 <button type="button" class="report-view-tab-btn" id="tab-btn-live-court" onclick="switchReportMainTab('live-court', this)">
                     <span class="tab-title">실시간 법원 접수 물건</span>
@@ -290,26 +290,19 @@
         <!-- 탭 1: AI 정밀 분석 추천 물건 -->
         <div id="tab-pane-ai-picks" class="report-tab-pane active">
             
-        <div class="pruned-accordion-toggle-wrapper animate-on-scroll">
-            <button id="pruned-accordion-btn" class="pruned-accordion-btn" data-prune-count="5" onclick="togglePrunedSection()">
-                <span>AI 필터링 탈락 물건 (5건) 확인하기 (투자 주의 &darr;)</span>
-            </button>
-        </div>
-
-        <div id="pruned-accordion-content" class="pruned-accordion-content" style="display: none;">
-            <div class="report-group-header prune-group animate-on-scroll" style="margin-top: 1.5rem;">
-                <div class="report-group-title">
-                    <span class="badge-status badge-pruned">탈락</span>
-                    <h2>AI 필터링 탈락 물건 (5건)</h2>
-                </div>
-                <div class="criteria-info-box prune-criteria-box">
-                    <strong>[AI 탈락 제외 기준]</strong> 기대 마진율이 <strong>30.0% 미만</strong>이거나 명도/수리비 차감 시 실투자 대비 마진이 부족하여 <strong>추천에서 공식 제외(탈락)</strong>된 물건입니다.
-                </div>
+        <div class="report-group-header pass-group animate-on-scroll">
+            <div class="report-group-title">
+                <span class="badge-status badge-pass">합격</span>
+                <h2>AI 정밀 심사 합격 물건 (5건)</h2>
             </div>
-            
-        <div id="case-20234869" data-rank="item-1" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="ZU0moVzqB36J7APnWGg1ohapk4C5HAadOmfOKhEfS8IB65LbZtHx++eu1BW8RKTJCbN1q+/lq0QvsfZr/MApotaHX1XQ9C87eHlb/ksK9VZ3V/pKOPpitvdUYCL1BI2dxYhGXjxA7z4wELKZAh4ClTRrHViqrjHwG8EdxCPGeiEO+emslSL5UHPbCjCpSlKBfPM2H8p51tzLBGRYZtoasAFb13L5baxCYG52YxTTZGw8OIbtcbNGPDWOMT+f3bPiwAbAZyP483e0b1LiVepL4N4zXsae+0YA5s39I1af1uazqnDWsyO8mEyXNxp1ntpnRvM/+aA1TggMT4cg/zR8UZx2Ul39ozZC6/d6Jba3CaMJiAB8ymo3rFnXcuc6ZbcsMyXrGHvXCuwYan2EBI3td8Ooc1x1uwTjCSar1LT0yXlJIVQF" style="border-color: rgba(248, 113, 113, 0.25); background: rgba(15, 23, 42, 0.45);">
+            <div class="criteria-info-box pass-criteria-box">
+                <strong>[AI 합격 판정 기준]</strong> 최소 기대 마진율 <strong>20.0% 이상</strong> &middot; 대출/세금/현실 예비비(명도&middot;수리&middot;공실이자) 차감 후에도 확실한 실익이 보장된 물건만 엄선
+            </div>
+        </div>
+        
+        <div id="case-20234869" data-rank="item-1" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="Y+iljNY945GpNUMbee0eZwU/vxkEmF40VhvGAilgMsLwR3HC6Gyu1KTAfJhU8IGVzSzmUNnVPjYtOpdl/Hlu5Oatars15woJREOyeEtuoIFNWtcaKy6Sr9KW5YPq2jHkRf31JKJd9suGKTYRJDYebP79UfJUnd0A2IBLzM9qBYxGfsDe496lZk0t58k1qAH4yhV1daxf/JgpQG67hwE3KzivVXwJsEhWt0mu7Wl1uTBo67+nilFiG3pfkYP40mFpNaEKgXvx9oQ2KbStIlHNhjSkauDS3APC/OBVxs0HVVCxrJh77HEeuokAsHhjxW10/JAyfkGFyY41v+x63ucnfgNa+kRszpy9lws/ZLjMCgH3ken9/DD9iQ2vQOCBg9u/mwQJt5RVzMXTcNtSCzcGtmraHpfjjKTsHw9RsSzPoZPP86kc" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pruned">탈락</span> <span class="prune-reason-tag">기준 미달: 마진 25.0% (기준 30% 대비 -5.0%p 부족 &bull; 비추천)</span>&nbsp;&middot;&nbsp;제외 1호.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 마진 25.0% (기준 20% 대비 +5.0%p 초과)</span>&nbsp;&middot;&nbsp;추천 1위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
                 <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
             </div>
             <table class="detail-table">
@@ -339,7 +332,7 @@
                 </tr>
                 <tr>
                     <th>예상 순수익</th>
-                    <td style="color: var(--red-400); font-weight: 700;">
+                    <td style="color: var(--green-400); font-weight: 700;">
                         +310,215,746 원 
                         <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
                             (현실 예비비 1,200만~2,500만 차감 시: +285,215,746 원 ~ +298,215,746 원)
@@ -361,7 +354,7 @@
                 </tr>
                 <tr>
                     <th>기대 마진율</th>
-                    <td style="color: var(--red-400); font-weight: 700;">
+                    <td style="color: var(--green-400); font-weight: 700;">
                         25.0% 
                         <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
                             (현실 버퍼 차감 후 실마진: 17.61% ~ 18.41%)
@@ -404,9 +397,9 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023106314" data-rank="item-2" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="0e+qZnyLj2pznvdImF8WA32KuLhdJ76mh9t4TPsI0fooCqNIGSl/8k/nCE9FKfcPcGuLSrmigTpdkK+Rv127JWPw7hleJG2xIAhA09mp381/aLbq2nkuL0KFN3yQhvVJtqGeF4jNdIvUwK3NiCyM568z8KnK7AEi3SSDrVcsbYIvRaCjWeOn5mfVBeG8IBQtaKpjfK4p5QVUL+cumHgnwu9VrZbEOisDLfMUDVnuDZZBwq0sBVRSwh11GoQfmXYXo4l+jkIaYcwTf1DdBwtTaiEXsRjX+3XPg0xs6hmgwSYeLSi+Vb3h6Kaqt7D5K+efYj35lgSo8TLIuLD+poNENDAkCd50uxq+hc+QybygrH0iDgQwjHrcnTfGndG1p391Dg2XM3j1FPdmvR7ZAAUCL0hmOkl0LBx6Y7B0kyefrMo=" style="border-color: rgba(248, 113, 113, 0.25); background: rgba(15, 23, 42, 0.45);">
+        <div id="case-2023106314" data-rank="item-2" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="pGzCjn0/NiSuW99VOprc4ZeN73egXAw6Sakom8xkeYzy6moJhvlFuTRwe94HpVasbFPgh4tgAhZ9xL6SEWcqN56XUn+RlgbzuN0weIalasFBbw75FsZJGvnkBE2+ikyiip4smIBpPffnNXObWnGrObdhw8OMZjcxFwvV0G8GyEyeokZBECzZWTqahQLxPHHb4f7mLKr8ztlpAfo4ZXZ1cQV7eLDurB7ky8aWnn6WyMyMCFP2p+WhK69H02zevIZjYZVKc7Z/JgkqemRNkGffYuy9ZnYbQh8nHmGCBhAYP+KqI8JUHO7dTWyC+wME8nwAYUTq8enOPLtzJMZ9xoHEU2sJmfvDp5fv6Mlt1/Vj2Tao05iknvAThZX5jB8dSfOdT5/lKjoZ29VFjwL/NbyjZG8zezpnA/nGVR3VQyY3oJg=" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pruned">탈락</span> <span class="prune-reason-tag">기준 미달: 마진 25.0% (기준 30% 대비 -5.0%p 부족 &bull; 비추천)</span>&nbsp;&middot;&nbsp;제외 2호.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 마진 25.0% (기준 20% 대비 +5.0%p 초과)</span>&nbsp;&middot;&nbsp;추천 2위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
                 <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
             </div>
             <table class="detail-table">
@@ -436,7 +429,7 @@
                 </tr>
                 <tr>
                     <th>예상 순수익</th>
-                    <td style="color: var(--red-400); font-weight: 700;">
+                    <td style="color: var(--green-400); font-weight: 700;">
                         +126,506,201 원 
                         <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
                             (현실 예비비 1,200만~2,500만 차감 시: +101,506,201 원 ~ +114,506,201 원)
@@ -458,7 +451,7 @@
                 </tr>
                 <tr>
                     <th>기대 마진율</th>
-                    <td style="color: var(--red-400); font-weight: 700;">
+                    <td style="color: var(--green-400); font-weight: 700;">
                         25.0% 
                         <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
                             (현실 버퍼 차감 후 실마진: 15.37% ~ 17.34%)
@@ -501,9 +494,9 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023108730" data-rank="item-3" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="oSnWK+M6QYQG6Whwx8HRGxA9IXuwIGYnbb1ScihUlLJ8gU5W3rpLqLBHq/YL0IbKAHw4EkQBY29i7o/B2wkiHaEMVzoTIkN4SrbZMsLnAfbgU1iEKGcjXKI7XdoqUbxzBFgxz1sGTSnQelUgLy0A2QM8fbE6efAUeLI7gnW4U46vqf02SkzI9LqhIAtuSS8mJuShkckpOPkZN+ky8wQoPuNfMUVZ8sEQvshWIUjcys9wYYdId47k0ElkI3FT5SBwqZXdMgH+A+ucReXTxyNyqeSG40usGRgbJbPmeY+nmPvGe/sLmYGgPQhzN1uzG43LdgabP4HAGhYWWDgEotp1U3Cw2KLHNWVymkrzPF5vJd0x4YWWmAGbeCAiSpFXNGJEiuuKdznj1sLuD47kBOzov3fQF8+9VctSzfBtzSGPmQA=" style="border-color: rgba(248, 113, 113, 0.25); background: rgba(15, 23, 42, 0.45);">
+        <div id="case-2023108730" data-rank="item-3" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="9YRf1doTa4tLLpmhgojckOT/7mO/CjgtNV3oySJ5XDr1Qay4JmkmcWR9rqOSSDjrnlmpMm65mwXGgWysBYrZ6JgrIvl9BSpEt2PSfNKh4lkwqC8UiSjDgc0JPilszIjGzzOXo1ck/Q+7ZSNJJsK8JArGNktPDBed8COA26zGtB5d3fOEzPtfmBMtWK+0HCmbQOetS0whWN+cr6ixShvAlsx8/IPpZQDpOPrSWsV/Agb+A2uAz2impmnwqVhq1CQojY/8JNpsuDxeRPv/bQs5hoT19DZKFHqXrOPFBHjyZaT3bpNz/H/qHMtn8+xwq1CidsHUvrJ+1VEBJMrcKZuZaF1ofE1rOlucT/mhChV91b3v7wHjhhjJoR5S7yuOOLXLBJsMn15lTbDu7CBaRHCqwK0tfKtzCym/wDf7OnFO4cY=" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pruned">탈락</span> <span class="prune-reason-tag">기준 미달: 마진 25.0% (기준 30% 대비 -5.0%p 부족 &bull; 비추천)</span>&nbsp;&middot;&nbsp;제외 3호.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 마진 25.0% (기준 20% 대비 +5.0%p 초과)</span>&nbsp;&middot;&nbsp;추천 3위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
                 <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
             </div>
             <table class="detail-table">
@@ -533,7 +526,7 @@
                 </tr>
                 <tr>
                     <th>예상 순수익</th>
-                    <td style="color: var(--red-400); font-weight: 700;">
+                    <td style="color: var(--green-400); font-weight: 700;">
                         +148,055,042 원 
                         <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
                             (현실 예비비 1,200만~2,500만 차감 시: +123,055,042 원 ~ +136,055,042 원)
@@ -555,7 +548,7 @@
                 </tr>
                 <tr>
                     <th>기대 마진율</th>
-                    <td style="color: var(--red-400); font-weight: 700;">
+                    <td style="color: var(--green-400); font-weight: 700;">
                         25.0% 
                         <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
                             (현실 버퍼 차감 후 실마진: 15.92% ~ 17.6%)
@@ -598,9 +591,9 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023110580" data-rank="item-4" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="WfYdSNsFHyV3V7TlwEzaFH1ECvL0YnnyVXVBPjZUGTsBbPGHpAA+yXFL8vIkYXHCwvm2y+sUQUvHjbHm/JE89bwaTpJtyk/Z1jBzzDq+FJIpKQGh7qVlQt3LtWthXez+iQ4ss3H+Xv8XzMBvTpJCU7nMWJnQGeKPDsEjzyUMxyXBJg5n79RyJqr2lZSHL9n7fl1Gcl2ecxY7CxF17cux4E4XEk1vL3hOZKXoaVeWH9frJDVssoPnxIdw4gR59apzTur0T931ZUeAyHJetGPtEyGfiqGfC/UE+DfyT+rZYDtJ3nNmiBSzbsIJ1i7GNyacen/PLsQpXost+vd6QENa8THiWorKeeejole5z5Z49jlGwKRiL0wLH554Fs2uBiBanjypgOp4r8uR4vY47o6P+ed3nd7evvac3907zKu6JGs=" style="border-color: rgba(248, 113, 113, 0.25); background: rgba(15, 23, 42, 0.45);">
+        <div id="case-2023110580" data-rank="item-4" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="KDTJahFOUG8YS/b57v9eabWDL4aJF8ITJMeKZklIB9wWHryk42iUjtiNSJsEzI68JpOfhhjw+69md3IAjYEGBSAocWBbySjRbGIWoVpjNaFHP8sdUQPwBA39mVzqcmn0XYoiyZGee9T08/cCRRaRbB3nRkcoNFmEw7qq+anXSJzPnW2CDpLB8x+TZZXzU9frfKQp6j87Xy4msVuE0d828PIRYfrqac8o3GjOIUIl9dYKjq2oiJ+/Wvde5+tIPZikilLGGriqjjFex4SLm60jUsM++GSloKxjTfM548KwqRtNHmDZY38O2CGQcgVZ0jeigjpTp6Ap6F6YybZ2d0kM8PBqWNOSDnAcLdL/Fy4aFQdL8ugEwxlWNnQCQRw3WxeIWLm4PKzYHFgXSz+bfl0eyc6DfUZvg+MqltArxqJ1EWQ=" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pruned">탈락</span> <span class="prune-reason-tag">기준 미달: 마진 25.0% (기준 30% 대비 -5.0%p 부족 &bull; 비추천)</span>&nbsp;&middot;&nbsp;제외 4호.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 마진 25.0% (기준 20% 대비 +5.0%p 초과)</span>&nbsp;&middot;&nbsp;추천 4위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
                 <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
             </div>
             <table class="detail-table">
@@ -630,7 +623,7 @@
                 </tr>
                 <tr>
                     <th>예상 순수익</th>
-                    <td style="color: var(--red-400); font-weight: 700;">
+                    <td style="color: var(--green-400); font-weight: 700;">
                         +123,941,666 원 
                         <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
                             (현실 예비비 1,200만~2,500만 차감 시: +98,941,666 원 ~ +111,941,666 원)
@@ -652,7 +645,7 @@
                 </tr>
                 <tr>
                     <th>기대 마진율</th>
-                    <td style="color: var(--red-400); font-weight: 700;">
+                    <td style="color: var(--green-400); font-weight: 700;">
                         25.0% 
                         <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
                             (현실 버퍼 차감 후 실마진: 15.29% ~ 17.3%)
@@ -695,9 +688,9 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023111644" data-rank="item-5" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="6fpSPvEuZ/25vZS1QfMJgPelZhcRGZH+bQb/hIkh30CtGvDeJnXpDTrS4l5a5XM4jKoyNOGK1wbPfj0zTahDcFm9EKqEbgVHO8uBsdc0ExzZLAtFEdASd5aW9EAG8S8q/+bb0gHPrhNxwz9+VsO99vuft1w6wXWTAXKWob0rChQaVxBtp/VTjlyFRLjJoWVACVbqazlvrGZ7B6NgDkxJouDQHw66Fm7cbey3hMCQKt6QR+JJNqKCvrIK4DHvGaRPWQI+X1or7MmD7XXbTUKzQ4aWDjlx0ZMXF8UjtPEIJJNdYgIJhu9qX/fOIiSvcos3Ad+Z7j5J1sVyeVQMvXEx8omu65hqcJIcgDHJx9lUeMQZwNSBqUUwslcE3ibjqlTGAJpTQmeJ7ZnBOeupEke4LR64/ThYFbOFH6EYTsj6f9wcURrqziZcchForMcU9q/R" style="border-color: rgba(248, 113, 113, 0.25); background: rgba(15, 23, 42, 0.45);">
+        <div id="case-2023111644" data-rank="item-5" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="BRDxjumab/9Ic8QWgUNpcMnd2tRQi/bny9QzL3tjBHmD8bdjU3HJ12hJ8vjyWqD3s0agueqltoAGJW+WVy4AvdQhU9eZhmsWYl6vDMVe291K90hljmtQuppol7+AzP6j9Lpsn5wNR67HqeLpev9OQyLJ/wCtFDefIfBRcOC4U1fhucaSbu0oo+A0r/5hcJCD4I9j5a8PqqCI/drIDEWmosnY/EIhypl6FDKIiLf/rTjReeQ7KTwSVN2VHo1RJEYL62dPXGyFnvWQ3bOdGS8mCx+hc9kEEr5AALSSfUWKxLlbPKEJeQPenVBESDc3hvbaZKo3jtgZhCNGjOq0vgv7hRkTnDDzvOT2pIZoPdxqu8gK9r/zWW9gkluL5pXeJxcM35lEr7axyY4EoqDlx9MtmLQxb5iEGoDVMx9k+GiAB//g99KrSuI570E9Z998Uuks" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pruned">탈락</span> <span class="prune-reason-tag">기준 미달: 마진 25.0% (기준 30% 대비 -5.0%p 부족 &bull; 비추천)</span>&nbsp;&middot;&nbsp;제외 5호.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 마진 25.0% (기준 20% 대비 +5.0%p 초과)</span>&nbsp;&middot;&nbsp;추천 5위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
                 <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
             </div>
             <table class="detail-table">
@@ -727,7 +720,7 @@
                 </tr>
                 <tr>
                     <th>예상 순수익</th>
-                    <td style="color: var(--red-400); font-weight: 700;">
+                    <td style="color: var(--green-400); font-weight: 700;">
                         +64,774,082 원 
                         <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
                             (현실 예비비 1,200만~2,500만 차감 시: +39,774,082 원 ~ +52,774,082 원)
@@ -749,7 +742,7 @@
                 </tr>
                 <tr>
                     <th>기대 마진율</th>
-                    <td style="color: var(--red-400); font-weight: 700;">
+                    <td style="color: var(--green-400); font-weight: 700;">
                         25.0% 
                         <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
                             (현실 버퍼 차감 후 실마진: 11.76% ~ 15.6%)
@@ -791,7 +784,6 @@
                     <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 250만 ~ 550만원 (대출이자+관리비)</div>
                 </div>
             </div>
-        </div>
         </div>
 
         </div>
