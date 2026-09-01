@@ -20,17 +20,27 @@
         (function() {
             try {
                 var d = new Date();
-                var today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-                var pin = localStorage.getItem('gh_member_pin') || sessionStorage.getItem('gh_member_pin');
-                var pinDate = localStorage.getItem('gh_member_pin_date') || sessionStorage.getItem('gh_member_pin_date');
-                if (pin && pin.trim().length >= 4 && pinDate === today) {
-                    // 당일 정상 인증 세션
+                var day = d.getDay();
+                var target = new Date(d);
+                if (day === 2 || day === 3) {
+                    target.setDate(d.getDate() - (day - 2));
+                } else if (day >= 4) {
+                    target.setDate(d.getDate() - (day - 4));
                 } else {
-                    if (pinDate && pinDate !== today) {
+                    target.setDate(d.getDate() - (day + 3));
+                }
+                var currentCycle = target.getFullYear() + '-' + String(target.getMonth() + 1).padStart(2, '0') + '-' + String(target.getDate()).padStart(2, '0');
+                var pin = localStorage.getItem('gh_member_pin') || sessionStorage.getItem('gh_member_pin');
+                var pinCycle = localStorage.getItem('gh_member_pin_cycle') || sessionStorage.getItem('gh_member_pin_cycle');
+                
+                if (pin && pin.trim().length >= 4 && pinCycle === currentCycle) {
+                    // 이번 회차(화·목 주기) 정상 인증 세션
+                } else {
+                    if (pinCycle && pinCycle !== currentCycle) {
                         localStorage.removeItem('gh_member_pin');
-                        localStorage.removeItem('gh_member_pin_date');
+                        localStorage.removeItem('gh_member_pin_cycle');
                         sessionStorage.removeItem('gh_member_pin');
-                        sessionStorage.removeItem('gh_member_pin_date');
+                        sessionStorage.removeItem('gh_member_pin_cycle');
                     }
                     document.documentElement.classList.add('pin-gate-locked');
                 }

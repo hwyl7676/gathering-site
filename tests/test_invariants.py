@@ -31,8 +31,8 @@ class TestGatheringSiteInvariants(unittest.TestCase):
         # 2. global-pin-gate-modal이 hidden 없이 기본 활성화되어 있는지 여부
         self.assertIn('id="global-pin-gate-modal" class="global-pin-overlay"', content, "index.html의 핀코드 모달은 기본 hidden 없이 오버레이되어야 함")
 
-        # 3. head 내 당일 만료 FOUC 방어 인라인 스크립트 존재 여부
-        self.assertIn('gh_member_pin_date', content, "index.html의 head에 당일 날짜 기반 만료 인라인 스크립트가 있어야 함")
+        # 3. head 내 화·목 회차 만료 FOUC 방어 인라인 스크립트 존재 여부
+        self.assertIn('gh_member_pin_cycle', content, "index.html의 head에 화·목 회차 기반 만료 인라인 스크립트가 있어야 함")
         self.assertIn('pin-gate-locked', content, "index.html의 head 스크립트에 pin-gate-locked 처리 로직이 있어야 함")
 
     def test_invariant_calculator_hard_lock_structure(self) -> None:
@@ -43,7 +43,7 @@ class TestGatheringSiteInvariants(unittest.TestCase):
 
         self.assertIn('<body class="pin-locked">', content, "calculator.html의 body는 초기 상태에서 pin-locked 클래스를 가져야 함")
         self.assertIn('id="global-pin-gate-modal" class="global-pin-overlay"', content, "calculator.html의 핀코드 모달은 기본 hidden 없이 오버레이되어야 함")
-        self.assertIn('gh_member_pin_date', content, "calculator.html의 head에 당일 날짜 기반 만료 인라인 스크립트가 있어야 함")
+        self.assertIn('gh_member_pin_cycle', content, "calculator.html의 head에 화·목 회차 기반 만료 인라인 스크립트가 있어야 함")
 
     def test_invariant_css_hard_lock_rules(self) -> None:
         """[불변 룰 3] style.css의 철통 암전/블러 및 포인터 이벤트 차단 CSS 규칙 검증"""
@@ -56,14 +56,15 @@ class TestGatheringSiteInvariants(unittest.TestCase):
         self.assertIn("pointer-events: none", css, "잠금 시 배경 클릭이 차단되어야 함")
         self.assertIn("blur(", css, "잠금 시 배경 블러 필터가 적용되어야 함")
 
-    def test_invariant_js_daily_midnight_expiry_logic(self) -> None:
-        """[불변 룰 4] main.js의 당일 자정 만료(Daily Midnight Expiry) 검증 로직 무결성"""
+    def test_invariant_js_tue_thu_cycle_expiry_logic(self) -> None:
+        """[불변 룰 4] main.js의 화·목 2회차 발급 주기(Cycle Key) 검증 로직 무결성"""
         self.assertTrue(os.path.exists(self.js_path), "main.js가 존재해야 함")
         with open(self.js_path, "r", encoding="utf-8") as f:
             js = f.read()
 
         self.assertIn("gh_member_pin", js, "main.js에 gh_member_pin 키 처리가 있어야 함")
-        self.assertIn("gh_member_pin_date", js, "main.js에 gh_member_pin_date 만료 키 처리가 있어야 함")
+        self.assertIn("gh_member_pin_cycle", js, "main.js에 gh_member_pin_cycle 회차 키 처리가 있어야 함")
+        self.assertIn("getPinCycleKey", js, "main.js에 getPinCycleKey 함수가 있어야 함")
         self.assertIn("pin-gate-locked", js, "main.js에 pin-gate-locked 해제 로직이 있어야 함")
 
     def test_invariant_cname_configuration(self) -> None:

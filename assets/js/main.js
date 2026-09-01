@@ -353,27 +353,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ===================================================================
-    // Global Hard Lock PIN Gatekeeper (무조건 핀코드 인증 필수 & 당일 자정 만료)
+    // Global Hard Lock PIN Gatekeeper (화·목 정규 발급 주기 2회차 모델)
+    // - 화요일 발급: 화·수 2일간 유지 (목요일 00시 만료)
+    // - 목요일 발급: 목·금·토·일·월 5일간 유지 (차주 화요일 00시 만료)
     // ===================================================================
     const PIN_STORAGE_KEY = 'gh_member_pin';
-    const PIN_DATE_KEY = 'gh_member_pin_date';
+    const PIN_CYCLE_KEY = 'gh_member_pin_cycle';
 
-    function getTodayString() {
-        const d = new Date();
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+    function getPinCycleKey(d = new Date()) {
+        const now = new Date(d);
+        const day = now.getDay(); // 0: 일, 1: 월, 2: 화, 3: 수, 4: 목, 5: 금, 6: 토
+        const target = new Date(now);
+        
+        if (day === 2 || day === 3) {
+            // 화(2) -> 0일 차감, 수(3) -> 1일 차감 (이번 주 화요일)
+            target.setDate(now.getDate() - (day - 2));
+        } else if (day >= 4) {
+            // 목(4) -> 0일 차감, 금(5) -> 1일, 토(6) -> 2일 차감 (이번 주 목요일)
+            target.setDate(now.getDate() - (day - 4));
+        } else {
+            // 일(0) -> 3일 차감, 월(1) -> 4일 차감 (직전 주 목요일)
+            target.setDate(now.getDate() - (day + 3));
+        }
+        
+        const year = target.getFullYear();
+        const month = String(target.getMonth() + 1).padStart(2, '0');
+        const dateStr = String(target.getDate()).padStart(2, '0');
+        return `${year}-${month}-${dateStr}`;
     }
 
     function initGlobalPinGate() {
-        const today = getTodayString();
+        const currentCycle = getPinCycleKey();
         let storedPin = null;
-        let storedDate = null;
+        let storedCycle = null;
         
         try {
             storedPin = localStorage.getItem(PIN_STORAGE_KEY) || sessionStorage.getItem(PIN_STORAGE_KEY);
-            storedDate = localStorage.getItem(PIN_DATE_KEY) || sessionStorage.getItem(PIN_DATE_KEY);
+            storedCycle = localStorage.getItem(PIN_CYCLE_KEY) || sessionStorage.getItem(PIN_CYCLE_KEY);
         } catch(e) {}
 
         const modal = document.getElementById('global-pin-gate-modal');
@@ -381,21 +397,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const pinForm = document.getElementById('global-pin-gate-form');
         const errorMsg = document.getElementById('global-pin-error-text');
 
-        // 당일 자정 만료 검증: 오늘 날짜와 다르면 무조건 세션 파기
-        const isValidSession = storedPin && storedPin.trim().length >= 4 && storedDate === today;
+        // 발급 회차 주기 검증: 현재 주기 키와 일치해야 정상 세션
+        const isValidSession = storedPin && storedPin.trim().length >= 4 && storedCycle === currentCycle;
 
         if (isValidSession) {
-            // 오늘 정상 인증된 세션: 화면 잠금 해제
+            // 이번 회차 정상 인증된 세션: 화면 잠금 해제
             document.body.classList.remove('pin-locked');
             document.documentElement.classList.remove('pin-gate-locked');
             if (modal) modal.classList.add('hidden');
         } else {
-            // 미인증 또는 만료 세션: 이전 스토리지 초기화 및 화면 완전 암전/블러 잠금
+            // 미인증 또는 회차 만료 세션: 이전 스토리지 초기화 및 화면 완전 암전/블러 잠금
             try {
                 localStorage.removeItem(PIN_STORAGE_KEY);
-                localStorage.removeItem(PIN_DATE_KEY);
+                localStorage.removeItem(PIN_CYCLE_KEY);
+                localStorage.removeItem('gh_member_pin_date');
                 sessionStorage.removeItem(PIN_STORAGE_KEY);
-                sessionStorage.removeItem(PIN_DATE_KEY);
+                sessionStorage.removeItem(PIN_CYCLE_KEY);
+                sessionStorage.removeItem('gh_member_pin_date');
             } catch(e) {}
 
             document.body.classList.add('pin-locked');
@@ -418,12 +436,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // 당일 핀코드 인증 완료 및 오늘 날짜 스탬프 저장
+                // 이번 회차 핀코드 인증 완료 및 회차 키 저장
                 try {
                     localStorage.setItem(PIN_STORAGE_KEY, entered);
-                    localStorage.setItem(PIN_DATE_KEY, today);
+                    localStorage.setItem(PIN_CYCLE_KEY, currentCycle);
                     sessionStorage.setItem(PIN_STORAGE_KEY, entered);
-                    sessionStorage.setItem(PIN_DATE_KEY, today);
+                    sessionStorage.setItem(PIN_CYCLE_KEY, currentCycle);
                 } catch(e) {}
 
                 if (errorMsg) errorMsg.style.display = 'none';
