@@ -74,5 +74,16 @@ class TestGatheringSiteInvariants(unittest.TestCase):
             cname = f.read().strip()
         self.assertEqual(cname, "gathering-house.kr", "CNAME은 gathering-house.kr 이어야 함")
 
+    def test_invariant_niche_bundle_deployed(self) -> None:
+        """[불변 룰 6] gathering-site/niche/ 서브 경로 배포 및 회차 핀코드 연동 무결성 검증"""
+        niche_index_path = os.path.join(BASE_DIR, "niche", "index.html")
+        self.assertTrue(os.path.exists(niche_index_path), "niche/index.html이 존재해야 함")
+        with open(niche_index_path, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        self.assertIn('<body class="pin-locked">', content, "niche/index.html도 초기 잠금 상태여야 함")
+        self.assertIn('gh_member_pin_cycle', content, "niche/index.html도 화·목 회차 핀코드 검증 스크립트가 있어야 함")
+        self.assertIn('https://gathering-house.kr', content, "niche/index.html에 Gathering House 메인 복귀 링크가 있어야 함")
+
 if __name__ == "__main__":
     unittest.main()
