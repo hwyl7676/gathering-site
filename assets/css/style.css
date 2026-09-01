@@ -1425,3 +1425,159 @@ a.btn.btn-kakao:hover {
     color: var(--amber-400);
     border: 1px solid rgba(245, 158, 11, 0.3);
 }
+
+/* ===================================================================
+   Global Hard Lock PIN Gatekeeper (철통 VIP 핀코드 대문)
+   =================================================================== */
+body.pin-locked {
+    overflow: hidden !important;
+    height: 100vh !important;
+}
+
+body.pin-locked > :not(#global-pin-gate-modal) {
+    filter: blur(30px) grayscale(50%) !important;
+    pointer-events: none !important;
+    opacity: 0.1 !important;
+    user-select: none !important;
+    transition: all 0.4s ease;
+}
+
+.global-pin-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999999;
+    background: radial-gradient(circle at 50% 40%, rgba(15, 23, 42, 0.98), rgba(5, 8, 16, 0.99));
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    animation: gateFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.global-pin-overlay.hidden {
+    display: none !important;
+}
+
+.global-pin-card {
+    background: linear-gradient(145deg, rgba(20, 30, 55, 0.95), rgba(12, 18, 35, 0.98));
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 50px rgba(99, 102, 241, 0.2);
+    border-radius: 20px;
+    padding: 2.75rem 2.25rem;
+    max-width: 460px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+
+.global-pin-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.9rem;
+    background: rgba(99, 102, 241, 0.2);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--blue-300);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+}
+
+.global-pin-title {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-heading);
+}
+
+.global-pin-desc {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+}
+
+.global-pin-desc strong {
+    color: var(--blue-400);
+    font-weight: 700;
+}
+
+.global-pin-input-group {
+    margin-bottom: 1.25rem;
+}
+
+.global-pin-input {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(7, 11, 20, 0.85);
+    border: 2px solid rgba(99, 102, 241, 0.35);
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 1.35rem;
+    font-family: var(--font-mono);
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: 0.3em;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.global-pin-input:focus {
+    border-color: var(--indigo-400);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+    background: rgba(12, 18, 35, 0.95);
+}
+
+.global-pin-btn-submit {
+    width: 100%;
+    padding: 1rem;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: 12px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+    transition: all 0.2s ease;
+}
+
+.global-pin-btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(99, 102, 241, 0.6);
+}
+
+.global-pin-error {
+    color: var(--red-400);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: none;
+}
+
+.global-pin-kakao-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: #fde047;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.global-pin-kakao-link:hover {
+    text-decoration: underline;
+    color: #ffffff;
+}
+
+@keyframes gateFadeIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+}
+

@@ -345,19 +345,70 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ===================================================================
+    // Global Hard Lock PIN Gatekeeper (무조건 핀코드 인증 필수)
+    // ===================================================================
+    const PIN_STORAGE_KEY = 'gh_member_pin';
+
+    function initGlobalPinGate() {
+        const storedPin = localStorage.getItem(PIN_STORAGE_KEY) || sessionStorage.getItem(PIN_STORAGE_KEY);
+        const modal = document.getElementById('global-pin-gate-modal');
+        const pinInput = document.getElementById('global-pin-input-field');
+        const pinForm = document.getElementById('global-pin-gate-form');
+        const errorMsg = document.getElementById('global-pin-error-text');
+
+        if (storedPin && storedPin.trim().length >= 4) {
+            // 이미 핀코드가 정상 등록된 경우 화면 잠금 해제
+            document.body.classList.remove('pin-locked');
+            if (modal) modal.classList.add('hidden');
+        } else {
+            // 핀코드가 없으면 무조건 화면 전체 잠금 및 모달 노출 (철통 차단)
+            document.body.classList.add('pin-locked');
+            if (modal) modal.classList.remove('hidden');
+            if (pinInput) setTimeout(() => pinInput.focus(), 200);
+        }
+
+        if (pinForm) {
+            pinForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (!pinInput) return;
+                const entered = pinInput.value.trim().toUpperCase();
+
+                if (entered.length < 4) {
+                    if (errorMsg) {
+                        errorMsg.textContent = "올바른 핀코드를 입력해 주십시오.";
+                        errorMsg.style.display = 'block';
+                    }
+                    return;
+                }
+
+                // 핀코드 검증 및 저장
+                localStorage.setItem(PIN_STORAGE_KEY, entered);
+                sessionStorage.setItem(PIN_STORAGE_KEY, entered);
+
+                if (errorMsg) errorMsg.style.display = 'none';
+                document.body.classList.remove('pin-locked');
+                if (modal) modal.classList.add('hidden');
+
+                if (window.showToast) {
+                    window.showToast("VIP 핀코드 인증 완료. 환영합니다.");
+                }
+            });
+        }
+    }
+
+    initGlobalPinGate();
+
     // --- Global VIP Member State Sync ---
     try {
-        const vipPin = localStorage.getItem('gh_member_pin') || sessionStorage.getItem('gh_member_pin');
+        const vipPin = localStorage.getItem(PIN_STORAGE_KEY) || sessionStorage.getItem(PIN_STORAGE_KEY);
         if (vipPin) {
-            // 로컬스토리지와 세션스토리지 상호 동기화
-            localStorage.setItem('gh_member_pin', vipPin);
-            sessionStorage.setItem('gh_member_pin', vipPin);
+            localStorage.setItem(PIN_STORAGE_KEY, vipPin);
+            sessionStorage.setItem(PIN_STORAGE_KEY, vipPin);
 
-            // 네비게이션 바에 VIP 풀버전 바로가기 골드 버튼 추가
             const navLinks = document.querySelector('.nav-links');
             if (navLinks && !document.querySelector('.nav-vip-badge')) {
                 const vipLi = document.createElement('li');
-                // 현재 경로 판별 (루트인지 하위 폴더인지)
                 const isSubdir = window.location.pathname.includes('/reports/') || window.location.pathname.includes('/members/');
                 const membersUrl = isSubdir ? '../members/current.html' : 'members/current.html';
                 

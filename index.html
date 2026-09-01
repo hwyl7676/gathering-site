@@ -18,6 +18,29 @@
 </head>
 <body>
 
+    <!-- Global Hard Lock PIN Gate Modal (철통 VIP 대문) -->
+    <div id="global-pin-gate-modal" class="global-pin-overlay hidden">
+        <div class="global-pin-card">
+            <span class="global-pin-badge">Gathering VIP Gatekeeper</span>
+            <h2 class="global-pin-title">VIP 핀코드 인증</h2>
+            <p class="global-pin-desc">
+                본 사이트는 <strong>게더링 VIP 구독자 전용</strong> 프라이빗 공간입니다.<br>
+                당일 배포된 6자리 VIP 핀코드를 입력하셔야<br>
+                리포트 및 모든 분석 화면이 잠금 해제됩니다.
+            </p>
+            <div id="global-pin-error-text" class="global-pin-error"></div>
+            <form id="global-pin-gate-form">
+                <div class="global-pin-input-group">
+                    <input type="text" id="global-pin-input-field" class="global-pin-input" placeholder="PIN CODE" maxlength="8" autocomplete="off" required>
+                </div>
+                <button type="submit" class="global-pin-btn-submit">잠금 해제 및 사이트 입장 &rarr;</button>
+            </form>
+            <a href="https://open.kakao.com/o/gDq86L8g" target="_blank" rel="noopener noreferrer" class="global-pin-kakao-link">
+                카카오톡 VIP 오픈채팅방에서 당일 핀코드 확인하기 &rarr;
+            </a>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-inner">
