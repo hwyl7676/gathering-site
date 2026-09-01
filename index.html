@@ -92,7 +92,7 @@
         </div>
     </section>
 
-                                                                                                                                                                                <!-- Track Record / Verification Section -->
+                                                                                                                                                                                        <!-- Track Record / Verification Section -->
     <section class="section" id="verification">
         <div class="container">
 
@@ -105,10 +105,10 @@
 
             <div class="track-status-switcher animate-on-scroll">
                 <button class="track-status-btn active" data-status-filter="all">
-                    전체 보기 <span class="track-status-count">5</span>
+                    전체 보기 <span class="track-status-count">7</span>
                 </button>
                 <button class="track-status-btn" data-status-filter="waiting">
-                    LIVE 개찰 대기/집계 중 <span class="track-status-count">5</span>
+                    LIVE 개찰 대기/집계 중 <span class="track-status-count">7</span>
                 </button>
                 <button class="track-status-btn" data-status-filter="matched">
                     법원 개찰 완료 검증 <span class="track-status-count">0</span>
@@ -335,6 +335,90 @@
                     </div>
                 </div>
             </div>
+
+            <div class="track-record-card waiting-card animate-on-scroll" data-status="waiting" data-budget="100m-300m">
+                <div class="track-record-header">
+                    <div class="track-record-title">
+                        <span>서울특별시 관악구 당곡6나길 27 103동 5층501호</span>
+                        <span class="track-record-case">2023타경114858</span>
+                        <span class="track-dday-tag">매각기일: 2026-09-03</span>
+                        <span class="budget-badge 100m-300m">필요 실투자금: 약 1.15억</span>
+                    </div>
+                    <span class="track-badge-waiting">LIVE D-2 개찰 예정</span>
+                </div>
+                <div class="track-grid">
+                    <div class="track-col forecast">
+                        <div class="track-col-title">AI 사전 분석 (입찰 전 리포팅)</div>
+                        <div class="track-row">
+                            <span class="track-label">법원 감정가</span>
+                            <span class="track-val">438,600,000 원 (4.39억)</span>
+                        </div>
+                        <div class="track-row">
+                            <span class="track-label">AI 추천 적정가</span>
+                            <span class="track-val highlight">356,143,199 원 (3.56억)</span>
+                        </div>
+                        <div class="track-row">
+                            <span class="track-label">예상 순수익</span>
+                            <span class="track-val profit">+68,211,074 원 (+0.68억)</span>
+                        </div>
+                        <a href="reports/report-2026-09-01-11.html#case-2023114858" class="track-report-link">
+                            사전 발행 리포트 원문 보기 &rarr;
+                        </a>
+                    </div>
+                    <div class="track-col actual">
+                        <div class="waiting-countdown-box">
+                            <div class="waiting-countdown-title">법원 개찰 결과 대기 및 집계</div>
+                            <p class="waiting-countdown-desc">
+                                AI 사전 분석이 완료되어 타임스탬프가 박제되었습니다.<br>
+                                법원 매각기일 개찰 결과(실제 낙찰가 및 경쟁률)가 실시간 자동 대조됩니다.
+                            </p>
+                            <div class="waiting-timestamp">사전 분석 박제: 2026-09-01 10:37:14</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="track-record-card waiting-card animate-on-scroll" data-status="waiting" data-budget="over-300m">
+                <div class="track-record-header">
+                    <div class="track-record-title">
+                        <span>경기도 안양시 만안구 전파로44번길 57</span>
+                        <span class="track-record-case">2023타경108518</span>
+                        <span class="track-dday-tag">매각기일: 2026-09-01</span>
+                        <span class="budget-badge over-300m">필요 실투자금: 약 3.01억</span>
+                    </div>
+                    <span class="track-badge-waiting">LIVE LIVE D-Day 오늘 개찰</span>
+                </div>
+                <div class="track-grid">
+                    <div class="track-col forecast">
+                        <div class="track-col-title">AI 사전 분석 (입찰 전 리포팅)</div>
+                        <div class="track-row">
+                            <span class="track-label">법원 감정가</span>
+                            <span class="track-val">1,160,000,000 원 (11.6억)</span>
+                        </div>
+                        <div class="track-row">
+                            <span class="track-label">AI 추천 적정가</span>
+                            <span class="track-val highlight">968,600,000 원 (9.69억)</span>
+                        </div>
+                        <div class="track-row">
+                            <span class="track-label">예상 순수익</span>
+                            <span class="track-val profit">+152,656,000 원 (+1.53억)</span>
+                        </div>
+                        <a href="reports/report-2026-09-01-11.html#case-2023108518" class="track-report-link">
+                            사전 발행 리포트 원문 보기 &rarr;
+                        </a>
+                    </div>
+                    <div class="track-col actual">
+                        <div class="waiting-countdown-box">
+                            <div class="waiting-countdown-title">법원 개찰 결과 대기 및 집계</div>
+                            <p class="waiting-countdown-desc">
+                                AI 사전 분석이 완료되어 타임스탬프가 박제되었습니다.<br>
+                                법원 매각기일 개찰 결과(실제 낙찰가 및 경쟁률)가 실시간 자동 대조됩니다.
+                            </p>
+                            <div class="waiting-timestamp">사전 분석 박제: 2026-09-01 10:37:14</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -350,7 +434,19 @@
             </div>
 
             <div class="report-list">
-                <a href="reports/report-2026-09-01-10.html" class="report-item animate-on-scroll">
+                <a href="reports/report-2026-09-01-11.html" class="report-item animate-on-scroll">
+                    <div class="report-date">
+                        <div class="report-date-day">01</div>
+                        <div class="report-date-month">Sep 2026</div>
+                    </div>
+                    <div class="report-info">
+                        <div class="report-title">서울/수도권 경매 AI 분석 브리핑 (2026년 09월 01일)</div>
+                        <div class="report-meta">10건 분석 &middot; 4건 알짜 픽 선별 &middot; 평균 마진율 14.3%</div>
+                    </div>
+                    <span class="report-badge pass">4건 합격 (추천)</span>
+                    <span class="report-arrow">&rarr;</span>
+                </a>
+<a href="reports/report-2026-09-01-10.html" class="report-item animate-on-scroll">
                     <div class="report-date">
                         <div class="report-date-day">01</div>
                         <div class="report-date-month">Sep 2026</div>
@@ -387,18 +483,6 @@
                     <span class="report-arrow">&rarr;</span>
                 </a>
 <a href="reports/report-2026-09-01-7.html" class="report-item animate-on-scroll">
-                    <div class="report-date">
-                        <div class="report-date-day">01</div>
-                        <div class="report-date-month">Sep 2026</div>
-                    </div>
-                    <div class="report-info">
-                        <div class="report-title">서울/수도권 경매 AI 분석 브리핑 (2026년 09월 01일)</div>
-                        <div class="report-meta">5건 분석 &middot; 5건 알짜 픽 선별 &middot; 평균 마진율 15.2%</div>
-                    </div>
-                    <span class="report-badge pass">5건 합격 (추천)</span>
-                    <span class="report-arrow">&rarr;</span>
-                </a>
-<a href="reports/report-2026-09-01-6.html" class="report-item animate-on-scroll">
                     <div class="report-date">
                         <div class="report-date-day">01</div>
                         <div class="report-date-month">Sep 2026</div>
