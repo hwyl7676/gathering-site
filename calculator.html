@@ -16,11 +16,34 @@
     <link rel="canonical" href="https://gathering-house.kr/calculator.html">
     <link rel="stylesheet" href="assets/css/style.css?v=20260901">
     <link rel="stylesheet" href="assets/css/calculator.css?v=20260901">
+    <script>
+        (function() {
+            try {
+                var d = new Date();
+                var today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+                var pin = localStorage.getItem('gh_member_pin') || sessionStorage.getItem('gh_member_pin');
+                var pinDate = localStorage.getItem('gh_member_pin_date') || sessionStorage.getItem('gh_member_pin_date');
+                if (pin && pin.trim().length >= 4 && pinDate === today) {
+                    // 당일 정상 인증 세션
+                } else {
+                    if (pinDate && pinDate !== today) {
+                        localStorage.removeItem('gh_member_pin');
+                        localStorage.removeItem('gh_member_pin_date');
+                        sessionStorage.removeItem('gh_member_pin');
+                        sessionStorage.removeItem('gh_member_pin_date');
+                    }
+                    document.documentElement.classList.add('pin-gate-locked');
+                }
+            } catch(e) {
+                document.documentElement.classList.add('pin-gate-locked');
+            }
+        })();
+    </script>
 </head>
-<body>
+<body class="pin-locked">
 
     <!-- Global Hard Lock PIN Gate Modal (철통 VIP 대문) -->
-    <div id="global-pin-gate-modal" class="global-pin-overlay hidden">
+    <div id="global-pin-gate-modal" class="global-pin-overlay">
         <div class="global-pin-card">
             <span class="global-pin-badge">Gathering VIP Gatekeeper</span>
             <h2 class="global-pin-title">VIP 핀코드 인증</h2>

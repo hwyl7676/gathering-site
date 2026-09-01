@@ -1429,17 +1429,19 @@ a.btn.btn-kakao:hover {
 /* ===================================================================
    Global Hard Lock PIN Gatekeeper (철통 VIP 핀코드 대문)
    =================================================================== */
+html.pin-gate-locked,
 body.pin-locked {
     overflow: hidden !important;
     height: 100vh !important;
 }
 
+html.pin-gate-locked body > :not(#global-pin-gate-modal),
 body.pin-locked > :not(#global-pin-gate-modal) {
-    filter: blur(30px) grayscale(50%) !important;
+    filter: blur(35px) grayscale(70%) !important;
     pointer-events: none !important;
-    opacity: 0.1 !important;
+    opacity: 0.03 !important;
     user-select: none !important;
-    transition: all 0.4s ease;
+    transition: all 0.3s ease;
 }
 
 .global-pin-overlay {
@@ -1449,7 +1451,7 @@ body.pin-locked > :not(#global-pin-gate-modal) {
     background: radial-gradient(circle at 50% 40%, rgba(15, 23, 42, 0.98), rgba(5, 8, 16, 0.99));
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     padding: 1.5rem;

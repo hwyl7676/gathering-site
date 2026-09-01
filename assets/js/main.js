@@ -353,24 +353,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ===================================================================
-    // Global Hard Lock PIN Gatekeeper (무조건 핀코드 인증 필수)
+    // Global Hard Lock PIN Gatekeeper (무조건 핀코드 인증 필수 & 당일 자정 만료)
     // ===================================================================
     const PIN_STORAGE_KEY = 'gh_member_pin';
+    const PIN_DATE_KEY = 'gh_member_pin_date';
+
+    function getTodayString() {
+        const d = new Date();
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
 
     function initGlobalPinGate() {
-        const storedPin = localStorage.getItem(PIN_STORAGE_KEY) || sessionStorage.getItem(PIN_STORAGE_KEY);
+        const today = getTodayString();
+        let storedPin = null;
+        let storedDate = null;
+        
+        try {
+            storedPin = localStorage.getItem(PIN_STORAGE_KEY) || sessionStorage.getItem(PIN_STORAGE_KEY);
+            storedDate = localStorage.getItem(PIN_DATE_KEY) || sessionStorage.getItem(PIN_DATE_KEY);
+        } catch(e) {}
+
         const modal = document.getElementById('global-pin-gate-modal');
         const pinInput = document.getElementById('global-pin-input-field');
         const pinForm = document.getElementById('global-pin-gate-form');
         const errorMsg = document.getElementById('global-pin-error-text');
 
-        if (storedPin && storedPin.trim().length >= 4) {
-            // 이미 핀코드가 정상 등록된 경우 화면 잠금 해제
+        // 당일 자정 만료 검증: 오늘 날짜와 다르면 무조건 세션 파기
+        const isValidSession = storedPin && storedPin.trim().length >= 4 && storedDate === today;
+
+        if (isValidSession) {
+            // 오늘 정상 인증된 세션: 화면 잠금 해제
             document.body.classList.remove('pin-locked');
+            document.documentElement.classList.remove('pin-gate-locked');
             if (modal) modal.classList.add('hidden');
         } else {
-            // 핀코드가 없으면 무조건 화면 전체 잠금 및 모달 노출 (철통 차단)
+            // 미인증 또는 만료 세션: 이전 스토리지 초기화 및 화면 완전 암전/블러 잠금
+            try {
+                localStorage.removeItem(PIN_STORAGE_KEY);
+                localStorage.removeItem(PIN_DATE_KEY);
+                sessionStorage.removeItem(PIN_STORAGE_KEY);
+                sessionStorage.removeItem(PIN_DATE_KEY);
+            } catch(e) {}
+
             document.body.classList.add('pin-locked');
+            document.documentElement.classList.add('pin-gate-locked');
             if (modal) modal.classList.remove('hidden');
             if (pinInput) setTimeout(() => pinInput.focus(), 200);
         }
@@ -379,7 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pinForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 if (!pinInput) return;
-                const entered = pinInput.value.trim().toUpperCase();
+                const entered = pinInput.value.trim().toUpperCase().replace(/[\s\-_]/g, '');
 
                 if (entered.length < 4) {
                     if (errorMsg) {
@@ -389,12 +418,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                // 핀코드 검증 및 저장
-                localStorage.setItem(PIN_STORAGE_KEY, entered);
-                sessionStorage.setItem(PIN_STORAGE_KEY, entered);
+                // 당일 핀코드 인증 완료 및 오늘 날짜 스탬프 저장
+                try {
+                    localStorage.setItem(PIN_STORAGE_KEY, entered);
+                    localStorage.setItem(PIN_DATE_KEY, today);
+                    sessionStorage.setItem(PIN_STORAGE_KEY, entered);
+                    sessionStorage.setItem(PIN_DATE_KEY, today);
+                } catch(e) {}
 
                 if (errorMsg) errorMsg.style.display = 'none';
                 document.body.classList.remove('pin-locked');
+                document.documentElement.classList.remove('pin-gate-locked');
                 if (modal) modal.classList.add('hidden');
 
                 if (window.showToast) {
