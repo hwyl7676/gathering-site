@@ -25,6 +25,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://gathering-house.kr/reports/report-2026-09-01-8.html</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://gathering-house.kr/reports/report-2026-09-01-7.html</loc>
     <lastmod>2026-09-01</lastmod>
     <changefreq>weekly</changefreq>
@@ -841,6 +847,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://gathering-house.kr/reports/archive-2026-09-01-2023-1173.html</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://gathering-house.kr/reports/archive-2026-09-01-2023-111644.html</loc>
     <lastmod>2026-09-01</lastmod>
     <changefreq>monthly</changefreq>
@@ -859,7 +871,19 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://gathering-house.kr/reports/archive-2026-09-01-2023-108446.html</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://gathering-house.kr/reports/archive-2026-09-01-2023-106314.html</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gathering-house.kr/reports/archive-2026-09-01-2023-102448.html</loc>
     <lastmod>2026-09-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
