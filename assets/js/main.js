@@ -280,6 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentBudget = 'all';
 
     function applyCompoundFilter() {
+        let visibleCount = 0;
         filterableCards.forEach(card => {
             const cardStatus = card.getAttribute('data-status');
             const cardBudget = card.getAttribute('data-budget');
@@ -288,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const matchBudget = (currentBudget === 'all' || cardBudget === currentBudget);
 
             if (matchStatus && matchBudget) {
+                visibleCount++;
                 card.style.display = 'block';
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(10px)';
@@ -300,6 +302,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.style.display = 'none';
             }
         });
+
+        // 0건일 때 휑한 공백 방지용 안내 박스
+        let emptyNotice = document.getElementById('track-record-empty-notice');
+        if (visibleCount === 0) {
+            if (!emptyNotice) {
+                emptyNotice = document.createElement('div');
+                emptyNotice.id = 'track-record-empty-notice';
+                emptyNotice.className = 'track-record-empty-box animate-on-scroll';
+                emptyNotice.style.cssText = 'text-align:center; padding:3rem 1.5rem; background:rgba(30,41,59,0.3); border:1px dashed rgba(255,255,255,0.15); border-radius:16px; margin:2rem 0; color:var(--text-secondary);';
+                emptyNotice.innerHTML = '<div style="font-size:1.1rem; font-weight:600; color:var(--text-primary); margin-bottom:0.5rem;">해당 조건에 부합하는 매물이 없습니다.</div><div style="font-size:0.88rem;">다른 예산 탭을 선택하시거나 [전체 예산]으로 확인해 보세요.</div>';
+                const container = document.querySelector('.budget-tabs-container');
+                if (container && container.parentNode) {
+                    container.parentNode.insertBefore(emptyNotice, container.nextSibling);
+                }
+            }
+            emptyNotice.style.display = 'block';
+        } else if (emptyNotice) {
+            emptyNotice.style.display = 'none';
+        }
     }
 
     if (statusBtns.length > 0) {
