@@ -2,6 +2,13 @@
 // Site-wide JavaScript - Scroll animations, nav toggle, interactions
 // ===================================================================
 
+/**
+ * [불변 비즈니스 프론트엔드 계약 (Invariants Contract) - AI 임의 원복 절대 금지]
+ * 1. Global Hard Lock PIN Gatekeeper: gh_member_pin 없이는 모든 화면 암전 및 블러 차단.
+ * 2. FOMO 카운트다운 타이머 & 카카오톡 VIP 오픈채팅방 전환 유지.
+ * 상세 내역은 프로젝트 루트의 DECISIONS.md를 준수할 것.
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- Scroll-triggered animations ---
     const animatedElements = document.querySelectorAll('.animate-on-scroll');
