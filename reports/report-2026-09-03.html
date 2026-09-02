@@ -6,223 +6,22 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>[VIP 풀버전] 서울/수도권 경매 AI 분석 브리핑 (2026년 09월 03일) | Private 경매 구독</title>
+    <title>[일반 공개] 서울/수도권 경매 AI 분석 브리핑 (2026년 09월 03일) | Private 경매 구독</title>
     <meta name="description" content="2026년 09월 03일 발행. AI가 분석한 경매 물건 13건 중 12건 알짜 픽 선별.">
-    <meta name="robots" content="noindex, nofollow">
+    
     <link rel="stylesheet" href="../assets/css/style.css?v=20260901">
     <link rel="stylesheet" href="../assets/css/report.css?v=20260901">
 </head>
 <body>
 
     
-    <!-- VIP Lock Modal Overlay -->
-    <div id="members-lock" class="members-lock-overlay" style="display: flex;">
-        <div class="members-lock-card">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin-bottom: 0.8rem; flex-wrap: wrap;">
-                <div class="members-lock-badge" style="margin: 0;">카톡 오픈채팅 전용 VIP 리포트</div>
-                <div class="countdown-timer-wrapper">
-                    <span>핀코드 만료:</span>
-                    <span class="countdown-timer-text timer-text">--:--:--</span>
-                </div>
-            </div>
-            <h2 class="members-lock-title">비공개 알짜 픽 열람 안내</h2>
-            <p class="members-lock-desc">
-                본 페이지는 비공개 인증 전용 풀 버전 리포트입니다.<br>
-                발급받으신 6자리 보안 핀코드를 입력하여 열람하세요.
-            </p>
-
-            
-            <div class="members-lock-highlights">
-                <div class="members-lock-highlights-head">
-                    <span>비공개 알짜 픽 요약 (12건 선별)</span>
-                    <span>사건번호/추천가 비공개</span>
-                </div>
-                
-                <div class="members-lock-highlight-item">
-                    <div>
-                        <span class="highlight-badge">알짜 1위</span>
-                        <span class="highlight-title">서울특별시 관악구 봉천동 (다세대 (빌라))</span>
-                    </div>
-                    <div class="highlight-details">
-                        <span>예상 순수익: <strong>+31,021만원</strong></span>
-                        <span>실투자금: <strong>약 53,952만원</strong></span>
-                    </div>
-                </div>
-                <div class="members-lock-highlight-item">
-                    <div>
-                        <span class="highlight-badge">알짜 2위</span>
-                        <span class="highlight-title">서울특별시 관악구 봉천동 (다세대 (빌라))</span>
-                    </div>
-                    <div class="highlight-details">
-                        <span>예상 순수익: <strong>+12,650만원</strong></span>
-                        <span>실투자금: <strong>약 22,001만원</strong></span>
-                    </div>
-                </div>
-            </div>
-
-            <form id="lock-form" class="members-lock-form" onsubmit="handleAuth(event)">
-                <div class="members-lock-input-group">
-                    <input type="text" id="passcode-input" class="members-lock-input" placeholder="6자리 핀코드 입력" maxlength="12" autocomplete="off" onfocus="setTimeout(() => { this.scrollIntoView({behavior: 'smooth', block: 'center'}); }, 250);" required>
-                    <button type="submit" class="members-lock-submit-btn">잠금 해제 &rarr;</button>
-                </div>
-                <div id="lock-error" class="members-lock-error">입장 핀코드가 일치하지 않습니다. 올바른 핀코드를 입력해 주세요.</div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        (function() {
-            async function decryptItem(encryptedBase64, pin) {
-                try {
-                    const cleanPin = (pin || '').trim().toUpperCase();
-                    const binary = atob(encryptedBase64);
-                    const bytes = new Uint8Array(binary.length);
-                    for (let i = 0; i < binary.length; i++) {
-                        bytes[i] = binary.charCodeAt(i);
-                    }
-                    const nonce = bytes.slice(0, 12);
-                    const ciphertext = bytes.slice(12);
-
-                    const pinBytes = new TextEncoder().encode(cleanPin);
-                    const keyHash = await crypto.subtle.digest('SHA-256', pinBytes);
-                    const cryptoKey = await crypto.subtle.importKey(
-                        'raw',
-                        keyHash,
-                        { name: 'AES-GCM' },
-                        false,
-                        ['decrypt']
-                    );
-
-                    const decryptedBytes = await crypto.subtle.decrypt(
-                        { name: 'AES-GCM', iv: nonce },
-                        cryptoKey,
-                        ciphertext
-                    );
-                    const jsonStr = new TextDecoder().decode(decryptedBytes);
-                    return JSON.parse(jsonStr);
-                } catch (err) {
-                    return null;
-                }
-            }
-
-            async function tryUnlock(pin) {
-                if (!pin) return false;
-                const cleanPin = pin.trim().toUpperCase();
-                const items = document.querySelectorAll('.vip-encrypted-item');
-                if (items.length === 0) return true;
-
-                // 첫 번째 아이템으로 복호화 사전 검증
-                const firstEnc = items[0].getAttribute('data-encrypted');
-                const firstData = await decryptItem(firstEnc, cleanPin);
-                if (!firstData) {
-                    return false;
-                }
-
-                // 모든 아이템 복호화 및 DOM 안전 주입
-                for (const item of items) {
-                    const enc = item.getAttribute('data-encrypted');
-                    const data = await decryptItem(enc, cleanPin);
-                    if (data) {
-                        const caseEl = item.querySelector('.vip-field-case-number');
-                        if (caseEl) {
-                            caseEl.textContent = data.case_number;
-                            caseEl.classList.remove('vip-locked-placeholder');
-                        }
-                        const addrEl = item.querySelector('.vip-field-address');
-                        if (addrEl) {
-                            addrEl.textContent = data.address;
-                            addrEl.classList.remove('vip-locked-placeholder');
-                        }
-                        const targetEl = item.querySelector('.vip-field-target-price');
-                        if (targetEl) {
-                            targetEl.innerHTML = '<span style="color: var(--indigo-400); font-weight: 700;">' + data.target_bid_price + '</span>';
-                            targetEl.classList.remove('vip-locked-placeholder');
-                        }
-                        const rangeEl = item.querySelector('.vip-field-bid-range');
-                        if (rangeEl) {
-                            rangeEl.textContent = data.bid_range;
-                            rangeEl.classList.remove('vip-locked-placeholder');
-                        }
-                        const notesEl = item.querySelector('.vip-field-notes');
-                        if (notesEl) {
-                            notesEl.textContent = data.special_notes;
-                            notesEl.classList.remove('vip-locked-placeholder');
-                        }
-                    }
-                }
-
-                try {
-                    localStorage.setItem('gh_member_pin', cleanPin);
-                    sessionStorage.setItem('gh_member_pin', cleanPin);
-                } catch(e) {}
-                const lockEl = document.getElementById('members-lock');
-                if (lockEl) lockEl.style.display = 'none';
-
-                // 잠금 해제 후 URL 해시 앵커로 부드럽게 스크롤
-                if (window.location.hash) {
-                    setTimeout(() => {
-                        if (typeof handleHashNavigation === 'function') {
-                            handleHashNavigation(true);
-                        } else {
-                            const el = document.querySelector(window.location.hash);
-                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                    }, 120);
-                }
-                return true;
-            }
-
-            window.handleAuth = async function(e) {
-                if (e) e.preventDefault();
-                const inputEl = document.getElementById('passcode-input');
-                const errEl = document.getElementById('lock-error');
-                const rawPin = (inputEl ? inputEl.value : '').trim().toUpperCase();
-                const cleanPin = rawPin.replace(/[\s\-_]/g, '');
-
-                const success = await tryUnlock(cleanPin);
-                if (success) {
-                    if (errEl) errEl.style.display = 'none';
-                } else {
-                    if (errEl) {
-                        errEl.style.display = 'block';
-                        errEl.textContent = '입장 핀코드가 일치하지 않습니다. 올바른 핀코드를 입력해 주세요.';
-                    }
-                }
-            };
-
-            async function checkInit() {
-                let stored = null;
-                try {
-                    stored = localStorage.getItem('gh_member_pin') || sessionStorage.getItem('gh_member_pin');
-                } catch(e) {}
-                const lockEl = document.getElementById('members-lock');
-                if (stored) {
-                    const ok = await tryUnlock(stored);
-                    if (ok) return;
-                    // 이전 회차 핀코드로 복호화 실패 시 캐시된 스토리지 즉시 클리어
-                    try {
-                        localStorage.removeItem('gh_member_pin');
-                        sessionStorage.removeItem('gh_member_pin');
-                    } catch(e) {}
-                }
-                if (lockEl) lockEl.style.display = 'flex';
-            }
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', checkInit);
-            } else {
-                checkInit();
-            }
-        })();
-    </script>
-
 
     <nav class="nav">
         <div class="nav-inner">
             <a href="../" class="nav-logo">
                 <div class="nav-logo-icon">G</div>
                 <span class="nav-logo-text">Private 경매 구독</span>
-                <span class="vip-member-tag">VIP 풀버전</span>
+                
             </a>
             <ul class="nav-links">
                 <li><a href="../#verification">적중 검증</a></li>
@@ -239,9 +38,9 @@
 
     <header class="report-detail-header">
         <div class="container">
-            <a href="../" class="btn btn-sm btn-secondary" style="margin-bottom: 2rem;">&larr; 메인 홈으로 가기</a>
+            <a href="../#reports" class="btn btn-sm btn-secondary" style="margin-bottom: 2rem;">&larr; 리포트 목록</a>
             <div class="report-case-number">Report #2026-0903</div>
-            <h1>[VIP 풀버전] 서울/수도권 경매 AI 분석 브리핑 (2026년 09월 03일)</h1>
+            <h1>[일반 공개] 서울/수도권 경매 AI 분석 브리핑 (2026년 09월 03일)</h1>
             <div class="report-detail-meta">
                 <span>2026년 09월 03일 발행</span>
                 <span>13건 분석</span>
@@ -253,6 +52,25 @@
 
     <main class="container">
         
+        <div class="teaser-banner animate-on-scroll">
+            <div class="teaser-banner-content">
+                <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                    <h3 style="margin: 0;">[안내] 본 페이지는 일반 공개 리포트입니다</h3>
+                    <div class="countdown-timer-wrapper">
+                        <span>회차 핀코드 만료:</span>
+                        <span class="countdown-timer-text timer-text">--:--:--</span>
+                    </div>
+                </div>
+                <p>사건번호, 아파트 단지명, AI 최적 추천 입찰가와 <strong>선순위 임차인 대항력 인수 검증 체크리스트</strong>가 완전 공개된 풀 버전 리포트는 <strong>카카오톡 오픈채팅방 상단 핀 공지사항</strong>에서 즉시 열람하실 수 있습니다.</p>
+                <div class="exclusive-checklist-tag">
+                    카톡방 공지 독점: AI 2차 특수 권리분석 &amp; 선순위 보증금 인수 안전 체크리스트 제공
+                </div>
+            </div>
+            <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="btn btn-kakao" style="background: #FEE500 !important; color: #191919 !important; font-weight: 800 !important; white-space: nowrap; font-size: 1rem; padding: 0.85rem 1.4rem;">
+                카톡방에서 풀버전 확인 &rarr;
+            </a>
+        </div>
+
 
         <div class="summary-grid animate-on-scroll">
             <div class="summary-card">
@@ -300,15 +118,15 @@
             </div>
         </div>
         
-        <div id="case-20234869" data-rank="item-1" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="+nfW2deHarifDw/+yJf9in77haMGKfoXD4gkV6dcPGqTxXB6x31AnRUMmldXQFXEmSJGmQ4SwBTzIH9KYceilcWOT83jr3R/jhCQl0TJMocwdMjE+TXSCymvuCJ71G+7JRDoO9r8Xf1REo5n27WSHx4Fp8NZBGwjK9KyeNpQ4lAQBgz2M3pkFTjx31I9HhfghKEKJhC4V3aWUNH49dxgKeVBTsROPy57eqkhoMdBLb6vuCDxoJLtOMbd5ocYp8LrGhhJ5VWwcQN5FJV3V37s7tXpax9U26K4JpjjzMz3fils7QvQdGRTRKPsu4yj+nnoN60Q6XtYj3klVI1x8B/14ewj5z05ybvHK59EtV6PjAp6DlyHTWll/gCRWnwCCI1aVCeDfQpEcFrf1BJv4IgLWo+SEiVckfgdbTeJuCL8isvFsVWT" >
+        <div id="case-20234869" data-rank="item-1" class="detail-section animate-on-scroll" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 1위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 1위.&nbsp;<span class="vip-field-case-number">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 봉천동 *** (빌라/다세대)</span></td>
+                    <td><span class="vip-field-address">서울특별시 관악구 봉천동 *** (빌라/다세대)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -324,7 +142,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -375,11 +193,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">1,603,738,799 원 ~ 1,700,681,218 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -397,15 +215,15 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023106314" data-rank="item-2" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="pIz9TantbLOGeMdgCoqLrZg1QPz9bfJb05ofhJGagggvnzL4k6heSCWsNDpUDvkxy9v+Jtnj2x3L2qHHby0pdJiqOaKo5BqUzAtRjvCbRUjewxk8j+XMd1sp4heOV3lOKLqodf/it2A9plQe9pzIL6dEFLbkILISUwurV8TJyNrV/nubJPM/rGqc0nwIbj/5T79U5o7kNSii9nA3tEjhEcGKvLYro20FmRyOtd7DiwExu+BARtLWM2P1L8eQK6f3Y7cRgE3zZCXbrmn+0jJ0Q5cRXNMsi2vDYvHaW9bJ1iISBagb33y4F8eynekQZ35FCWKVp1o7ulNIpln0dqRgkQl1Qo1GfrnvwnfJ8OILVz4UpKuQxQXnlhU84id9pzZHr60wG9nyyP9Q2MF8E0FLVkndw5NOY7A7/nABubhu0K8=" >
+        <div id="case-2023106314" data-rank="item-2" class="detail-section animate-on-scroll" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 2위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 2위.&nbsp;<span class="vip-field-case-number">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 봉천동 *** (빌라/다세대)</span></td>
+                    <td><span class="vip-field-address">서울특별시 관악구 봉천동 *** (빌라/다세대)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -421,7 +239,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -472,11 +290,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">654,005,816 원 ~ 693,539,002 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -494,15 +312,15 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023108730" data-rank="item-3" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="ELr7wmFQkP3UXOq8Mm7XyQK5rC6Fnl808i7PYygmz9WAfSJN53Ei/R8prrRvi5wpdApEhPpvgfp89OOKtDZq2SBiDmqCFCOGG9F1DZgqP04IEoigfMMOaZcr9nrb5cwNoNenJ9EuZuS+FTr3vlyQtrh0BXhUbJbeZ+OFU3B2nPvx+7pmu1DNx5btCHOAfv8zt6OpXBZuoFaZAlAkvcTb93aKxNNMiJDHNkvA5XQI0DpwRmD4H9dq7aw137iNS7M5OKFovVxil64+5gcWptF9oCvzsx9P0nX+ZnVTflDETiDGBYFvGsWwg5Fx2DNjirF4EvDeP5CYwmCI1oHDnHy7z3IEmmtWa4m/Ge1Y+CalW49TrJfVx/6xFp9lS6pUJN74y/gGQl0GegHOqrj8s0yghgyyFH3J99HAa0F7ow5/otQ=" >
+        <div id="case-2023108730" data-rank="item-3" class="detail-section animate-on-scroll" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 3위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 3위.&nbsp;<span class="vip-field-case-number">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 봉천동 *** (빌라/다세대)</span></td>
+                    <td><span class="vip-field-address">서울특별시 관악구 봉천동 *** (빌라/다세대)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -518,7 +336,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -569,11 +387,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">765,407,999 원 ~ 811,675,198 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -591,15 +409,15 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023111644" data-rank="item-4" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="h/rve0msRSAbXmTWuHxjA0k81/V9x4Rz1CKmk3wpmd6GKArql5dwIQvGpx4ny7UVO9sUofehzluvt1ebBIqJsyQB/IvG8EBMha401p+klpTr2DAQEf4+WThG1IKlyPD+Khy10Tf4PZ0OHRaDem0rZr0/MMMeq/Rj/szLfrwgbRyRwvgHucmHywrYBwTAOBBc0QpEalSJ3PpbVkX34jFbvA/4dBWdJWrEfUGW+0KyWYY/SdaNE//xyHmaDwHx8oXvjheXmoS37vh/t8cn0uCwTULo/T4YBSvxud1OybORByyOHeAZM9zrrRPsNU4wPy7sPngAEstAY5yVsVlaEkl2VHIpXm1XL8FiB5vBDMS7nLsKx2IZ+9Zh4UrAcQufipfi8DZKcMbOL0/0LQx56XqRPjSK4VXS9dUWcCKTT7LtMhYzrQ6bvy8DDx/zVkSFzoKe" >
+        <div id="case-2023111644" data-rank="item-4" class="detail-section animate-on-scroll" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 4위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 4위.&nbsp;<span class="vip-field-case-number">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 중구 난계로11길 *** (빌라/다세대)</span></td>
+                    <td><span class="vip-field-address">서울특별시 중구 난계로11길 *** (빌라/다세대)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -615,7 +433,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -666,11 +484,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">334,865,999 원 ~ 355,107,898 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -688,15 +506,15 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023114858" data-rank="item-5" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="/iY6OJHexTIsQoz+HSxt8S/xY8I7uM859MjJOsV3m0q/AbgizSMuiiKbNikCavdiuYGCGqyJ+CS2F+3pbDtDJ5KohKV+1Z/fl14wMoxT8FFIh690HZ1RUBtAtGPxz/5zGEZyPxqJCT8Udouiv/UJFKWaFqdW+djYg7bc0JUdbWyU6Xelr1Vqua2zBYnjNXnAzxtnY0FPW9U6y6bpw2hj4Hs94nHJkHG7wIqEWXxOEvGIbIOnrsd4Wu8ihxGPk5xZezHishPopUMof+OK1aPxxA7DQVhGrxG0TWPvkRCjEeMBfxvLY+iLOLAwHrjrCXIuPvKgSXLS/N3eFqcFs/8vOrX+yRnWRgEekXOwKCgULtm2GZDwDtcv6bf09MFzc9ZTGy7Pp3Ddnma3N6BSwzh1iSKvUarRWLhj4KGJEKyj867YwutK2bnx3lQ3wxTfMv+6j8iI" >
+        <div id="case-2023114858" data-rank="item-5" class="detail-section animate-on-scroll" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 5위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 5위.&nbsp;<span class="vip-field-case-number">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 당곡6나길 *** (빌라/다세대)</span></td>
+                    <td><span class="vip-field-address">서울특별시 관악구 당곡6나길 *** (빌라/다세대)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -712,7 +530,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -763,11 +581,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">352,634,399 원 ~ 373,950,358 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -785,15 +603,15 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023116182" data-rank="item-6" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="F+iDm1RgZbmhy//C16yKF6yPu5axTzybj7DeBJqQhwkYX8wwMdekcnJr+sk7PzBaCNuxHwxvx6OJDwpPOc8OdL26f1VBPGy3YeRpROfi8V7nJKiMRvNMptds7tAZL0XVbQq8JmnJe5b0KEwdL2OwXls42n0uaSzBHSeN9zhIGytsn7SnLwtC9TnPRy2BLt5MwraVX+wn5Hg3rLNlo+pqZwVlcwxMptAuiIkQHRSXtK2z961Fdl4PBx/1sMqeWRV9wTR5ANRpZBhRpa283RpDZ2bsgN4u6xWbj64wmlhT+qTotp5TTBH+KaJ65D08PFDc4kuWwQ0gbx8d0sLy8RJqDo8Z5rUvp0A6JbDIJzXhUG6kJTwF1C8KFGotxRFrrPaEYoduu4bE3dSJofSd84u8zaLoCipdT4kPyDPghLAxBEkoGRMcKH/T6Q==" >
+        <div id="case-2023116182" data-rank="item-6" class="detail-section animate-on-scroll" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 6위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 6위.&nbsp;<span class="vip-field-case-number">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 봉천동 *** (빌라/다세대)</span></td>
+                    <td><span class="vip-field-address">서울특별시 관악구 봉천동 *** (빌라/다세대)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -809,7 +627,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -860,11 +678,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">1,019,447,437 원 ~ 1,081,070,752 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -882,15 +700,15 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023118379" data-rank="item-7" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="IbjV+UGvsfgZnDPC+26Akm75CPsMkC2rTCrtfq4o1FfaVFfhfllHrc63q6BjijcYX1zFGZpM2K4O89Smxl8qbF0ypg+6nGntgaCVwGrmb8w3n27zBpMvN6ge2MfHIctYA6sTZpB/+YT6jfoQBbSHQNilGNPnQiVmHBAyTG2XCTiDC4EVYONlX1oeAVhWjIvU+/vXIqZMyYZqm8utWHoPiJN/oqr1l+DW6EoztDZn8iqmdh1O70U5xspnfTt2yT9M1jTaw6CUmnNHU9ErrKJegV974JQqJgIznDX2XUFB4UbAhC3Yzccm014KiVMot63B3o9lPFN3Dede/yWfuRyV/AfDN2n/1XQZjZkKGvgNtNji9aexTCJZo4A2O3Q9jiBCQx4w4TxLSWzxWWumP5cFiFMIpsGWfk5YyGEpo0j2AX/m" >
+        <div id="case-2023118379" data-rank="item-7" class="detail-section animate-on-scroll" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 7위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 7위.&nbsp;<span class="vip-field-case-number">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 봉천동 *** (빌라/다세대)</span></td>
+                    <td><span class="vip-field-address">서울특별시 관악구 봉천동 *** (빌라/다세대)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -906,7 +724,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -957,11 +775,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">640,908,599 원 ~ 679,650,088 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -979,15 +797,15 @@
                 </div>
             </div>
         </div>
-        <div id="case-20242501" data-rank="item-8" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="baDlqWTEIlrZeKiMSqhrAkTlTp6zjDDbF4oubUY+fXjt/dtEN38kr4Oaj5CdhVdLx4KL0C5DAApCEvaTIeNCqyGR50DYfJp+Qyf3aH3dO/R8eA22P+ZVCfYzWtqRgPdurYZMk/fBWAVvnqSpiK9Nu6+vpf0u77Aljtv5G0oV3UTktuNGAQhZegWqAwbfqAvyT7G9oOpzYzsoec265V9qqy8209MTSwYbnuhS2X7WLiQtajrCXh40TSDS959qEgyRmVLow3S6iq4Ba0zzUTXIB0zUsbon+gca2jKs9/9rmTezUiwKq1XwHJqNIrB61Yak/Awa3EmObDH7kHUrTKMOfCyODUM+K9Rd+0XUB+f6yvF79h2cqpMMmo6FIYXa94n0Z65VViImpsyfbUk82hFAIBGD9lczynHFfvElM8rxucozydM=" >
+        <div id="case-20242501" data-rank="item-8" class="detail-section animate-on-scroll" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 8위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2024타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 8위.&nbsp;<span class="vip-field-case-number">2024타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 중구 퇴계로 *** (빌라/다세대)</span></td>
+                    <td><span class="vip-field-address">서울특별시 중구 퇴계로 *** (빌라/다세대)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -1003,7 +821,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -1054,11 +872,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">562,799,999 원 ~ 596,820,000 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -1076,15 +894,15 @@
                 </div>
             </div>
         </div>
-        <div id="case-20242532" data-rank="item-9" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="UxIhyQR5YptuJuvueos95VTFyxDhsU9ePehwUS/fZirNKqG29AA+FqR6QzCRcsHVBs/rJ6ufl0I9LJB4yyYWfO2/j+lvtya8lGPD+hBYqU8usFNy0WD70PvAVjh1dkKFOZ6dKggij229sBiYDrIvLyri+m/8375h9b8BMhfIV5Y/ZPph8ST2crxhKCBvrkQs5Pb41OP03b2ThOIGSJhy+G00xc+AhkTAphw0gEFkzDv4smDLs2jcPDJmytQKQkZViLirX8rZNRMhSpCrid6eT60SjuqLr4IJ2ZYn4YTjxYShxpvWS/hC8r80y1h6mAnLfsweHpNDXR/WVsf/4YSEeYDpqJuFOu0+acn0yO8OURbH0ayWn6UC9F02h1mEfz1fnJtizwua3bCoZ2tCAAK29HPP60DKFGiHGMwM5GYJFU7/QcQC" >
+        <div id="case-20242532" data-rank="item-9" class="detail-section animate-on-scroll" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 9위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2024타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 9위.&nbsp;<span class="vip-field-case-number">2024타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 종로구 평창동 *** (빌라/다세대)</span></td>
+                    <td><span class="vip-field-address">서울특별시 종로구 평창동 *** (빌라/다세대)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -1100,7 +918,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -1151,11 +969,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">2,262,171,231 원 ~ 2,398,914,416 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -1173,15 +991,15 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023104819" data-rank="item-10" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="rXrtaN1FCatHxkbpFuk2GevaYQ9i6bWsz1/1gyk9rFkXLs4dNx/YhL9436hwAtZ/cWtiLRvGkkKReQpFLG32BrzlVSI8CReNMm+PLgDB8sZlebrkJUM90zXgAAEZ1cNSS6VadkmO+v/z+sACHkcECULbNLuxdVugESRi4Ep0JGveFT7fm55G3XKbGhTWIPFDfhTXmQ+pajD4hjeaSLsCTEQg+lVgXYwsyprIpJ+6FFI5lTmSjHcgs7Dwc1gKPS/STM+kh8vtquEcBZJBiJQjQX5c2aBdHvz3Fgfx8hUBs+1qbMrVDQ53kj3URtizSKMJHnceznFFXtzIEJPhep4o9XUssG9IJti+B7s2jZs7v9CXy/02i7iko/EzdYADloaSt9oeXMRfur2N5krrSjn8Cq9d00B5zJaaU6uDTJy/85zxyjRjumHyz1aM+nSXjlpJUL9GXoHw8O4aYw==" >
+        <div id="case-2023104819" data-rank="item-10" class="detail-section animate-on-scroll" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 10위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 10위.&nbsp;<span class="vip-field-case-number">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 금천구 시흥대로150길 *** (빌라/다세대)</span></td>
+                    <td><span class="vip-field-address">서울특별시 금천구 시흥대로150길 *** (빌라/다세대)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -1197,7 +1015,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -1248,11 +1066,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">197,783,999 원 ~ 209,739,598 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -1270,15 +1088,15 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023102448" data-rank="item-11" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="OBBsIxr17ekZWbQHtia92FTZEfIR9S0TMlCD38Y64Lc8isrN3Jn6ucPAui66gXxhkXw7xPl/FnnsSE+5stH8mucgI8xHx63oojeUdkr8N8KMKPu2cLlEQyA9FfuuWSovMGzrC8oMTDrezNmmIQ5qCYreVg88wLeAKLfeySUYBIZb4Sh1fJlWezs0y0eMvsAgpNcDIONB2TEqxoUK0UScfzDEXnpRwmXn4/OhFo0gfmwxOuNQ+crCb8Y5Wn4xzmOXEX2/ZRoQuMR4AqszqhgFnHFudj8gjTO8dtzfb8HH8X6eJKmPBaN3ZkrvCpiBlb5YMLQmkf8uaYEcaj3zvwYsAv/rAZpZju6P3x2kfDNzGIPBZaWIbNULCjG74MaA3zp0oXV4reT4MFrs0XNVbUOTa7hRi8aJCPmuAswxntkBpLBfC4o2R55g27axaJ7yBI8DnjNQ6haJR013TycxvTXjVA0=" >
+        <div id="case-2023102448" data-rank="item-11" class="detail-section animate-on-scroll" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 11위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 11위.&nbsp;<span class="vip-field-case-number">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 강서구 방화동로14길 *** (빌라/다세대)</span></td>
+                    <td><span class="vip-field-address">서울특별시 강서구 방화동로14길 *** (빌라/다세대)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -1294,7 +1112,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -1345,11 +1163,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">247,631,999 원 ~ 262,600,798 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -1367,15 +1185,15 @@
                 </div>
             </div>
         </div>
-        <div id="case-2023108446" data-rank="item-12" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="xI8FtGdjDt20fN7XsrtJpy2PyN0LaA4V1S+PCo2abBZz91NmRSXSieLnEOC3XnR2mvs5kgd9wUYSG/GVPq7Qb484ukhqX6zcclBSts/DedAh776buWeKw7G4c7/5dwc09WX13RaEtXMslirvr3VmLyZeJDvJ6/Z35doLo7zsNjQIt3CGzmTZmfZLfiAsV8LJwBmdui15RAHKa077DKx6HuRd8+NAm5Kl+u3dWukzWvFFoXqFC37SmjhkiYNWfN9CCPtPHuGWrzx8zZsLlvjDsMnVeKDCBhxU/5JDrX54HqD4bPdGwQKWHKZDHJJhY6M7Fx3XRCFUHyklf9i6xlddEkhqjnxyAdOpSPH/oXmYyIJyJg5e5QkNdHqQKmaFFvcXn6CYFtsr8cF/XBavJkBOoobOMXWcMkNYcooVF4D/0q4o5dU93HO0w6QWop1qjLFDP0lG1cEBQ6IbfClGksdMJ/Y=" >
+        <div id="case-2023108446" data-rank="item-12" class="detail-section animate-on-scroll" >
             <div class="detail-section-title">
-                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 12위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 12위.&nbsp;<span class="vip-field-case-number">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 구로구 경인로15나길 *** (빌라/다세대)</span></td>
+                    <td><span class="vip-field-address">서울특별시 구로구 경인로15나길 *** (빌라/다세대)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -1391,7 +1209,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -1442,11 +1260,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">192,155,999 원 ~ 203,771,398 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -1482,15 +1300,15 @@
                 </div>
             </div>
             
-        <div id="case-2023445952" data-rank="item-1" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="WFY+YjBYzahTzobtsDvJkQI9RxLHijiPdmIhnz2qH/OwyTNxKFuO5WTF2WORY6dZEC1m2f1A+HPXTwY3wtTeCgornQKQ5gHYu4qEYd5PytddAYQsgvOf88vvuoGFJFs0aAkXj/ymQvwyIKQkl0jrgIlsUl2z3Dhkxca6xVcPRVscmFDNHh2QgbabchKJO/Yx0e+K+dYIVBURsWsOFTdx+Msz4ttk224mUUgpZ8oggZM0LjPfJwBtL7FRG/yAscW8uLRZaj00J2LPBe9aHjctzsSw6uRvGDlJdSdgXY/oUi3jXtQwnZo9uN44810agiy1yJJL14PkavTyTAXdnHLfg01iKvc3rLCif4PvUvODbN/uEOwNe8dml4Fh1tyZ+npXa6amc7+6yh+/TMOGliicdODGErcU3gM/875qGZSUj7vGSCjbUfUNyVHvBVurmZXM5tOkmw==" style="border-color: rgba(248, 113, 113, 0.25); background: rgba(15, 23, 42, 0.45);">
+        <div id="case-2023445952" data-rank="item-1" class="detail-section animate-on-scroll" style="border-color: rgba(248, 113, 113, 0.25); background: rgba(15, 23, 42, 0.45);">
             <div class="detail-section-title">
-                <span class="badge-status badge-pruned">탈락</span> <span class="prune-reason-tag">기준 미달: 실마진 9.2% (기준 10% 대비 -0.8%p 부족 &bull; 비추천)</span>&nbsp;&middot;&nbsp;제외 1호.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
-                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+                <span class="badge-status badge-pruned">탈락</span> <span class="prune-reason-tag">기준 미달: 실마진 9.2% (기준 10% 대비 -0.8%p 부족 &bull; 비추천)</span>&nbsp;&middot;&nbsp;제외 1호.&nbsp;<span class="vip-field-case-number">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(254, 229, 0, 0.12); color: #FEE500; padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(254, 229, 0, 0.3);">일반 공개</span>
             </div>
             <table class="detail-table">
                 <tr>
                     <th>소재지</th>
-                    <td><span class="vip-field-address vip-locked-placeholder">경기도 부천시 경인로10번길 *** (아파트)</span></td>
+                    <td><span class="vip-field-address">경기도 부천시 경인로10번길 *** (아파트)</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked">[상세단지명 카톡확인]</a></td>
                 </tr>
                 <tr>
                     <th>물건 종류</th>
@@ -1506,7 +1324,7 @@
                 </tr>
                 <tr>
                     <th>추천 입찰가</th>
-                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                    <td><span class="vip-field-target-price"><a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="padding: 0.35rem 0.8rem; font-size: 0.92rem;">AI 최적 입찰가 &amp; 권리분석 확인 &rarr;</a></span></td>
                 </tr>
                 <tr>
                     <th>낙찰 성공 확률</th>
@@ -1557,11 +1375,11 @@
                 </tr>
                 <tr>
                     <th>입찰가 범위</th>
-                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                    <td><span class="vip-field-bid-range"><span class="teaser-blur-text">295,871,999 원 ~ 322,644,000 원</span> <a href="https://open.kakao.com/o/gJaTtHJi" onclick="joinKakaoWithCode(event)" target="_blank" class="teaser-masked" style="margin-left: 0.4rem;">[카톡공개]</a></span></td>
                 </tr>
                 <tr>
                     <th>특이사항</th>
-                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                    <td><span class="vip-field-notes">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
                 </tr>
             </table>
 
@@ -1600,7 +1418,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경4869</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -1615,7 +1433,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">서울특별시 관악구 봉천동 66-89</span>
+                            <span class="live-case-info-val">서울특별시 관악구 봉천동 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -1638,7 +1456,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경106314</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -1653,7 +1471,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">서울특별시 관악구 봉천동 65-30</span>
+                            <span class="live-case-info-val">서울특별시 관악구 봉천동 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -1676,7 +1494,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경108730</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -1691,7 +1509,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">서울특별시 관악구 봉천동 66-98</span>
+                            <span class="live-case-info-val">서울특별시 관악구 봉천동 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -1714,7 +1532,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경111644</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -1729,7 +1547,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">서울특별시 중구 난계로11길 30 13층102-1303호</span>
+                            <span class="live-case-info-val">서울특별시 중구 난계로11길 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -1752,7 +1570,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경114858</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -1767,7 +1585,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">서울특별시 관악구 당곡6나길 27 103동 5층501호</span>
+                            <span class="live-case-info-val">서울특별시 관악구 당곡6나길 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -1790,7 +1608,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경116182</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -1805,7 +1623,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">서울특별시 관악구 봉천동 1671-26</span>
+                            <span class="live-case-info-val">서울특별시 관악구 봉천동 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -1828,7 +1646,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경118379</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -1843,7 +1661,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">서울특별시 관악구 봉천동 66-185</span>
+                            <span class="live-case-info-val">서울특별시 관악구 봉천동 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -1866,7 +1684,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2024타경2501</span>
+                            <span class="live-case-no">2024타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -1881,7 +1699,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">서울특별시 중구 퇴계로 72 1층110호</span>
+                            <span class="live-case-info-val">서울특별시 중구 퇴계로 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -1904,7 +1722,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2024타경2532</span>
+                            <span class="live-case-no">2024타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -1919,7 +1737,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">서울특별시 종로구 평창동 445-1</span>
+                            <span class="live-case-info-val">서울특별시 종로구 평창동 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -1942,7 +1760,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경104819</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -1957,7 +1775,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">서울특별시 금천구 시흥대로150길 11-9 제2층 제202호</span>
+                            <span class="live-case-info-val">서울특별시 금천구 시흥대로150길 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -1980,7 +1798,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경102448</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -1995,7 +1813,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">서울특별시 강서구 방화동로14길 12 제103동 제4층 제402호</span>
+                            <span class="live-case-info-val">서울특별시 강서구 방화동로14길 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2018,7 +1836,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경108446</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2033,7 +1851,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">서울특별시 구로구 경인로15나길 20 제104동 제3층 제302호</span>
+                            <span class="live-case-info-val">서울특별시 구로구 경인로15나길 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2056,7 +1874,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경2003</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2071,7 +1889,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 양평군 서종면 수입리 168-7</span>
+                            <span class="live-case-info-val">경기도 양평군 서종면 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2094,7 +1912,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경845920</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2109,7 +1927,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">인천광역시 남동구 소래역로 117 상가동 2층204호</span>
+                            <span class="live-case-info-val">인천광역시 남동구 소래역로 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2132,7 +1950,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경12076</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2147,7 +1965,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">인천광역시 옹진군 자월면 자월리 407-1</span>
+                            <span class="live-case-info-val">인천광역시 옹진군 자월면 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2170,7 +1988,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경10367</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2185,7 +2003,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 용인시 처인구 남사읍 북리 산100</span>
+                            <span class="live-case-info-val">경기도 용인시 처인구 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2208,7 +2026,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경10596</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2223,7 +2041,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 수원시 팔달구 경수대로616번길 18-10</span>
+                            <span class="live-case-info-val">경기도 수원시 팔달구 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2246,7 +2064,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경108792</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2261,7 +2079,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 오산시 세교동 528-123</span>
+                            <span class="live-case-info-val">경기도 오산시 세교동 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2284,7 +2102,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경106802</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2299,7 +2117,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 과천시 주암동 산19-23</span>
+                            <span class="live-case-info-val">경기도 과천시 주암동 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2322,7 +2140,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2024타경126320</span>
+                            <span class="live-case-no">2024타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2337,7 +2155,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 의왕시 포일세거리로 73 403동 7층702호</span>
+                            <span class="live-case-info-val">경기도 의왕시 포일세거리로 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2360,7 +2178,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2024타경1485</span>
+                            <span class="live-case-no">2024타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2375,7 +2193,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 군포시 산본천로226번안길 12 5층 504호</span>
+                            <span class="live-case-info-val">경기도 군포시 산본천로226번안길 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2398,7 +2216,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2024타경100269</span>
+                            <span class="live-case-no">2024타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2413,7 +2231,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 안양시 만안구 안양동 730-11</span>
+                            <span class="live-case-info-val">경기도 안양시 만안구 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2436,7 +2254,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2024타경102524</span>
+                            <span class="live-case-no">2024타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2451,7 +2269,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 과천시 과천동 산69-13</span>
+                            <span class="live-case-info-val">경기도 과천시 과천동 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2474,7 +2292,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2024타경106298</span>
+                            <span class="live-case-no">2024타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2489,7 +2307,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 안양시 동안구 경수대로 701 5층519호</span>
+                            <span class="live-case-info-val">경기도 안양시 동안구 *** (부동산)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2512,7 +2330,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경407532</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-postponed">기일변경 (대법원 조회)</span>
                     </div>
@@ -2527,7 +2345,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 김포시 양촌읍 대포리 83-26</span>
+                            <span class="live-case-info-val">경기도 김포시 양촌읍 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2550,7 +2368,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경445952</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2565,7 +2383,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 부천시 경인로10번길 25-32 101동 3층302호</span>
+                            <span class="live-case-info-val">경기도 부천시 경인로10번길 *** (아파트)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2588,7 +2406,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경45888</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2603,7 +2421,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 김포시 김포한강10로133번길 40 10층비10-103호</span>
+                            <span class="live-case-info-val">경기도 김포시 김포한강10로133번길 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2626,7 +2444,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경45994</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2641,7 +2459,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 김포시 풍무로 168 10층1012호</span>
+                            <span class="live-case-info-val">경기도 김포시 풍무로 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2664,7 +2482,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경479142</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2679,7 +2497,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 김포시 통진읍 고정리 275-8</span>
+                            <span class="live-case-info-val">경기도 김포시 통진읍 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2702,7 +2520,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2024타경3782</span>
+                            <span class="live-case-no">2024타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2717,7 +2535,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 김포시 태장로 810 1층119호</span>
+                            <span class="live-case-info-val">경기도 김포시 태장로 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2740,7 +2558,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2024타경4257</span>
+                            <span class="live-case-no">2024타경*****</span>
                         </div>
                         <span class="live-case-badge badge-postponed">기일변경 (대법원 조회)</span>
                     </div>
@@ -2755,7 +2573,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 시흥시 거북섬1길 19 3층308호</span>
+                            <span class="live-case-info-val">경기도 시흥시 거북섬1길 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2778,7 +2596,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2024타경6048</span>
+                            <span class="live-case-no">2024타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2793,7 +2611,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 안산시 상록구 선암로1길 23 1층102호</span>
+                            <span class="live-case-info-val">경기도 안산시 상록구 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2816,7 +2634,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2024타경50496</span>
+                            <span class="live-case-no">2024타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2831,7 +2649,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 안산시 단원구 화정천서로2길 17 3층301호</span>
+                            <span class="live-case-info-val">경기도 안산시 단원구 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2854,7 +2672,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경551620</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2869,7 +2687,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 남양주시 수동면 송천리 5-6</span>
+                            <span class="live-case-info-val">경기도 남양주시 수동면 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2892,7 +2710,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경717042</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2907,7 +2725,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 가평군 청평면 고성리 산165</span>
+                            <span class="live-case-info-val">경기도 가평군 청평면 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2930,7 +2748,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경3719</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2945,7 +2763,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 평택시 평택5로34번길 99 2층202호</span>
+                            <span class="live-case-info-val">경기도 평택시 평택5로34번길 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -2968,7 +2786,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경478492</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -2983,7 +2801,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 평택시 팽성읍 계양로 771-12 1층101호</span>
+                            <span class="live-case-info-val">경기도 평택시 팽성읍 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -3006,7 +2824,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경3943</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -3021,7 +2839,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 양주시 남면 상수리 411-2</span>
+                            <span class="live-case-info-val">경기도 양주시 남면 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
@@ -3044,7 +2862,7 @@
                 <div class="live-case-card animate-on-scroll">
                     <div class="live-case-card-header">
                         <div class="live-case-no-wrap">
-                            <span class="live-case-no">2023타경764820</span>
+                            <span class="live-case-no">2023타경*****</span>
                         </div>
                         <span class="live-case-badge badge-fresh">실시간 접수</span>
                     </div>
@@ -3059,7 +2877,7 @@
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">소재지</span>
-                            <span class="live-case-info-val">경기도 양주시 은현면 봉암리 429-1</span>
+                            <span class="live-case-info-val">경기도 양주시 은현면 *** (빌라/다세대)</span>
                         </div>
                         <div class="live-case-info-row">
                             <span class="live-case-info-label">감정평가액</span>
