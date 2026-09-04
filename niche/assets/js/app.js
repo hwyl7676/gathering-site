@@ -58,40 +58,84 @@ const NicheApp = {
             if (!Array.isArray(presets) || presets.length === 0) return;
 
             let html = '';
-            presets.forEach((preset) => {
-                const isVehicle = !!preset.is_vehicle;
-                const badgeClass = isVehicle ? 'tag-redev' : 'tag-share';
-                const safeJson = JSON.stringify(preset).replace(/"/g, '&quot;');
+            let currentCategory = '';
+
+            presets.forEach((preset, index) => {
+                const categoryType = preset.slot_category || (preset.is_vehicle ? 'vehicle' : 'residential');
                 
-                let ddayStr = '';
-                if (preset.auction_date) {
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    const aDate = new Date(preset.auction_date);
-                    aDate.setHours(0, 0, 0, 0);
-                    const diffDays = Math.ceil((aDate - today) / (1000 * 60 * 60 * 24));
-                    if (diffDays > 0) ddayStr = `<span style="font-size:0.78rem; color:#f59e0b; margin-left:0.4rem; font-weight:700;">(D-${diffDays})</span>`;
-                    else if (diffDays === 0) ddayStr = `<span style="font-size:0.78rem; color:#ef4444; margin-left:0.4rem; font-weight:700;">(오늘 매각)</span>`;
+                // 5:5 카테고리 헤더 분기 (차량 5슬롯 / 주거지 5슬롯)
+                if (categoryType !== currentCategory) {
+                    currentCategory = categoryType;
+                    const headerTitle = currentCategory === 'vehicle' 
+                        ? '[헤이딜러 5대 카테고리 1위 챔피언 자동차 (5슬롯)]' 
+                        : '[수도권 실거주 주거지 1/2 지분 (5슬롯)]';
+                    const headerDesc = currentCategory === 'vehicle'
+                        ? '5년·7만km 이내 / 헤이딜러 즉시 엑시트 순수익 200만 원 이상 검증 물건'
+                        : '타 공유자 실거주 점유 / 부당이득반환 청구 압박 레버리지 검증 물건';
+                    
+                    const marginTop = index > 0 ? 'margin-top: 24px;' : '';
+                    html += `
+                    <div style="${marginTop} margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        <div style="font-size: 0.95rem; font-weight: 700; color: var(--primary); letter-spacing: -0.01em;">${headerTitle}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">${headerDesc}</div>
+                    </div>
+                    `;
                 }
 
-                html += `
-                <div class="case-item" onclick="NicheApp.loadPreset(${safeJson})" style="cursor:pointer;">
-                    <div>
-                        <div class="case-info-title">
-                            <span style="color:var(--text-muted); font-size:0.85rem; font-weight:600;">[${preset.court_name || '법원'}]</span>
-                            <span style="color:var(--primary); font-weight:700;">${preset.case_number}</span> 
-                            ${preset.title || preset.car_model || preset.address}
-                            ${ddayStr}
+                const isEmpty = !!preset.is_empty;
+                const isVehicle = !!preset.is_vehicle;
+
+                if (isEmpty) {
+                    // 실매물 부재 시 가짜 데이터 주입 없이 공석 바닥 텍스트 슬롯 렌더링
+                    html += `
+                    <div class="case-item case-item-empty" style="cursor: default; opacity: 0.72; border: 1.5px dashed rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.02); transition: all 0.2s ease;">
+                        <div style="flex: 1;">
+                            <div class="case-info-title" style="color: var(--text-muted);">
+                                <span style="border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 4px; padding: 2px 6px; font-size: 0.75rem; margin-right: 6px; font-weight: 600; color: var(--text-muted);">공석 슬롯</span>
+                                <strong>${preset.placeholder_title || preset.title}</strong>
+                            </div>
+                            <div class="case-info-meta" style="color: rgba(255, 255, 255, 0.45); font-size: 0.82rem; margin-top: 4px; line-height: 1.4;">
+                                ${preset.placeholder_desc || '이번 회차 필터 통과 실매물이 없습니다. (다음 회차 수집 대기)'}
+                            </div>
                         </div>
-                        <div class="case-info-meta">${preset.meta || ''}</div>
+                        <span class="case-tag tag-blind" style="opacity: 0.8; font-size: 0.75rem; align-self: center;">${preset.badge || '수집 대기'}</span>
                     </div>
-                    <span class="case-tag ${badgeClass}">${preset.badge || '검증 통과'}</span>
-                </div>
-                `;
+                    `;
+                } else {
+                    // 필터를 통과한 실매물 정상 렌더링 (클릭 시 가치평가 파라미터 자동 로드)
+                    const badgeClass = isVehicle ? 'tag-redev' : 'tag-share';
+                    const safeJson = JSON.stringify(preset).replace(/"/g, '&quot;');
+                    
+                    let ddayStr = '';
+                    if (preset.auction_date) {
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        const aDate = new Date(preset.auction_date);
+                        aDate.setHours(0, 0, 0, 0);
+                        const diffDays = Math.ceil((aDate - today) / (1000 * 60 * 60 * 24));
+                        if (diffDays > 0) ddayStr = `<span style="font-size:0.78rem; color:#f59e0b; margin-left:0.4rem; font-weight:700;">(D-${diffDays})</span>`;
+                        else if (diffDays === 0) ddayStr = `<span style="font-size:0.78rem; color:#ef4444; margin-left:0.4rem; font-weight:700;">(오늘 매각)</span>`;
+                    }
+
+                    html += `
+                    <div class="case-item" onclick="NicheApp.loadPreset(${safeJson})" style="cursor:pointer; transition: all 0.2s ease;">
+                        <div style="flex: 1;">
+                            <div class="case-info-title">
+                                <span style="color:var(--text-muted); font-size:0.85rem; font-weight:600;">[${preset.court_name || '법원'}]</span>
+                                <span style="color:var(--primary); font-weight:700;">${preset.case_number}</span> 
+                                ${preset.title || preset.car_model || preset.address}
+                                ${ddayStr}
+                            </div>
+                            <div class="case-info-meta">${preset.meta || ''}</div>
+                        </div>
+                        <span class="case-tag ${badgeClass}" style="align-self: center;">${preset.badge || '검증 통과'}</span>
+                    </div>
+                    `;
+                }
             });
 
             container.innerHTML = html;
-            console.log('[NicheApp] 실데이터 저수지 프리셋 연동 완료 (' + presets.length + '건)');
+            console.log('[NicheApp] 실데이터 저수지 10슬롯 프리셋 연동 완료 (총 ' + presets.length + '슬롯)');
         } catch (e) {
             console.warn('[NicheApp] active_presets.json 로드 건너뜀 (기본 프리셋 유지):', e);
         }
