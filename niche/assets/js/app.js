@@ -42,7 +42,59 @@ const NicheApp = {
     init() {
         this.checkPinAuth();
         this.bindEvents();
+        this.loadActivePresets();
         this.calculate();
+    },
+
+    async loadActivePresets() {
+        const container = document.getElementById('case-list-container');
+        if (!container) return;
+
+        try {
+            const res = await fetch('data/active_presets.json?v=' + Date.now(), { cache: 'no-cache' });
+            if (!res.ok) return;
+            const data = await res.json();
+            const presets = data.presets;
+            if (!Array.isArray(presets) || presets.length === 0) return;
+
+            let html = '';
+            presets.forEach((preset) => {
+                const isVehicle = !!preset.is_vehicle;
+                const badgeClass = isVehicle ? 'tag-redev' : 'tag-share';
+                const safeJson = JSON.stringify(preset).replace(/"/g, '&quot;');
+                
+                let ddayStr = '';
+                if (preset.auction_date) {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    const aDate = new Date(preset.auction_date);
+                    aDate.setHours(0, 0, 0, 0);
+                    const diffDays = Math.ceil((aDate - today) / (1000 * 60 * 60 * 24));
+                    if (diffDays > 0) ddayStr = `<span style="font-size:0.78rem; color:#f59e0b; margin-left:0.4rem; font-weight:700;">(D-${diffDays})</span>`;
+                    else if (diffDays === 0) ddayStr = `<span style="font-size:0.78rem; color:#ef4444; margin-left:0.4rem; font-weight:700;">(오늘 매각)</span>`;
+                }
+
+                html += `
+                <div class="case-item" onclick="NicheApp.loadPreset(${safeJson})" style="cursor:pointer;">
+                    <div>
+                        <div class="case-info-title">
+                            <span style="color:var(--text-muted); font-size:0.85rem; font-weight:600;">[${preset.court_name || '법원'}]</span>
+                            <span style="color:var(--primary); font-weight:700;">${preset.case_number}</span> 
+                            ${preset.title || preset.car_model || preset.address}
+                            ${ddayStr}
+                        </div>
+                        <div class="case-info-meta">${preset.meta || ''}</div>
+                    </div>
+                    <span class="case-tag ${badgeClass}">${preset.badge || '검증 통과'}</span>
+                </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            console.log('[NicheApp] 실데이터 저수지 프리셋 연동 완료 (' + presets.length + '건)');
+        } catch (e) {
+            console.warn('[NicheApp] active_presets.json 로드 건너뜀 (기본 프리셋 유지):', e);
+        }
     },
 
     async checkPinAuth() {

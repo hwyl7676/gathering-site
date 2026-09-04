@@ -1,0 +1,40 @@
+{
+  "updated_at": "2026-09-01 16:47:00",
+  "category_champions": [
+    {
+      "category_id": "DOMESTIC_LARGE_SEDAN",
+      "category_name": "국산 준대형/대형 세단",
+      "rank": 1,
+      "champion_model": "그랜저",
+      "keywords": ["그랜저", "GRANDEUR", "GN7", "IG"]
+    },
+    {
+      "category_id": "DOMESTIC_MID_SUV",
+      "category_name": "국산 패밀리 SUV",
+      "rank": 1,
+      "champion_model": "쏘렌토",
+      "keywords": ["쏘렌토", "SORENTO", "MQ4", "싼타페", "SANTAFE"]
+    },
+    {
+      "category_id": "DOMESTIC_FAMILY_RV",
+      "category_name": "국산 패밀리 RV",
+      "rank": 1,
+      "champion_model": "카니발",
+      "keywords": ["카니발", "CARNIVAL", "KA4"]
+    },
+    {
+      "category_id": "IMPORT_PREMIUM_SEDAN",
+      "category_name": "수입 프리미엄 세단",
+      "rank": 1,
+      "champion_model": "벤츠 E-Class",
+      "keywords": ["ECLASS", "E클래스", "E300", "E250", "E220", "5시리즈", "520I", "530I"]
+    },
+    {
+      "category_id": "DOMESTIC_PREMIUM_LUXURY",
+      "category_name": "국산 프리미엄 럭셔리",
+      "rank": 1,
+      "champion_model": "제네시스 G80",
+      "keywords": ["G80", "GV80", "제네시스", "GENESIS", "RG3"]
+    }
+  ]
+}
