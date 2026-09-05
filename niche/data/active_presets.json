@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generated_at": "2026-09-05T10:08:14.661472",
+    "generated_at": "2026-09-05T10:26:59.918889",
     "source": "auction_7612_data_lake",
     "total_slots": 10,
-    "active_count": 0,
-    "empty_count": 10
+    "active_count": 1,
+    "empty_count": 9
   },
   "presets": [
     {
@@ -22,12 +22,17 @@
       "slot_id": "veh_sorento",
       "slot_category": "vehicle",
       "slot_name": "국산 패밀리 SUV 1위",
-      "is_empty": true,
+      "is_empty": false,
       "is_vehicle": true,
-      "title": "[국산 패밀리 SUV 1위] 쏘렌토/싼타페 자리",
-      "placeholder_title": "[국산 패밀리 SUV 1위] 쏘렌토/싼타페 자리",
-      "placeholder_desc": "이번 회차 5년·7만km·헤이딜러 마진 200만 원 필터를 통과한 쏘렌토/싼타페 실매물이 없습니다. (다음 회차 수집 대기)",
-      "badge": "수집 대기"
+      "case_number": "2026타경101037",
+      "court_name": "서울중앙지방법원",
+      "title": "[국산 패밀리 SUV 1위] 쏘렌토 하이브리드 2023년식 승용차",
+      "car_model": "쏘렌토 하이브리드 2023년식 승용차",
+      "appraisal_value": 40000000,
+      "min_bid_price": 28000000,
+      "auction_date": "2026-09-15",
+      "badge": "검증 통과",
+      "meta": "감정가 40,000,000원 | 서울중앙지방법원"
     },
     {
       "slot_id": "veh_carnival",
