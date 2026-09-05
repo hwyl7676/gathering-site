@@ -154,7 +154,18 @@
                 try {
                     localStorage.setItem('gh_member_pin', cleanPin);
                     sessionStorage.setItem('gh_member_pin', cleanPin);
+                    const now = new Date();
+                    const day = now.getDay();
+                    const target = new Date(now);
+                    if (day === 2 || day === 3) target.setDate(now.getDate() - (day - 2));
+                    else if (day >= 4) target.setDate(now.getDate() - (day - 4));
+                    else target.setDate(now.getDate() - (day + 3));
+                    const cKey = `${target.getFullYear()}-${String(target.getMonth() + 1).padStart(2, '0')}-${String(target.getDate()).padStart(2, '0')}`;
+                    localStorage.setItem('gh_member_pin_cycle', cKey);
+                    sessionStorage.setItem('gh_member_pin_cycle', cKey);
                 } catch(e) {}
+                document.body.classList.remove('pin-locked');
+                document.documentElement.classList.remove('pin-gate-locked');
                 const lockEl = document.getElementById('members-lock');
                 if (lockEl) lockEl.style.display = 'none';
 

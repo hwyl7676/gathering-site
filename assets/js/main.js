@@ -393,6 +393,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(e) {}
 
         const modal = document.getElementById('global-pin-gate-modal');
+        // global-pin-gate-modal이 없는 상세/리포트 페이지는 자체 모달에 위임하고 전역 잠금 클래스 주입 제외
+        if (!modal) {
+            return;
+        }
         const pinInput = document.getElementById('global-pin-input-field');
         const pinForm = document.getElementById('global-pin-gate-form');
         const errorMsg = document.getElementById('global-pin-error-text');

@@ -1452,8 +1452,8 @@ body.pin-locked {
     height: 100vh !important;
 }
 
-html.pin-gate-locked body > :not(#global-pin-gate-modal),
-body.pin-locked > :not(#global-pin-gate-modal) {
+html.pin-gate-locked body > :not(#global-pin-gate-modal):not(#members-lock),
+body.pin-locked > :not(#global-pin-gate-modal):not(#members-lock) {
     filter: blur(35px) grayscale(70%) !important;
     pointer-events: none !important;
     opacity: 0.03 !important;
