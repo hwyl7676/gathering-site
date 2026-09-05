@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated_at": "2026-09-05T10:26:59.918889",
+    "generated_at": "2026-09-05T11:18:37.948829",
     "source": "auction_7612_data_lake",
     "total_slots": 10,
     "active_count": 1,
@@ -26,10 +26,16 @@
       "is_vehicle": true,
       "case_number": "2026타경101037",
       "court_name": "서울중앙지방법원",
+      "property_type": "자동차 경매 (5대 카테고리 1위 / 5년 7만)",
       "title": "[국산 패밀리 SUV 1위] 쏘렌토 하이브리드 2023년식 승용차",
       "car_model": "쏘렌토 하이브리드 2023년식 승용차",
+      "vehicle_year": 2023,
+      "mileage_km": 45000,
+      "address": "서울중앙지방법원 지정 차량보관소",
       "appraisal_value": 40000000,
       "min_bid_price": 28000000,
+      "wholesale_price": 40000000,
+      "fines": 0,
       "auction_date": "2026-09-15",
       "badge": "검증 통과",
       "meta": "감정가 40,000,000원 | 서울중앙지방법원"

@@ -255,11 +255,17 @@ const NicheApp = {
     },
 
     loadPreset(presetData) {
-        document.getElementById('input-case').value = presetData.case_number;
-        document.getElementById('input-type').value = presetData.property_type;
-        document.getElementById('input-address').value = presetData.address;
-        document.getElementById('input-appraisal').value = presetData.appraisal_value;
-        document.getElementById('input-min-bid').value = presetData.min_bid_price;
+        if (!presetData) return;
+        const courtName = presetData.court_name || '서울중앙지방법원';
+        const defaultVehicleAddr = courtName + ' 지정 차량보관소';
+        const defaultResAddr = '서울특별시 마포구 서교동 394-12';
+        const defaultType = presetData.is_vehicle ? '자동차 경매 (5대 카테고리 1위 / 5년 7만)' : '빌라/다세대 지분 (실거주)';
+
+        document.getElementById('input-case').value = presetData.case_number || '';
+        document.getElementById('input-type').value = presetData.property_type || defaultType;
+        document.getElementById('input-address').value = presetData.address || (presetData.is_vehicle ? defaultVehicleAddr : defaultResAddr);
+        document.getElementById('input-appraisal').value = presetData.appraisal_value || 0;
+        document.getElementById('input-min-bid').value = presetData.min_bid_price || 0;
         
         if (presetData.is_vehicle) {
             if (document.getElementById('input-car-model')) document.getElementById('input-car-model').value = presetData.car_model || "";
