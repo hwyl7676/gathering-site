@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generated_at": "2026-09-09T21:35:26.159499",
+    "generated_at": "2026-09-10T07:00:51.852344",
     "source": "auction_7612_data_lake",
     "total_slots": 10,
-    "active_count": 1,
-    "empty_count": 9
+    "active_count": 2,
+    "empty_count": 8
   },
   "presets": [
     {
@@ -31,7 +31,7 @@
       "car_model": "쏘렌토 하이브리드 2023년식 승용차",
       "vehicle_year": 2023,
       "mileage_km": 45000,
-      "address": "서울중앙지방법원 지정 차량보관소",
+      "address": "인천광역시 연수구 함박뫼로 250 107동 206호",
       "appraisal_value": 40000000,
       "min_bid_price": 28000000,
       "wholesale_price": 40000000,
@@ -121,12 +121,23 @@
       "slot_id": "res_high_ev",
       "slot_category": "residential",
       "slot_name": "수도권 고수익(EV) 픽",
-      "is_empty": true,
+      "is_empty": false,
       "is_vehicle": false,
-      "title": "[수도권 알짜 픽] 최고수익(EV) 실거주 지분 자리",
-      "placeholder_title": "[수도권 알짜 픽] 최고수익(EV) 실거주 지분 자리",
-      "placeholder_desc": "이번 회차 위험조정 기대수익(EV) 및 4대 불변 필터를 통과한 수도권 실매물이 없습니다. (다음 회차 수집 대기)",
-      "badge": "수집 대기"
+      "case_number": "2025타경90",
+      "court_name": "서울중앙지방법원",
+      "property_type": "다세대 (빌라)",
+      "title": "[수도권 고수익(EV) 픽] 서울특별시 중구 인현동1가 126-1",
+      "address": "서울특별시 중구 인현동1가 126-1",
+      "appraisal_value": 391248800,
+      "min_bid_price": 0,
+      "auction_date": "2026-09-22",
+      "badge": "검증 통과",
+      "meta": "감정가 391,248,800원 | 다세대 (빌라)",
+      "building_area_sqm": 59.8,
+      "share_numerator": 1,
+      "share_denominator": 2,
+      "monthly_rent": 0,
+      "is_residing": true
     }
   ]
 }
