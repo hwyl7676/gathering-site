@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generated_at": "2026-09-14T07:00:53.404329",
+    "generated_at": "2026-09-28T07:01:03.067024",
     "source": "auction_7612_data_lake",
     "total_slots": 10,
-    "active_count": 2,
-    "empty_count": 8
+    "active_count": 4,
+    "empty_count": 6
   },
   "presets": [
     {
@@ -44,12 +44,23 @@
       "slot_id": "veh_carnival",
       "slot_category": "vehicle",
       "slot_name": "국산 패밀리 RV 1위",
-      "is_empty": true,
+      "is_empty": false,
       "is_vehicle": true,
-      "title": "[국산 패밀리 RV 1위] 카니발 자리",
-      "placeholder_title": "[국산 패밀리 RV 1위] 카니발 자리",
-      "placeholder_desc": "이번 회차 5년·7만km·헤이딜러 마진 200만 원 필터를 통과한 카니발 실매물이 없습니다. (다음 회차 수집 대기)",
-      "badge": "수집 대기"
+      "case_number": "2026타경101075",
+      "court_name": "서울중앙지방법원",
+      "property_type": "자동차 경매 (5대 카테고리 1위 / 5년 7만)",
+      "title": "[국산 패밀리 RV 1위] 카니발 2021년식 승용차",
+      "car_model": "카니발 2021년식 승용차",
+      "vehicle_year": 2021,
+      "mileage_km": 45000,
+      "address": "서울특별시 서초구 신흥말길 1-593",
+      "appraisal_value": 28000000,
+      "min_bid_price": 19600000,
+      "wholesale_price": 28000000,
+      "fines": 0,
+      "auction_date": "2026-10-01",
+      "badge": "검증 통과",
+      "meta": "감정가 28,000,000원 | 서울중앙지방법원"
     },
     {
       "slot_id": "veh_eclass",
@@ -66,12 +77,23 @@
       "slot_id": "veh_genesis",
       "slot_category": "vehicle",
       "slot_name": "국산 프리미엄 럭셔리 1위",
-      "is_empty": true,
+      "is_empty": false,
       "is_vehicle": true,
-      "title": "[국산 프리미엄 럭셔리 1위] 제네시스 G80/GV80 자리",
-      "placeholder_title": "[국산 프리미엄 럭셔리 1위] 제네시스 G80/GV80 자리",
-      "placeholder_desc": "이번 회차 5년·7만km·헤이딜러 마진 200만 원 필터를 통과한 G80/GV80 실매물이 없습니다. (다음 회차 수집 대기)",
-      "badge": "수집 대기"
+      "case_number": "2025타경103470",
+      "court_name": "서울중앙지방법원",
+      "property_type": "자동차 경매 (5대 카테고리 1위 / 5년 7만)",
+      "title": "[국산 프리미엄 럭셔리 1위] 제네시스(GENESIS) 자동차,중기_차량",
+      "car_model": "제네시스(GENESIS) 자동차,중기_차량",
+      "vehicle_year": 2024,
+      "mileage_km": 45000,
+      "address": "서울중앙지방법원 지정 차량보관소",
+      "appraisal_value": 1855000,
+      "min_bid_price": 1298500,
+      "wholesale_price": 1855000,
+      "fines": 0,
+      "auction_date": "2026-10-08",
+      "badge": "검증 통과",
+      "meta": "감정가 1,855,000원 | 서울중앙지방법원"
     },
     {
       "slot_id": "res_seoul_west",
