@@ -10,7 +10,7 @@
     <meta property="og:title" content="Gathering Niche - 주거지 지분 & 카테고리 1위 자동차 경매">
     <meta property="og:description" content="주거지 지분 및 헤이딜러 5대 카테고리 1위 챔피언 자동차 경매 정밀 분석 엔진">
     <meta property="og:type" content="website">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=110fb23f0780400ef7e27f21abfb4be1ebea8f6e5878941c9bac94c6a125d9fc">
     <script>
         (function() {
             try {
@@ -75,14 +75,15 @@
         <header class="navbar">
             <a href="#" class="brand">
                 <div class="brand-icon">N</div>
-                <div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span class="brand-title">Gathering Niche</span>
-                        <span class="brand-badge">Residential & Category 1st Auto</span>
-                    </div>
+                <div class="brand-copy">
+                    <span class="brand-title">Gathering Niche</span>
+                    <span class="brand-badge">Residential & Category 1st Auto</span>
                 </div>
             </a>
-            <nav class="nav-menu">
+            <button id="nav-toggle" class="nav-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="niche-nav">
+                <span></span><span></span><span></span>
+            </button>
+            <nav id="niche-nav" class="nav-menu" aria-label="주 메뉴">
                 <a href="https://gathering-house.kr" target="_blank" rel="noopener noreferrer" class="nav-link" style="color: var(--blue-400); font-weight: 700;">&larr; Gathering House 메인</a>
                 <a href="#simulator" class="nav-link active">시뮬레이터</a>
                 <a href="#showcase" class="nav-link">특화 분석 사례</a>
@@ -105,153 +106,86 @@
             </p>
         </section>
 
-        <!-- Main Simulator Grid -->
-        <main class="main-grid" id="simulator">
-            <!-- Left: Input Form -->
-            <section class="card">
-                <div class="card-header">
-                    <h2 class="card-title">니치 자산 분석 파라미터</h2>
-                    <p class="card-subtitle">주거지 지분 또는 자동차 경매 물건의 조건을 입력하십시오.</p>
-                </div>
-
-                <form id="niche-calc-form">
-                    <div class="form-group">
-                        <label class="form-label" for="input-case">법원 사건번호</label>
-                        <input type="text" id="input-case" class="form-input" value="2025타경10450" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="input-type">물건 유형</label>
-                        <select id="input-type" class="form-select">
-                            <option value="빌라/다세대 지분 (실거주)" selected>빌라/다세대 지분 (실거주 주거지)</option>
+        <!-- Independent Asset Simulators -->
+        <main id="simulator">
+            <div class="asset-tabs" role="tablist" aria-label="분석할 자산">
+                <button id="residential-tab" type="button" role="tab" aria-selected="true" aria-controls="residential-panel">부동산 지분</button>
+                <button id="vehicle-tab" type="button" role="tab" aria-selected="false" aria-controls="vehicle-panel" tabindex="-1">자동차</button>
+            </div>
+            <section id="residential-panel" class="asset-panel main-grid" role="tabpanel" aria-labelledby="residential-tab">
+                <section class="card">
+                    <div class="card-header"><h2 class="card-title">부동산 지분 입력</h2><p class="card-subtitle">주거지 지분의 조건을 입력하십시오. 자동차 입력값과 별도로 유지됩니다.</p></div>
+                    <form id="residential-form">
+                        <div class="form-group"><label class="form-label" for="residential-case">법원 사건번호</label><input id="residential-case" name="case" type="text" class="form-input" value="2025타경10450" required></div><div class="form-group"><label class="form-label" for="residential-address">소재지 주소</label><input id="residential-address" name="address" type="text" class="form-input" value="서울특별시 마포구 서교동 394-12" ></div><div class="form-row"><div class="form-group"><label class="form-label" for="residential-appraisal">감정평가액 (원)</label><input id="residential-appraisal" name="appraisal" type="number" class="form-input" value="280000000" min="1" required></div>
+<div class="form-group"><label class="form-label" for="residential-min-bid">최저 입찰가 (원)</label><input id="residential-min-bid" name="min-bid" type="number" class="form-input" value="143360000" min="1" required></div></div>
+                        <div class="form-group"><label class="form-label" for="residential-type">물건 유형</label><select id="residential-type" name="type" class="form-select">
+                            <option value="빌라/다세대 지분 (실거주)">빌라/다세대 지분 (실거주 주거지)</option>
                             <option value="아파트 지분 (실거주)">아파트 지분 (실거주 주거지)</option>
                             <option value="주거용 오피스텔 지분">주거용 오피스텔 지분</option>
-                            <option value="자동차 경매 (카테고리 1위)">자동차 경매 (5대 카테고리 1위 / 5년 7만)</option>
-                        </select>
+                        </select></div><div class="form-group"><label class="form-label" for="residential-building-area">건물 전용면적 (㎡)</label><input id="residential-building-area" name="building-area" type="number" class="form-input" value="59.8" min="0" step="0.1"></div><div class="form-row"><div class="form-group"><label class="form-label" for="residential-num">지분 분자</label><input id="residential-num" name="num" type="number" class="form-input" value="1" min="1" required></div>
+<div class="form-group"><label class="form-label" for="residential-denom">지분 분모</label><input id="residential-denom" name="denom" type="number" class="form-input" value="2" min="1" required></div></div><div class="form-group"><label class="form-label" for="residential-monthly-rent">주변 동일평형 월세 시세 (원)</label><input id="residential-monthly-rent" name="monthly-rent" type="number" class="form-input" value="1200000" min="0"></div>
+                        <div class="form-group"><label class="checkbox-label"><input id="residential-residing" name="residing" type="checkbox" checked><span>타 공유자 실제 거주 중 (협상 합의 압박 레버리지 최고)</span></label></div>
+                        <button type="submit" class="btn-submit">부동산 지분 분석</button>
+                    </form>
+                </section>
+                <section id="residential-results" class="card" aria-label="부동산 지분 분석 결과">
+                    <div class="card-header result-header"><div><h2 class="card-title">부동산 지분 분석 결과</h2><p class="card-subtitle">선택한 자산의 입력값으로 독립 계산합니다.</p></div><span data-result="badge" class="brand-badge">입력 대기</span></div>
+                    <p class="result-empty" data-result="empty">사례를 선택하거나 유효한 조건을 입력하면 분석 결과가 표시됩니다.</p>
+                    <div data-result="content" hidden>
+                        <div class="metric-highlight-grid">
+                            <div class="metric-box"><div class="metric-label">추천 적정 입찰가</div><div class="metric-val accent" data-result="target-bid"></div></div>
+                            <div class="metric-box"><div class="metric-label">정량 낙찰 승률</div><div class="metric-val" data-result="win-rate"></div></div>
+                            <div class="metric-box"><div class="metric-label">위험조정 기대수익(EV)</div><div class="metric-val green" data-result="ev"></div></div>
+                        </div>
+                        <table class="result-table"><tbody>
+                            <tr><th>감정평가액</th><td data-result="appraisal"></td></tr>
+                            <tr><th>법원 최저 입찰가</th><td data-result="min-bid"></td></tr>
+                            <tr><th>추정 기준 시세</th><td data-result="market-price"></td></tr>
+                            <tr><th>건물 전용 / 지분율</th><td data-result="share"></td></tr>
+                            <tr><th>협상 합의 압박도</th><td data-result="settlement"></td></tr>
+                            <tr><th>부당이득 청구 예상액 (월)</th><td data-result="unjust-monthly"></td></tr>
+                            <tr><th>부당이득 청구 예상액 (연)</th><td data-result="unjust-annual"></td></tr>
+                            <tr><th>예상 순수익 (기본)</th><td data-result="net-profit"></td></tr>
+                            <tr><th>현실 예비비 (내용증명・소송)</th><td data-result="buffer"></td></tr>
+                            <tr><th>예비비 차감 후 순수익</th><td data-result="safe-profit"></td></tr>
+                            <tr><th>필요 실투자금 (전액 현금 기준)</th><td data-result="real-cash"></td></tr>
+                        </tbody></table>
                     </div>
-
-                    <!-- 주거지 지분 전용 필드 -->
-                    <div class="re-field">
-                        <div class="form-group">
-                            <label class="form-label" for="input-building-area">건물 전용면적 (㎡)</label>
-                            <input type="number" id="input-building-area" class="form-input" value="59.8" step="0.1">
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label" for="input-num">지분 분자</label>
-                                <input type="number" id="input-num" class="form-input" value="1" min="1">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="input-denom">지분 분모</label>
-                                <input type="number" id="input-denom" class="form-input" value="2" min="1">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="input-monthly-rent">주변 동일평형 월세 시세 (원)</label>
-                            <input type="number" id="input-monthly-rent" class="form-input" value="1200000" step="50000">
-                        </div>
-                        <div class="form-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="check-residing" checked>
-                                <span>타 공유자 실제 거주 중 (협상 합의 압박 레버리지 최고)</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- 자동차 전용 필드 (5대 카테고리 1위 및 5년 7만km) -->
-                    <div class="vehicle-field" style="display: none;">
-                        <div class="form-group">
-                            <label class="form-label" for="input-car-model">차종명 (5대 카테고리 1위: 대형세단/SUV/RV/수입프리미엄/럭셔리)</label>
-                            <input type="text" id="input-car-model" class="form-input" placeholder="예: 벤츠 E300, 쏘렌토 하이브리드, 제네시스 G80, 카니발, 그랜저">
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label" for="input-car-year">차량 연식 (제작년도)</label>
-                                <input type="number" id="input-car-year" class="form-input" value="2023" min="2010" max="2030">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="input-car-mileage">주행거리 (km, 7만 이하)</label>
-                                <input type="number" id="input-car-mileage" class="form-input" value="45000" step="1000">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label" for="input-car-wholesale">헤이딜러 즉시 도매 매입가 (원)</label>
-                                <input type="number" id="input-car-wholesale" class="form-input" placeholder="헤이딜러 실거래 기준선" step="1000000">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="input-car-fines">체납 과태료/세금 (원)</label>
-                                <input type="number" id="input-car-fines" class="form-input" value="0" step="100000">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="input-address">소재지 주소 / 보관소</label>
-                        <input type="text" id="input-address" class="form-input" value="서울특별시 마포구 서교동 394-12">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="input-appraisal">감정평가액 (원)</label>
-                            <input type="number" id="input-appraisal" class="form-input" value="280000000" step="1000000" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="input-min-bid">최저 입찰가 (원)</label>
-                            <input type="number" id="input-min-bid" class="form-input" value="143360000" step="1000000" required>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn-submit">실시간 정밀 가치평가 실행</button>
-                </form>
+                </section>
             </section>
-
-            <!-- Right: Results Output -->
-            <section class="card">
-                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <h2 class="card-title">정량적 분석 결과 및 지표</h2>
-                        <p class="card-subtitle">인간 베이스 현실 예비비 및 카테고리 1위 / 5년 7만 필터</p>
+            <section id="vehicle-panel" class="asset-panel main-grid" role="tabpanel" aria-labelledby="vehicle-tab" hidden>
+                <section class="card">
+                    <div class="card-header"><h2 class="card-title">자동차 입력</h2><p class="card-subtitle">자동차의 조건을 입력하십시오. 부동산 입력값과 별도로 유지됩니다.</p></div>
+                    <form id="vehicle-form">
+                        <div class="form-group"><label class="form-label" for="vehicle-case">법원 사건번호</label><input id="vehicle-case" name="case" type="text" class="form-input" required></div><div class="form-group"><label class="form-label" for="vehicle-address">차량 보관소</label><input id="vehicle-address" name="address" type="text" class="form-input" ></div><div class="form-row"><div class="form-group"><label class="form-label" for="vehicle-appraisal">감정평가액 (원)</label><input id="vehicle-appraisal" name="appraisal" type="number" class="form-input" min="1" required></div>
+<div class="form-group"><label class="form-label" for="vehicle-min-bid">최저 입찰가 (원)</label><input id="vehicle-min-bid" name="min-bid" type="number" class="form-input" min="1" required></div></div><div class="form-group"><label class="form-label" for="vehicle-type">물건 유형</label><input id="vehicle-type" name="type" type="text" class="form-input" value="자동차 경매 (카테고리 1위)" readonly></div><div class="form-group"><label class="form-label" for="vehicle-car-model">차종명 (5대 카테고리 1위)</label><input id="vehicle-car-model" name="car-model" type="text" class="form-input" required></div><div class="form-row"><div class="form-group"><label class="form-label" for="vehicle-car-year">차량 연식 (제작년도)</label><input id="vehicle-car-year" name="car-year" type="number" class="form-input" min="1" required></div>
+<div class="form-group"><label class="form-label" for="vehicle-car-mileage">주행거리 (km)</label><input id="vehicle-car-mileage" name="car-mileage" type="number" class="form-input" min="0" required></div></div><div class="form-row"><div class="form-group"><label class="form-label" for="vehicle-car-wholesale">헤이딜러 즉시 도매 매입가 (원)</label><input id="vehicle-car-wholesale" name="car-wholesale" type="number" class="form-input" min="0"></div>
+<div class="form-group"><label class="form-label" for="vehicle-car-fines">체납 과태료/세금 (원)</label><input id="vehicle-car-fines" name="car-fines" type="number" class="form-input" min="0"></div></div>
+                        <button type="submit" class="btn-submit">자동차 분석</button>
+                    </form>
+                </section>
+                <section id="vehicle-results" class="card" aria-label="자동차 분석 결과">
+                    <div class="card-header result-header"><div><h2 class="card-title">자동차 분석 결과</h2><p class="card-subtitle">선택한 자산의 입력값으로 독립 계산합니다.</p></div><span data-result="badge" class="brand-badge">입력 대기</span></div>
+                    <p class="result-empty" data-result="empty">사례를 선택하거나 유효한 조건을 입력하면 분석 결과가 표시됩니다.</p>
+                    <div data-result="content" hidden>
+                        <div class="metric-highlight-grid">
+                            <div class="metric-box"><div class="metric-label">추천 적정 입찰가</div><div class="metric-val accent" data-result="target-bid"></div></div>
+                            <div class="metric-box"><div class="metric-label">정량 낙찰 승률</div><div class="metric-val" data-result="win-rate"></div></div>
+                            <div class="metric-box"><div class="metric-label">위험조정 기대수익(EV)</div><div class="metric-val green" data-result="ev"></div></div>
+                        </div>
+                        <table class="result-table"><tbody>
+                            <tr><th>감정평가액</th><td data-result="appraisal"></td></tr>
+                            <tr><th>법원 최저 입찰가</th><td data-result="min-bid"></td></tr>
+                            <tr><th>헤이딜러 즉시 도매가</th><td data-result="market-price"></td></tr>
+                            <tr><th>예상 회전 주기</th><td data-result="turnaround"></td></tr>
+                            <tr><th>엔카 소매 직접 판매 시</th><td data-result="encar-bonus"></td></tr>
+                            <tr><th>예상 순수익 (기본)</th><td data-result="net-profit"></td></tr>
+                            <tr><th>현실 예비비 (점검・탁송・체납)</th><td data-result="buffer"></td></tr>
+                            <tr><th>헤이딜러 즉시 순수익</th><td data-result="safe-profit"></td></tr>
+                            <tr><th>필요 실투자금 (전액 현금 기준)</th><td data-result="real-cash"></td></tr>
+                        </tbody></table>
                     </div>
-                    <span id="res-badge" class="brand-badge">알짜 선별 완료</span>
-                </div>
-
-                <div class="metric-highlight-grid">
-                    <div class="metric-box">
-                        <div class="metric-label">추천 적정 입찰가</div>
-                        <div class="metric-val accent" id="res-target-bid">210,000,000원</div>
-                    </div>
-                    <div class="metric-box">
-                        <div class="metric-label">정량 낙찰 승률</div>
-                        <div class="metric-val" id="res-win-rate">72.0%</div>
-                    </div>
-                    <div class="metric-box">
-                        <div class="metric-label">위험조정 기대수익(EV)</div>
-                        <div class="metric-val green" id="res-ev">45,108,000원</div>
-                    </div>
-                </div>
-
-                <table class="result-table">
-                    <tbody>
-                        <tr><th>감정평가액</th><td id="td-appraisal">280,000,000원</td></tr>
-                        <tr><th>법원 최저 입찰가</th><td id="td-min-bid">143,360,000원</td></tr>
-                        <tr><th id="th-market-label">추정 기준 시세</th><td id="td-market-price">280,000,000원</td></tr>
-                        
-                        <tr id="tr-turnaround" style="display: none;"><th>예상 회전 주기</th><td id="td-turnaround" style="color: #34d399;">3일 (헤이딜러 즉시 엑시트)</td></tr>
-                        <tr id="tr-encar-bonus" style="display: none;"><th>엔카 소매 직접 판매 시</th><td id="td-encar-bonus" style="color: #60a5fa;">+2,500,000원 보너스</td></tr>
-
-                        <tr id="tr-share"><th>건물 전용 / 지분율</th><td id="td-share">전용 18.09평 / 50.0%</td></tr>
-                        <tr id="tr-settlement"><th>협상 합의 압박도</th><td id="td-settlement" style="color: #60a5fa;">90점 / 100점 (실거주 점유)</td></tr>
-                        
-                        <tr><th>예상 순수익 (기본)</th><td id="td-net-profit">62,650,000원 (29.8%)</td></tr>
-                        <tr><th>현실 예비비 (내용증명·소송·점검)</th><td id="td-buffer">5,000,000원 ~ 10,000,000원</td></tr>
-                        <tr><th id="th-safe-profit-label">예비비 차감 후 순수익</th><td id="td-safe-profit" style="color: #60a5fa;">52,650,000원 (25.1%)</td></tr>
-                        <tr><th>필요 실투자금 (전액 현금 기준)</th><td id="td-real-cash">222,350,000원 ~ 227,350,000원</td></tr>
-                        
-                        <tr id="tr-unjust-monthly"><th>부당이득 청구 예상액 (월)</th><td id="td-unjust-monthly">월 600,000원</td></tr>
-                        <tr id="tr-unjust-annual"><th>부당이득 청구 예상액 (연)</th><td id="td-unjust-annual">연 7,200,000원</td></tr>
-                    </tbody>
-                </table>
+                </section>
             </section>
         </main>
 
@@ -264,7 +198,7 @@
 
             <div class="case-list" id="case-list-container">
                 <!-- 자동차 사례 1: 벤츠 E300 (수입 세단 1위) -->
-                <div class="case-item" onclick="NicheApp.loadPreset({
+                <div class="case-item" data-preset-category="vehicle" role="button" tabindex="0" aria-pressed="false" onclick="NicheApp.loadVehiclePreset({
                     is_vehicle: true,
                     case_number: '2025타경51200',
                     property_type: '자동차 경매 (카테고리 1위)',
@@ -276,7 +210,7 @@
                     wholesale_price: 43000000,
                     min_bid_price: 23520000,
                     fines: 350000
-                })">
+                }, this)">
                     <div>
                         <div class="case-info-title">[자동차 1] 벤츠 E-Class E300 (수입 프리미엄 세단 1위 / 4.2만km)</div>
                         <div class="case-info-meta">헤이딜러 수입 1위 / 도매가 4,300만 ➔ 헤이딜러 즉시 던져도 순수익 +780만 원 (3일 컷)</div>
@@ -285,7 +219,7 @@
                 </div>
 
                 <!-- 자동차 사례 2: 쏘렌토 하이브리드 (국산 SUV 1위) -->
-                <div class="case-item" onclick="NicheApp.loadPreset({
+                <div class="case-item" data-preset-category="vehicle" role="button" tabindex="0" aria-pressed="false" onclick="NicheApp.loadVehiclePreset({
                     is_vehicle: true,
                     case_number: '2025타경48900',
                     property_type: '자동차 경매 (카테고리 1위)',
@@ -297,7 +231,7 @@
                     wholesale_price: 36000000,
                     min_bid_price: 24960000,
                     fines: 150000
-                })">
+                }, this)">
                     <div>
                         <div class="case-info-title">[자동차 2] 쏘렌토 하이브리드 (국산 패밀리 SUV 1위 / 3.1만km)</div>
                         <div class="case-info-meta">헤이딜러 SUV 1위 / 도매가 3,600만 ➔ 성능점검비 차감 후 순수익 +620만 원</div>
@@ -306,7 +240,7 @@
                 </div>
 
                 <!-- 주거지 사례 1 -->
-                <div class="case-item" onclick="NicheApp.loadPreset({
+                <div class="case-item" data-preset-category="residential" role="button" tabindex="0" aria-pressed="false" onclick="NicheApp.loadResidentialPreset({
                     is_vehicle: false,
                     case_number: '2025타경10450',
                     property_type: '빌라/다세대 지분 (실거주)',
@@ -318,7 +252,7 @@
                     share_denominator: 2,
                     monthly_rent: 1200000,
                     is_residing: true
-                })">
+                }, this)">
                     <div>
                         <div class="case-info-title">[주거지 1] 서울 마포구 서교동 실거주 빌라 1/2 지분</div>
                         <div class="case-info-meta">감정가 2.8억 / 최저가 1.43억 / 타 공유자 실거주 중 ➔ 월 60만 원 부당이득 청구 압박</div>
@@ -327,7 +261,7 @@
                 </div>
 
                 <!-- 주거지 사례 2 -->
-                <div class="case-item" onclick="NicheApp.loadPreset({
+                <div class="case-item" data-preset-category="residential" role="button" tabindex="0" aria-pressed="false" onclick="NicheApp.loadResidentialPreset({
                     is_vehicle: false,
                     case_number: '2025타경29400',
                     property_type: '아파트 지분 (실거주)',
@@ -339,7 +273,7 @@
                     share_denominator: 2,
                     monthly_rent: 3200000,
                     is_residing: true
-                })">
+                }, this)">
                     <div>
                         <div class="case-info-title">[주거지 2] 송파 잠실 대단지 아파트 1/2 지분</div>
                         <div class="case-info-meta">감정가 12억 / 최저가 6.14억 / 실거주 타 공유자 대상 월 160만 원 부당이득 압류</div>
@@ -356,6 +290,6 @@
         </footer>
     </div>
 
-    <script src="assets/js/app.js"></script>
+    <script src="assets/js/app.js?v=a3bab82a4a37b007da0d05c256f2d3e845ab3bf93463b12364f1932267d9c9f4"></script>
 </body>
 </html>
