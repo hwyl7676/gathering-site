@@ -1,10 +1,10 @@
 {
   "_meta": {
-    "generated_at": "2026-10-02T07:01:04.307495",
     "source": "auction_7612_data_lake",
     "total_slots": 10,
     "active_count": 4,
-    "empty_count": 6
+    "empty_count": 6,
+    "generated_at": "2026-10-06T07:00:59.240081"
   },
   "presets": [
     {
@@ -36,7 +36,7 @@
       "min_bid_price": 28000000,
       "wholesale_price": 40000000,
       "fines": 0,
-      "auction_date": "2026-09-15",
+      "auction_date": "2026-10-20",
       "badge": "검증 통과",
       "meta": "감정가 40,000,000원 | 서울중앙지방법원"
     },
