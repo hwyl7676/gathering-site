@@ -1,0 +1,2175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>[VIP 풀버전] 서울/수도권 경매 AI 분석 브리핑 (2026년 10월 15일) | Private 경매 구독</title>
+    <meta name="description" content="2026년 10월 15일 발행. AI가 분석한 경매 물건 13건 중 13건 알짜 픽 선별.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="../assets/css/style.css?v=20260901">
+    <link rel="stylesheet" href="../assets/css/report.css?v=20260901">
+</head>
+<body>
+
+    
+    <!-- VIP Lock Modal Overlay -->
+    <div id="members-lock" class="members-lock-overlay" style="display: flex;">
+        <div class="members-lock-card">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin-bottom: 0.8rem; flex-wrap: wrap;">
+                <div class="members-lock-badge" style="margin: 0;">카톡 오픈채팅 전용 VIP 리포트</div>
+                <div class="countdown-timer-wrapper">
+                    <span>핀코드 만료:</span>
+                    <span class="countdown-timer-text timer-text">--:--:--</span>
+                </div>
+            </div>
+            <h2 class="members-lock-title">비공개 알짜 픽 열람 안내</h2>
+            <p class="members-lock-desc">
+                본 페이지는 비공개 인증 전용 풀 버전 리포트입니다.<br>
+                발급받으신 6자리 보안 핀코드를 입력하여 열람하세요.
+            </p>
+
+            
+            <div class="members-lock-highlights">
+                <div class="members-lock-highlights-head">
+                    <span>비공개 알짜 픽 요약 (13건 선별)</span>
+                    <span>사건번호/추천가 비공개</span>
+                </div>
+                
+                <div class="members-lock-highlight-item">
+                    <div>
+                        <span class="highlight-badge">알짜 1위</span>
+                        <span class="highlight-title">서울특별시 관악구 봉천동 (다세대 (빌라))</span>
+                    </div>
+                    <div class="highlight-details">
+                        <span>예상 순수익: <strong>+31,021만원</strong></span>
+                        <span>실투자금: <strong>약 53,952만원</strong></span>
+                    </div>
+                </div>
+                <div class="members-lock-highlight-item">
+                    <div>
+                        <span class="highlight-badge">알짜 2위</span>
+                        <span class="highlight-title">서울특별시 관악구 봉천동 (다세대 (빌라))</span>
+                    </div>
+                    <div class="highlight-details">
+                        <span>예상 순수익: <strong>+12,182만원</strong></span>
+                        <span>실투자금: <strong>약 21,188만원</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <form id="lock-form" class="members-lock-form" onsubmit="handleAuth(event)">
+                <div class="members-lock-input-group">
+                    <input type="text" id="passcode-input" class="members-lock-input" placeholder="6자리 핀코드 입력" maxlength="12" autocomplete="off" onfocus="setTimeout(() => { this.scrollIntoView({behavior: 'smooth', block: 'center'}); }, 250);" required>
+                    <button type="submit" class="members-lock-submit-btn">잠금 해제 &rarr;</button>
+                </div>
+                <div id="lock-error" class="members-lock-error">입장 핀코드가 일치하지 않습니다. 올바른 핀코드를 입력해 주세요.</div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            async function decryptItem(encryptedBase64, pin) {
+                try {
+                    const cleanPin = (pin || '').trim().toUpperCase();
+                    const binary = atob(encryptedBase64);
+                    const bytes = new Uint8Array(binary.length);
+                    for (let i = 0; i < binary.length; i++) {
+                        bytes[i] = binary.charCodeAt(i);
+                    }
+                    const nonce = bytes.slice(0, 12);
+                    const ciphertext = bytes.slice(12);
+
+                    const pinBytes = new TextEncoder().encode(cleanPin);
+                    const keyHash = await crypto.subtle.digest('SHA-256', pinBytes);
+                    const cryptoKey = await crypto.subtle.importKey(
+                        'raw',
+                        keyHash,
+                        { name: 'AES-GCM' },
+                        false,
+                        ['decrypt']
+                    );
+
+                    const decryptedBytes = await crypto.subtle.decrypt(
+                        { name: 'AES-GCM', iv: nonce },
+                        cryptoKey,
+                        ciphertext
+                    );
+                    const jsonStr = new TextDecoder().decode(decryptedBytes);
+                    return JSON.parse(jsonStr);
+                } catch (err) {
+                    return null;
+                }
+            }
+
+            async function tryUnlock(pin) {
+                if (!pin) return false;
+                const cleanPin = pin.trim().toUpperCase();
+                const items = document.querySelectorAll('.vip-encrypted-item');
+                if (items.length === 0) return true;
+
+                // 첫 번째 아이템으로 복호화 사전 검증
+                const firstEnc = items[0].getAttribute('data-encrypted');
+                const firstData = await decryptItem(firstEnc, cleanPin);
+                if (!firstData) {
+                    return false;
+                }
+
+                // 모든 아이템 복호화 및 DOM 안전 주입
+                for (const item of items) {
+                    const enc = item.getAttribute('data-encrypted');
+                    const data = await decryptItem(enc, cleanPin);
+                    if (data) {
+                        const caseEl = item.querySelector('.vip-field-case-number');
+                        if (caseEl) {
+                            caseEl.textContent = data.case_number;
+                            caseEl.classList.remove('vip-locked-placeholder');
+                        }
+                        const addrEl = item.querySelector('.vip-field-address');
+                        if (addrEl) {
+                            addrEl.textContent = data.address;
+                            addrEl.classList.remove('vip-locked-placeholder');
+                        }
+                        const targetEl = item.querySelector('.vip-field-target-price');
+                        if (targetEl) {
+                            targetEl.innerHTML = '<span style="color: var(--indigo-400); font-weight: 700;">' + data.target_bid_price + '</span>';
+                            targetEl.classList.remove('vip-locked-placeholder');
+                        }
+                        const rangeEl = item.querySelector('.vip-field-bid-range');
+                        if (rangeEl) {
+                            rangeEl.textContent = data.bid_range;
+                            rangeEl.classList.remove('vip-locked-placeholder');
+                        }
+                        const notesEl = item.querySelector('.vip-field-notes');
+                        if (notesEl) {
+                            notesEl.textContent = data.special_notes;
+                            notesEl.classList.remove('vip-locked-placeholder');
+                        }
+                    }
+                }
+
+                try {
+                    localStorage.setItem('gh_member_pin', cleanPin);
+                    sessionStorage.setItem('gh_member_pin', cleanPin);
+                } catch(e) {}
+                const lockEl = document.getElementById('members-lock');
+                if (lockEl) lockEl.style.display = 'none';
+
+                // 잠금 해제 후 URL 해시 앵커로 부드럽게 스크롤
+                if (window.location.hash) {
+                    setTimeout(() => {
+                        if (typeof handleHashNavigation === 'function') {
+                            handleHashNavigation(true);
+                        } else {
+                            const el = document.querySelector(window.location.hash);
+                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    }, 120);
+                }
+                return true;
+            }
+
+            window.handleAuth = async function(e) {
+                if (e) e.preventDefault();
+                const inputEl = document.getElementById('passcode-input');
+                const errEl = document.getElementById('lock-error');
+                const rawPin = (inputEl ? inputEl.value : '').trim().toUpperCase();
+                const cleanPin = rawPin.replace(/[\s\-_]/g, '');
+
+                const success = await tryUnlock(cleanPin);
+                if (success) {
+                    if (errEl) errEl.style.display = 'none';
+                } else {
+                    if (errEl) {
+                        errEl.style.display = 'block';
+                        errEl.textContent = '입장 핀코드가 일치하지 않습니다. 올바른 핀코드를 입력해 주세요.';
+                    }
+                }
+            };
+
+            async function checkInit() {
+                let stored = null;
+                try {
+                    stored = localStorage.getItem('gh_member_pin') || sessionStorage.getItem('gh_member_pin');
+                } catch(e) {}
+                const lockEl = document.getElementById('members-lock');
+                if (stored) {
+                    const ok = await tryUnlock(stored);
+                    if (ok) return;
+                    // 이전 회차 핀코드로 복호화 실패 시 캐시된 스토리지 즉시 클리어
+                    try {
+                        localStorage.removeItem('gh_member_pin');
+                        sessionStorage.removeItem('gh_member_pin');
+                    } catch(e) {}
+                }
+                if (lockEl) lockEl.style.display = 'flex';
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', checkInit);
+            } else {
+                checkInit();
+            }
+        })();
+    </script>
+
+
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="../" class="nav-logo">
+                <div class="nav-logo-icon">G</div>
+                <span class="nav-logo-text">Private 경매 구독</span>
+                <span class="vip-member-tag">VIP 풀버전</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="../#verification">적중 검증</a></li>
+                <li><a href="../#reports">리포트</a></li>
+                <li><a href="../calculator.html" style="color: var(--cyan-400); font-weight: 700;">실투자금 계산기</a></li>
+            </ul>
+            <button class="nav-toggle" aria-label="메뉴 열기">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <header class="report-detail-header">
+        <div class="container">
+            <a href="../" class="btn btn-sm btn-secondary" style="margin-bottom: 2rem;">&larr; 메인 홈으로 가기</a>
+            <div class="report-case-number">Report #2026-1015</div>
+            <h1>[VIP 풀버전] 서울/수도권 경매 AI 분석 브리핑 (2026년 10월 15일)</h1>
+            <div class="report-detail-meta">
+                <span>2026년 10월 15일 발행</span>
+                <span>13건 분석</span>
+                <span>13건 알짜 픽 선별</span>
+                <span class="report-badge pass" style="font-size: 0.8rem;">평균 마진율 12.4%</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        
+
+        <div class="summary-grid animate-on-scroll">
+            <div class="summary-card">
+                <div class="summary-card-label">총 분석 건수</div>
+                <div class="summary-card-value accent">13건</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-card-label">합격 물건 (추천)</div>
+                <div class="summary-card-value positive">13건</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-card-label">탈락 물건 (마진미달)</div>
+                <div class="summary-card-value negative">0건</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-card-label">합격 평균 마진율</div>
+                <div class="summary-card-value positive">12.4%</div>
+            </div>
+        </div>
+
+        <!-- 탭 스위처 네비게이션 -->
+        <div class="report-view-tab-container animate-on-scroll">
+            <div class="report-view-tabs">
+                <button type="button" class="report-view-tab-btn active" id="tab-btn-ai-picks" onclick="switchReportMainTab('ai-picks', this)">
+                    <span class="tab-title">AI 정밀 분석 추천 물건</span>
+                    <span class="tab-count-badge">13건</span>
+                </button>
+                <button type="button" class="report-view-tab-btn" id="tab-btn-live-court" onclick="switchReportMainTab('live-court', this)">
+                    <span class="tab-title">실시간 법원 접수 물건</span>
+                    <span class="tab-count-badge">14건</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 탭 1: AI 정밀 분석 추천 물건 -->
+        <div id="tab-pane-ai-picks" class="report-tab-pane active">
+            
+        <div class="report-group-header pass-group animate-on-scroll">
+            <div class="report-group-title">
+                <span class="badge-status badge-pass">합격</span>
+                <h2>AI 정밀 심사 합격 물건 (13건)</h2>
+            </div>
+            <div class="criteria-info-box pass-criteria-box">
+                <strong>[AI 합격 판정 기준]</strong> 현실 예비비(명도·수리·공실이자) 최대치 차감 후에도 <strong>실마진 10.0% 이상</strong> 확실한 실익이 보장된 물건만 엄선
+            </div>
+        </div>
+        
+        <div id="case-20234869" data-rank="item-1" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="tZ55StyQwiG1aXvpBWZ5Ab889geWzwymYUeu7qkqHdye1/ADUJQrekG0QKUD94Lr3N+9Y2GxMuprbBCfaEr6yE54Ic7yBHestwlA2G2B5eYyH6kgTLezOwTksl0AzWorL+TDMWMT3u8pzXMcGfQPtyphwyWT1mHaKGv6zJlAlGxVqGJOx6aFhSVGS53empDQlIJAwlvttCCFulxEdiap1RpSoFFSb5Xq0ZidtN5/wh1sXFcQTPmWfp3ist1q9jhgBj1Ozs48iDiTt++s3c8QrVOmNtzHBnQPyIDTbbD3kMhfhqy+nMUo/6b4zzGrHLQitUiCzDPliJyaBjJ0Ou8UymufIyZahihYXs+fsYkBgY1pS1VALBlAxu840l+8HB+Kbxj2HH+27fST/mI0w/m3wujTeJXpks4DbFpIgN+JP8neWBEh" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 1위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 봉천동 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">1,994,700,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>1,595,760,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +310,215,746 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 6,981만~10,970만 차감 시: +200,507,246 원 ~ +240,401,246 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 53,952만 ~ 57,942만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 6,981만~10,970만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">255,927,990 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>130.8 ㎡ (39.57 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>218.0 ㎡ (65.95 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>50,413,221 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 6,981만 ~ 10,970만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 1,994만 ~ 2,992만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 997만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 3,989만 ~ 4,986만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 1,994만 ~ 2,992만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+        <div id="case-2023104875" data-rank="item-2" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="W5fAlqHHohG8zhJ5tLobzymgNIP20AV0yovrxYLp+4RdOqqFOyPM27RTBgpBW5s+C44KImvmMy1ajjV0a9jhPt6slGiiDoyF8oZoifHkYG0lsuhmRFE7RDobRv0mwte49fv/oK0x4iIxmhHBsrJeUpyUESZnlqt8/gavT/KBwHfp64oL1D9oNp0hcfd692I7MSpFCc3fLMDQFp6GzAx0ITemaePBJPTn8ZNCBi2D8fOxjnuGz5ADoK2o3aET2dsHYXnU+W9XMq23TzqgINMxcQ8Aj87lqmK47de/zqsiQp1y/yhOQaih0vRo97LvWp8FvX5atRdbcxXQGB8Sqk0b6aQ82bBeC3yXl/gyiNHfxzmDIQnRy1Cr28CtIOIUehjsPfPwhSofRsP1ZWRWckqTLQ0TiqRvtx+RzFiihL6SSw==" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 2위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 봉천동 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">783,360,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>626,688,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +121,828,149 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 2,741만~4,308만 차감 시: +78,743,349 원 ~ +94,410,549 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 21,188만 ~ 22,755만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 2,741만~4,308만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">100,508,222 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>57.6 ㎡ (17.42 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>96.0 ㎡ (29.04 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>44,958,676 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 2,741만 ~ 4,308만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 783만 ~ 1,175만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 391만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 1,566만 ~ 1,958만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 783만 ~ 1,175만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+        <div id="case-2023106314" data-rank="item-3" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="/+gI7FQjxER2x0IDFpVBpDsD4boB4MwSGPpYB9vk0riRpVLiMfUEJ1MysaUSND4huCIwXCcCytGPgtw9VrX809ni1X7c4T4RVygGMw8foGw7u3QwEAGDDtYwr9n5jpH74OTImYRGG+oUlIvlAjXoY0XVk8MFoxkS1YaIJ2QcjDxD0PUfAekBE4XbutvM1SXLILnu0LTq8Fp8+jfhyLTJUL+3Gs9v6XUdsuw9I0Kuh0QyjmQZZhMApMy1q/wDqG8tkMYbb/k6HJtxiAwQADn+wd0P26yntiNH6qP2f1Dr22NGMCK4vCLPmn52oorYv+EDCFcA/NM9YWvgNwbPDVT6hVABqUg6R1X5B+xjAkoDL/8XqYF6LwLZqXwBpp9shNYb0VmM0uQtBMGshmJpiXmHIK5FRYGz+yh1s18T5PhwNXY=" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 3위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 봉천동 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">813,440,070 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>650,752,056 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +126,506,201 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 2,847만~4,473만 차감 시: +81,766,998 원 ~ +98,035,799 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 22,001만 ~ 23,628만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 2,847만~4,473만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">104,367,615 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>59.4 ㎡ (17.97 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>99.0 ㎡ (29.95 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>45,270,336 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 2,847만 ~ 4,473만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 813만 ~ 1,220만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 406만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 1,626만 ~ 2,033만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 813만 ~ 1,220만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+        <div id="case-2023108556" data-rank="item-4" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="CZ/WzdE6D4npk8cf3vuvs4e56K6k/n0a0lEjQX+9CAdNvE3DZg6gFbmRK6qoPbul5hp5ssnhIcP52fOfA0yS3V3JzqG+EmDk6Gg2Gm1NG37NUcAd50fHUNgZUfCqcq54zbXW5JlCVZZImfiC1unFIJO3oUD9pFCz/lcnngrTufrHItSzG5SdsL/53eKSrCZB3scQFIb6SEAj9T62hNROdiYgshF9mM+WSOg8zDhY+wgHZ/YoT0ylO26Dlllzr7cMgfJthNGRdnvR6/PH3yePkpqaz1TE4rHo2XS7ciMDWSMf90lpk9qDe1Sg+chb/tqYCPzw1Yn1iZWefGYvahaWNkbc/cL9L4pnLZx32HO9wxfRDRIce3Y9q54S2o/4lrB/dzUEUIQzoScMZQZBfXTtuJ1KbgTIDlxkJHKq0YdyQxYq" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 4위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 봉천동 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">907,800,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>726,240,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +141,181,058 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 3,177만~4,992만 차감 시: +91,252,058 원 ~ +109,408,058 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 24,554만 ~ 26,369만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 3,177만~4,992만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">116,474,372 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>61.2 ㎡ (18.51 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>102.0 ㎡ (30.86 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>49,035,810 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 3,177만 ~ 4,992만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 907만 ~ 1,361만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 453만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 1,815만 ~ 2,269만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 907만 ~ 1,361만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+        <div id="case-2023108730" data-rank="item-5" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="+n9e2ePD2I553U5MJcrHZjW4Qwhn0FhfRHvJ71JadYYHgq3zp35o0QpRThd9tLgblzYODKbwCb/B8MrV1ZZfPoVFme/jdPsueAWSWrKkR7ELT0Uk7N2oNeF0kBD1DX295wfMIV3FfWN/+EHuy/pixezzxRrVdWyl4dHsaoI3/8sxx6CONSRgZkv0M+72zW+qRK8kQbZG3tSkxZYMcTrHgVRu29+kyUEd7Xx90Zlj74f+XEMPOEuqnK6k38cWwHb+e72EtIll2NNncRF/0C/ngGrFf8gr/m+vJXoN2mt9NV+0JPPNLZj3zqpFTQde+/rdTSt7GuIgBfl+EAEZdthUiSWPmvvmIZ5qhrHhUYrq73HqH2gU4fJ08B2DH8AqGQ9Bb7rSvCH2QIMYXN0yFkrFut0fUQqOozPzDcgRf7dZdRs=" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 5위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 봉천동 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">952,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>761,600,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +148,055,042 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 3,332만~5,236만 차감 시: +95,695,042 원 ~ +114,735,042 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 25,749만 ~ 27,653만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 3,332만~5,236만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">122,145,409 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>71.4 ㎡ (21.6 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>119.0 ㎡ (36.0 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>44,077,133 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 3,332만 ~ 5,236만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 952만 ~ 1,428만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 476만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 1,904만 ~ 2,380만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 952만 ~ 1,428만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+        <div id="case-2023116182" data-rank="item-6" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="36zgLoqEYyrRMVH8CyVmaFGWrAgZ45BxS9JTyPIc3QaQhp4usB0Wn6QZQnAL5AB9o42TKE4MGcZkMhtUAlOKlZHb+AiAdkwPYsC7YjR8EdcH59W2XmXANcPMelm1d077NbyTjHU+X0y+BgrDDaUIr6QodSFi/7SjfAcIeEeDYG+CdVVMnok82HKCE8SdWXdo/hG+ZqfpS5qMJvqIQV5wXxgEexyiJZUIggiI+880ZoXzyveCQRS//fW+rQuOArZBDSJGgOruVT7KAi6NFkqDBkc0XfDj70YsmBzYwTCiqpZCc1RDqFIYMVYtBpPdD6oAAIANMnyU9pLPR2rsxFCIu09U9eC709nvDyh0gXU/dvOy89yMpQisvsBlEaNEyCFIckQZTA2YOffeOqQes0AAQQSi9u79lGxRE/7F7VK8Oo+SydXq2WBv4A==" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 6위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 봉천동 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">1,267,969,450 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>1,014,375,560 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +197,194,610 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 4,437만~6,973만 차감 시: +127,456,291 원 ~ +152,815,680 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 34,296만 ~ 36,831만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 4,437만~6,973만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">162,685,553 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>81.78 ㎡ (24.74 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>136.3 ㎡ (41.23 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>51,255,005 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 4,437만 ~ 6,973만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 1,267만 ~ 1,901만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 633만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 2,535만 ~ 3,169만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 1,267만 ~ 1,901만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+        <div id="case-2023118379" data-rank="item-7" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="TJ1pf3jzcR3Zaroc8jynEuZJdxVbs88YazOo99LB4wNgMTZ1O7jgZx2gLXVptrHyXfF+xhMWtuIKMHAPc/ocXsl5xZZBnk/E/nGS/nCExwdJrUF/qrYypu0Dn9zEbLURufnJOBKG+AYaFHQM0EE2EbyJ4FACFvtLX42ARXi+UGvl0Z0vGGk0nvUb7UxQ7LabWNck4yqV1PgBBAlA/cOkPBA+jjPMtHqHWHLE7j/cDkQTDXM/CTvJRNndAKYc5s4AF1rFkFo1br31N78sRQsft0FvH/naHshoo2JHvdOMJ9uDZc8Keb+OLw2vihzFxUxJa49e9Qmx3qCRUjiHZw/oK/6vyD4o0sKTwtpyLuEW3xFEVvMsTTWNdNCJWJu5kKBJj2HJy/QAyzAP1ZT3zOdmBxiNdUT0fHllMaZgIa6oEaRG" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 7위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 관악구 봉천동 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">797,150,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>637,720,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +123,972,770 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 2,790만~4,384만 차감 시: +80,129,520 원 ~ +96,072,520 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 21,561만 ~ 23,155만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 2,790만~4,384만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">102,277,535 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>64.2 ㎡ (19.42 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>107.0 ㎡ (32.37 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>41,046,830 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 2,790만 ~ 4,384만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 797만 ~ 1,195만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 398만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 1,594만 ~ 1,992만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 797만 ~ 1,195만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+        <div id="case-20241072" data-rank="item-8" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="/lTxdKyuzbmyZeso+UlhLpYjY5GCupn6Kz/yePIM+lxewkjjk+uqNFFZQehFJld5Dk8qitv6w7+nhXhQihSNjVObaUi3ynBqB6UtpQJjTx/V362Sk8soh/iZeASbt/Y6iAKdHldAHiUA+EwsZWhFNI42E2mPD9x5zl3vl70c1r4DDCZAZ4jFszKcmWc4kTDf/R/J90JtzXtJYYBeNtW6FCDXFbhjZzageo17Q+6BxL3u7zVlZKv34j+8tsShAZOFjiLM/MtY9vu6+2qHtMM2uU6n/wWdIUDc7tk0NrNAL3I8wKSk11b5PH85Em2FqQSKw35aafGln1aNtv7lSVUZx79sFooTRFUlalfXJY85FLmA9jB9j53D6gZq4Kb6mQheGPC9YDhfHSVwkV7EDpxcZBuz/mT4kFlPjPBrLFufHq7ii3AuC07GySnFi9k=" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 8위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2024타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 중구 마장로1길 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">275,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>220,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +42,768,002 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 962만~1,512만 차감 시: +27,643,002 원 ~ +33,143,002 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 7,438만 ~ 7,988만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 962만~1,512만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">35,283,601 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>553.56 ㎡ (167.45 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>922.6 ㎡ (279.09 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>1,642,262 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 962만 ~ 1,512만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 275만 ~ 412만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 137만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 550만 ~ 687만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 275만 ~ 412만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+        <div id="case-2023104819" data-rank="item-9" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="V7TrJ7B9Mb4vcX1Y6yXeYt4WIMIzF7b0UrbfWNwXHz62i0exI2/VMViArLgDGg4bLixv8bHUEiE5uvjT1AyBP1kMwT5wh45WCvWARzpwIm0haeO7h55LVbtT1el4jzP+WMJfMhJOcOz4yOBsUekefYuIm+H0rpcEBHMzMVrBjUcNbng7uwI/zy6jJN5OUeU0VWnVi1sMVPrXAhyoZTeaTbs35wcNlecgeG17EJWz0+3LkpkinfIhOWs3qSywBqjlPytpZmnHMj6In99vhFd1DuL1Li1z9YyP9SASEJdFbO2dpILJF/Rnn00zQsFPex/NCT2NCzodaE+LlR5oIrASel/15jc56jggOGlpWKuq1zoGvyD2MgS+DMB5uX5DVxaI70eEgFdMEBakIXE+h4E12qzIba/W2XsA2+r3uuHHnxtbyz+TyDPu+AZqgAdbHcnLDCoPsaW8Jex3Xg==" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 9위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 금천구 시흥대로150길 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">246,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>196,800,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +38,257,922 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 861만~1,353만 차감 시: +24,727,922 원 ~ +29,647,922 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 6,653만 ~ 7,145만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 861만~1,353만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">31,562,785 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>29.54 ㎡ (8.94 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>49.24 ㎡ (14.9 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>27,529,556 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 861만 ~ 1,353만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 246만 ~ 369만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 123만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 492만 ~ 615만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 246만 ~ 369만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+        <div id="case-2023102448" data-rank="item-10" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="aSR5sPZbuqx2zsWmY95RHak1alm+4yjFRb6Q0Q8aP9gSNqS5rijKsdHhaxQ/Y/3H2Yl02qywCEuHZ28vQ0fzAodpZBJJq3Nl3bGhYFMMRHUpiWX4AJYXJBLjFTqs+K+Ne7HSqcsjA4AzZkWBKECfUzcNfXG9XAbqzqG+3JapSLFMESlWsjExaO2zfJ/tK400tiNU0ofdEe3f/9IFsTe+I8WYjOmFpDPkvuD/wKqMbVYuxtGJzTuAKAfrDEIElgiQDyX97688FXKvFmirgaj/pT+RD+3QCwMhvzmYAOyfjN873tPnd827LHsB7HQf/qqooYaaxPMo9amZbsYYBa+rPewusieiJUIAWIkGaP2Yeg4oVf8NESBdc8cxVnxjZVsqGIoHRI1qj1VJ73w8Hz9pEOVBUbA+xLhy6lsDQAd1rkFGjzXRyMB8Av4jxEmS2icQ2w8XZnYQ7yN0X2uuyAm+61w=" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 10위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 강서구 방화동로14길 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">308,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>246,400,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +47,900,162 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 1,078만~1,694만 차감 시: +30,960,162 원 ~ +37,120,162 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 8,330만 ~ 8,946만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 1,078만~1,694만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">39,517,633 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>27.08 ㎡ (8.19 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>45.13 ㎡ (13.65 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>37,599,031 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 1,078만 ~ 1,694만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 308만 ~ 462만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 154만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 616만 ~ 770만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 308만 ~ 462만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+        <div id="case-2023108446" data-rank="item-11" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="kMle4AIThfTDMQEwxniIwIY2pXRm1JUQao5ICvjOkJl8i1NbruE5MQqQb6ZFezfo6467cO1vLWpr0eJQAloETYZE9DN8K+Zmw9r5iHEaKtp3Rb28howOXkC7jXAy4vOeswUh0XDLh1cB328KGKpCbqJwb9InerFh1RnJDNGcI3jsSsCPO+z9BfKtnCPTpndhAv9mGIqT9ZQDvTq+3M9gpyjyQSnw3F86037wHWZ4GNibM9Vq1GHsaCikZnq2Uar3vApLzf1qsMrjkNqGbKkjj5QOP5/E+rt+IaDYJNV6qPj8/cM8bU4nBEIxU6jjKOzFWBhgkJkpXjooIoRm7F/IpHqGLnP6m3u/NdqE/xloaz0fqlcSaOjwTHvS2horvRJajiNkbk0EXTbouZdExwTGlc5JzswvbuUuC/uHeXQI8MLpP1NjTJLH65O03tKq/ftVXKKsGa2Dd8+mUt2ALN67ggc=" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 11위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 구로구 경인로15나길 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">239,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>191,200,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +37,169,282 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 836만~1,314만 차감 시: +24,024,282 원 ~ +28,804,282 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 6,464만 ~ 6,942만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 836만~1,314만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">30,664,657 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>20.08 ㎡ (6.07 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>33.46 ㎡ (10.12 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>39,346,743 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 836만 ~ 1,314만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 239만 ~ 358만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 119만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 478만 ~ 597만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 239만 ~ 358만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+        <div id="case-202355266" data-rank="item-12" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="kLk2mr07s1HBFF41aCCgZnaYYZ3/92LOTHgrQ1uhgAHhZjccQ0fX1ULBtp2vpo7zzg2PkfuV0VupJTZQf3uqbEpIZboIhi+YDzcM5XkXaxdx6IsC8ljSuGa7GeA1dHMr2eA8uNIomkyBjFE4evPfJOvdrNj8yNjTUe2tFk/zLvISjkuCXhmlGwLjjVQvDXvKeSIC3A9ghNfw1NrfJ6s5Dx0SWL7bLtF6YDPH5c84BdphR2KVJkrqkmpIR3QPXTkZ1HHDalADrtgUzebMrJavLqPrGX+rAwi39ug/cz0N54FM+jNHXPbj3ENvBDlJVAa4E2uAT/BD0nb5kxNNpsGamhqfvj03VLBNEeOtPo7DfNbEG7bJqK26zstOWKkXEQBZezE1UdT/l80Ubhm1xS7GDu9hVnDvDfb/844d+xHkN4ATiBsLGnpKqQss+9Xop7g=" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 12위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 강동구 천호대로188길 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">260,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>208,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +40,435,202 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 910만~1,430만 차감 시: +26,135,202 원 ~ +31,335,202 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 7,032만 ~ 7,552만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 910만~1,430만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">33,359,041 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>30.25 ㎡ (9.15 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>50.42 ㎡ (15.25 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>28,413,358 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 910만 ~ 1,430만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 260만 ~ 390만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 130만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 520만 ~ 650만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 260만 ~ 390만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+        <div id="case-2023113554" data-rank="item-13" class="detail-section animate-on-scroll vip-encrypted-item" data-encrypted="6uNpfWEVNFhjJueKH+RhcRY3NIgTyfeaQmzYssGKAjcGndurYej9IvEGNVIM5JYItT0APaNxK3pdSQ2L0RhExXyDj5leOs/29xDA6nBCAVYmngB+t8+RGefhxkGQxVMgX/16421GIqHIRMs69dHy/6HcFoDzTDrAZx7/lzdhoyT6kuAZExfriz6/tlVlwMP4wq7QJh/Fla3CYWujdoho+KkhV/IB561TL7qk2DPhcX/43jWX21ZYDzgmEL1Q7v0sXmVwmy7DvD3MQrKtfE4BAu7IN2mbPxpraUHu96qJHnn5J5iJRnXRfMEb4+QxOErwaMDWjTwJVvXlx0ilUj9NYzRFzuzydMlNvZThId1siRmtqOex+w7X/ZVoDkxl75g1fY09H7RKZNNm5d9hlbeGSjp6bP17/9I0xcnPcXsh2/ERWBzH+DgPNN4Jhk3aaHwI8uxQpgoTfF/wvs/ox9DU1w==" >
+            <div class="detail-section-title">
+                <span class="badge-status badge-pass">합격</span> <span class="pass-criteria-tag">기준 충족: 실마진 12.4% (기준 10% 대비 +2.4%p 초과)</span>&nbsp;&middot;&nbsp;추천 13위.&nbsp;<span class="vip-field-case-number vip-locked-placeholder">2023타경*****</span>
+                <span style="margin-left: auto; font-size: 0.78rem; background: rgba(34, 211, 238, 0.12); color: var(--cyan-400); padding: 0.2rem 0.6rem; border-radius: 6px; border: 1px solid rgba(34, 211, 238, 0.3);">VIP 암호화 보호</span>
+            </div>
+            <table class="detail-table">
+                <tr>
+                    <th>소재지</th>
+                    <td><span class="vip-field-address vip-locked-placeholder">서울특별시 강서구 공항대로4길 *** (빌라/다세대)</span></td>
+                </tr>
+                <tr>
+                    <th>물건 종류</th>
+                    <td>다세대 (빌라)</td>
+                </tr>
+                <tr>
+                    <th>감정 평가액</th>
+                    <td style="font-weight: 700;">250,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>가상 최저가</th>
+                    <td>200,000,000 원</td>
+                </tr>
+                <tr>
+                    <th>추천 입찰가</th>
+                    <td><span class="vip-field-target-price vip-locked-placeholder">***,***,*** 원 (핀코드 잠김)</span></td>
+                </tr>
+                <tr>
+                    <th>낙찰 성공 확률</th>
+                    <td style="font-weight: 600;">82.5%</td>
+                </tr>
+                <tr>
+                    <th>예상 순수익</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        +38,880,002 원 
+                        <div style="font-size: 0.83rem; color: var(--cyan-400); font-weight: 600; margin-top: 0.25rem;">
+                            (현실 예비비 875만~1,375만 차감 시: +25,130,002 원 ~ +30,130,002 원)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>필요 실투자금</th>
+                    <td style="font-weight: 700; color: var(--cyan-400);">
+                        약 6,761만 ~ 7,261만 원 
+                        <div style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-top: 0.25rem;">
+                            (대출 75% 잔금 + 취등록세 4% + 현실 예비비 875만~1,375만 포함)
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>위험조정 기대수익 (EV)</th>
+                    <td style="font-weight: 600;">32,076,001 원</td>
+                </tr>
+                <tr>
+                    <th>기대 마진율</th>
+                    <td style="color: var(--green-400); font-weight: 700;">
+                        12.4% 
+                        <span style="font-size: 0.83rem; color: var(--text-secondary); font-weight: normal; margin-left: 0.35rem;">
+                            (현실 버퍼 차감 후 실마진: 12.4% ~ 14.8%)
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>대지 지분 면적</th>
+                    <td>17.54 ㎡ (5.31 평)</td>
+                </tr>
+                <tr>
+                    <th>건물 전용면적</th>
+                    <td>29.23 ㎡ (8.84 평)</td>
+                </tr>
+                <tr>
+                    <th>대지 평단가</th>
+                    <td>47,117,802 원/평</td>
+                </tr>
+                <tr>
+                    <th>입찰가 범위</th>
+                    <td><span class="vip-field-bid-range vip-locked-placeholder">***,***,*** 원 ~ ***,***,*** 원</span></td>
+                </tr>
+                <tr>
+                    <th>특이사항</th>
+                    <td><span class="vip-field-notes vip-locked-placeholder">대법원 실시간 2024~2026타경 신규 유찰 매물, 권리분석 안전 지표 충족</span></td>
+                </tr>
+            </table>
+
+            <!-- 현실 예비비 산출 근거 박스 -->
+            <div class="reality-buffer-box">
+                <div class="reality-buffer-head">
+                    <span>현실 반영 안전 예비비 산출 근거 (감정가 대비 3.5% ~ 5.5%: 875만 ~ 1,375만원)</span>
+                    <span class="reality-buffer-tag">감정가 5.5% 정률 반영</span>
+                </div>
+                <div class="reality-buffer-grid">
+                    <div class="reality-buffer-item">&bull; <strong>명도 협상비 (이사비)</strong>: 250만 ~ 375만원 (원만한 합의)</div>
+                    <div class="reality-buffer-item">&bull; <strong>폐기물 처리 &amp; 특수청소</strong>: 125만원 (방치 짐 및 찌든때 정리)</div>
+                    <div class="reality-buffer-item">&bull; <strong>필수 인테리어 수리</strong>: 500만 ~ 625만원 (도배·장판·조명·위생도기)</div>
+                    <div class="reality-buffer-item">&bull; <strong>공실 2~3개월 금융비용</strong>: 250만 ~ 375만원 (대출이자+관리비)</div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+        <!-- 탭 2: 실시간 법원 접수 물건 -->
+        <div id="tab-pane-live-court" class="report-tab-pane" style="display: none;">
+            <div class="live-court-guide-card animate-on-scroll">
+                <div class="live-court-guide-title">
+                    <span class="guide-badge">실시간 법원 데이터</span>
+                    <h3>대법원 경매정보 실시간 접수 사건 목록</h3>
+                </div>
+                <p class="live-court-guide-desc">
+                    대법원 법원경매시스템에 실시간 등록된 신규 및 특수(기일변경/지분 등) 사건 목록입니다.<br>
+                    <strong>사건번호 복사</strong> 버튼을 눌러 대법원 경매정보 사이트(courtauction.go.kr)에서 감정평가서, 현황조사서, 매각물건명세서 원본을 즉시 열람하실 수 있습니다.
+                </p>
+            </div>
+            <div class="live-court-grid">
+                
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경4869</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울중앙지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 관악구 봉천동 66-89</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">1,994,700,000 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-15</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경4869', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경104875</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울중앙지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 관악구 봉천동 66-8</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">783,360,000 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-22</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경104875', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경106314</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울중앙지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 관악구 봉천동 65-30</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">813,440,070 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-15</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경106314', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경108556</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울중앙지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 관악구 봉천동 66-175</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">907,800,000 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-22</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경108556', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경108730</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울중앙지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 관악구 봉천동 66-98</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">952,000,000 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-15</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경108730', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경116182</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울중앙지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 관악구 봉천동 1671-26</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">1,267,969,450 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-15</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경116182', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경118379</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울중앙지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 관악구 봉천동 66-185</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">797,150,000 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-15</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경118379', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2024타경1072</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울중앙지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 중구 마장로1길 21 지하1층16호</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">275,000,000 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-22</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2024타경1072', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경104819</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울남부지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 금천구 시흥대로150길 11-9 제2층 제202호</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">246,000,000 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-28</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경104819', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경102448</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울남부지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 강서구 방화동로14길 12 제103동 제4층 제402호</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">308,000,000 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-16</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경102448', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경108446</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울남부지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 구로구 경인로15나길 20 제104동 제3층 제302호</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">239,000,000 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-20</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경108446', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경55266</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울동부지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 강동구 천호대로188길 8 3층302호</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">260,000,000 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-26</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경55266', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경113554</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">서울남부지방법원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">서울특별시 강서구 공항대로4길 11 제103동 제3층 제304호</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">250,000,000 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-27</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경113554', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+                <div class="live-case-card animate-on-scroll">
+                    <div class="live-case-card-header">
+                        <div class="live-case-no-wrap">
+                            <span class="live-case-no">2023타경2003</span>
+                        </div>
+                        <span class="live-case-badge badge-fresh">실시간 접수</span>
+                    </div>
+                    <div class="live-case-info-list">
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">관할 법원</span>
+                            <span class="live-case-info-val">대법원 공고 참조</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">물건 종류</span>
+                            <span class="live-case-info-val">다세대 (빌라)</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">소재지</span>
+                            <span class="live-case-info-val">경기도 양평군 서종면 수입리 168-7</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">감정평가액</span>
+                            <span class="live-case-info-val">840,638,900 원</span>
+                        </div>
+                        <div class="live-case-info-row">
+                            <span class="live-case-info-label">매각기일</span>
+                            <span class="live-case-info-val">2026-10-21</span>
+                        </div>
+                    </div>
+                    <div class="live-case-actions">
+                        <button type="button" class="btn-copy-case" onclick="copyCaseNumber('2023타경2003', this)">
+                            사건번호 복사
+                        </button>
+                        <a href="https://www.courtauction.go.kr" target="_blank" rel="noopener noreferrer" class="btn-court-direct">
+                            대법원 원본 조회 &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-default); border-radius: 16px; padding: 2rem; margin: 3rem 0 2rem; text-align: center;">
+            <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-primary);">내 상황에 맞는 실투자금과 안전마진 계산</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">취득세 감면, 경락잔금대출(LTV), 수리비 등 필요한 순수 현금을 직접 시뮬레이션해 보세요.</p>
+            <a href="../calculator.html" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.85rem 2rem;">
+                실투자금 1초 무료 계산기 바로가기 &rarr;
+            </a>
+        </div>
+
+        <div class="disclaimer">
+            <p>본 리포트는 AI 자동 분석 결과이며, 투자 자문이 아닙니다.<br>
+            최종 투자 판단은 반드시 전문가 상담 및 현장 답사 후 투자자 본인의 책임 하에 결정하시기 바랍니다.</p>
+            <p style="margin-top: 0.5rem;">
+                &copy; 2026 Private 경매 구독 &middot; <a href="https://gathering-house.kr">gathering-house.kr</a>
+            </p>
+        </div>
+    </main>
+
+    <script>
+        function switchReportMainTab(tabName, btnEl) {
+            document.querySelectorAll('.report-view-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+            if (btnEl) btnEl.classList.add('active');
+
+            var paneAi = document.getElementById('tab-pane-ai-picks');
+            var paneLive = document.getElementById('tab-pane-live-court');
+
+            if (tabName === 'ai-picks') {
+                if (paneAi) paneAi.style.display = 'block';
+                if (paneLive) paneLive.style.display = 'none';
+            } else {
+                if (paneAi) paneAi.style.display = 'none';
+                if (paneLive) paneLive.style.display = 'block';
+            }
+        }
+
+        function copyCaseNumber(caseNo, btnEl) {
+            if (!navigator.clipboard) {
+                var textarea = document.createElement('textarea');
+                textarea.value = caseNo;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+            } else {
+                navigator.clipboard.writeText(caseNo);
+            }
+            if (btnEl) {
+                var origText = btnEl.innerHTML;
+                btnEl.innerHTML = '<span style="color: var(--green-400); font-weight: 700;">복사 완료</span>';
+                btnEl.classList.add('copied');
+                setTimeout(function() {
+                    btnEl.innerHTML = origText;
+                    btnEl.classList.remove('copied');
+                }, 1800);
+            }
+        }
+    </script>
+    <script src="../assets/js/analytics.js"></script>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>
