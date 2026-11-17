@@ -4,7 +4,7 @@
     "total_slots": 10,
     "active_count": 3,
     "empty_count": 7,
-    "generated_at": "2026-10-22T07:01:00.842972"
+    "generated_at": "2026-11-18T07:00:58.086992"
   },
   "presets": [
     {
@@ -141,7 +141,7 @@
       "address": "서울특별시 중구 마장로1길 21 지하1층16호",
       "appraisal_value": 275000000,
       "min_bid_price": 0,
-      "auction_date": "2026-10-22",
+      "auction_date": "2026-11-26",
       "badge": "검증 통과",
       "meta": "감정가 275,000,000원 | 다세대 (빌라)",
       "building_area_sqm": 59.8,
